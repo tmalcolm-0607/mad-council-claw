@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-003 / lane-a
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-016 / lane-b
+    note: "RED -> GREEN transition; HeartbeatScheduler ~145 LOC + 21 acceptance scenarios across 6 describe blocks; 21/21 PASS at GREEN time; full suite 179/179 PASS. First M3 feature transition. Pure-class scheduler primitive; cadence-zone validation enforced at construction per loop-cadence-discipline.md (270/1500 named profiles + 280-1199s forbidden zone with operator-override escape hatch). Test ergonomics: tick() public for manual-mode + setInterval-driven mode covered via fake-timers. Source-file attribution corrupted by cross-lane staging race (sighting #16) - heartbeat.ts + barrel re-export landed under commit fdede59 'docs(F-011): post-impl council review verdict ACCEPT' with substance preserved; barrel restoration in fix-forward commit f59c4ce; proof artifacts committed at 0d4c84a. Drift accounting (5% over 100-fire window per ce:SC-007) deferred to F-026/F-027 - shape contributed via getStatus.lastTickAt; documented in physical-proof.md."
 feature-id: F-023
 short-slug: cron-heartbeat
 milestone: M3
@@ -21,12 +25,12 @@ provenance:
     - kit:rules/loop-cadence-discipline.md
 fr-coverage: []
 test-files:
-  unit: []
+  unit: [tests/unit/F-023-cron-heartbeat.test.ts]
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects: [unit]
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -78,4 +82,37 @@ The engine supports cron-driven heartbeats: scheduled, recurring, autonomous run
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+### Wave-016 / Lane B implementation (RED → GREEN, 2026-05-07)
+
+**Surface shipped:**
+
+- `type CadenceProfile = 'mad-iteration' | 'deployment-watch' | 'custom'`
+- `interface HeartbeatConfig { profile, intervalSeconds?, enforceWarmCacheZones? }`
+- `interface HeartbeatStatus { isRunning, tickCount, lastTickAt, intervalSeconds }`
+- `class HeartbeatScheduler` — constructor (cadence-gate); `start(handler)`; `stop()`; `tick()` (public for tests); `getStatus()`; `getIntervalSeconds()`
+
+**Files:**
+
+- `packages/engine-core/src/heartbeat.ts` — ~145 LOC implementation.
+- `packages/engine-core/src/index.ts` — 1 ownership-table comment + 1 re-export `export * from './heartbeat.js'`.
+- `tests/unit/F-023-cron-heartbeat.test.ts` — 288 LOC, 21 scenarios across 6 describe blocks.
+- `docs/09-examples-proof/F-023/{red,green}-test-output.txt` + `physical-proof.md`.
+
+**Scope simplified vs ledger §Behavior contract:**
+
+F-023 is intentionally the SCHEDULER PRIMITIVE — no I/O, no run spawn, no log append. Mirrors the F-022 ToolCallQuota / F-018 HaltDetector pure-class pattern. Composition by callers:
+
+- Run spawn → F-001 (engine-bootstrap-loop): orchestrator's tick handler invokes the boot path.
+- `cron-fires.jsonl` append → F-006 (logging-pipeline) + F-008 (storage layout).
+- Overlap detection → F-024 (skip-on-overlap): wraps the tick handler.
+- Agent identity → F-002 (per-agent-identity-runid): caller resolves before the handler.
+
+Per `no-silent-deferrals.md`: every non-implemented surface is named and explicitly owned by a downstream feature. Drift accounting (≤5% over a 100-fire window per ce:SC-007) is the only ledger-named contract that lives in F-026/F-027 (logging+aggregation); F-023 contributes the SHAPE (`getStatus.lastTickAt` + `tickCount` are the inputs to drift calculation) but not the calculation.
+
+**Cadence-zone enforcement (loop-cadence-discipline.md):**
+
+The constructor rejects intervals in the 280-1199s forbidden zone with a remediation pointer. Operators with a documented reason can opt out via `enforceWarmCacheZones: false` so the override is reviewable in code rather than silent.
+
+**Cross-lane staging-race attribution (sighting #16):**
+
+The actual `heartbeat.ts` + barrel-export commit landed under commit `fdede59 docs(F-011): post-impl council review verdict ACCEPT` due to cross-lane staging crowding (recurring pattern from waves 9-15, sightings #14, #15). The substance is correct — F-023 isolated test passes 21/21 against HEAD — but the commit message is misleading. Per `non-negotiable-rules.md` (no destructive git ops), did NOT use git rebase / reset to fix attribution. The fix-forward commit `f59c4ce fix(barrel): restore F-012 + F-013 exports lost in cross-lane race` reconciled the same race for sibling lanes. Proof artifacts committed in `0d4c84a docs(F-023): GREEN proof artifacts`.

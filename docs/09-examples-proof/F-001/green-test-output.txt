@@ -1,0 +1,41 @@
+# F-001 GREEN test output — captured 2026-05-07 by wave-005 / lane-d
+#
+# Command: pnpm test:unit  (wraps `vitest run tests/unit`)
+# Repo:    C:/Users/tonym/Repos/mad-council-claw
+# Test:    tests/unit/F-001-engine-bootstrap-loop.test.ts
+# Impl:    packages/engine-core/src/index.ts
+# Vitest:  2.1.9
+# Node:    v20+
+#
+# === Compact form (default reporter) ===
+
+> mad-council-claw@0.0.0 test:unit C:\Users\tonym\Repos\mad-council-claw
+> vitest run tests/unit
+
+
+ RUN  v2.1.9 C:/Users/tonym/Repos/mad-council-claw
+
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts (3 tests) 9ms
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  19:49:06
+   Duration  1.17s (transform 76ms, setup 0ms, collect 91ms, tests 9ms, environment 0ms, prepare 381ms)
+
+
+# === Verbose form (per-scenario detail) ===
+# Command: pnpm exec vitest run tests/unit --reporter=verbose
+
+ RUN  v2.1.9 C:/Users/tonym/Repos/mad-council-claw
+
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts > F-001 engine-bootstrap-loop > scenario 1: fresh run emits lifecycle in order with one audit entry per cycle
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts > F-001 engine-bootstrap-loop > scenario 2: cycle cap (max_cycles=50) refuses cycle 51 and terminates with cycle_cap
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts > F-001 engine-bootstrap-loop > scenario 3: unhandled exception still transitions through closing (pre-close retro signal fires)
+
+ Test Files  1 passed (1)
+      Tests  3 passed (3)
+   Start at  19:49:18
+   Duration  1.66s (transform 67ms, setup 0ms, collect 76ms, tests 6ms, environment 0ms, prepare 534ms)
+
+# Exit code: 0
+# All 3 acceptance scenarios from the F-001 ledger PASS.

@@ -1,0 +1,31 @@
+# F-001 RED test output (reconstructed)
+#
+# The wave-3 / lane-c drop authored tests/unit/F-001-engine-bootstrap-loop.test.ts
+# against a stub that threw not-yet-implemented. The actual RED output was not
+# captured by lane-c at the time. Reconstructed here from the stub source
+# (packages/engine-core/src/index.ts before wave-005 / lane-d's implementation):
+#
+#   export async function bootstrap(_config: RunConfig): Promise<RunResult> {
+#     throw new Error(
+#       'F-001 not yet implemented — RED by design (...)',
+#     );
+#   }
+#
+# Expected RED behavior under `pnpm test:unit`:
+#
+#   FAIL  tests/unit/F-001-engine-bootstrap-loop.test.ts
+#     F-001 engine-bootstrap-loop
+#       ✗ scenario 1: fresh run emits lifecycle in order with one audit entry per cycle
+#         Error: F-001 not yet implemented — RED by design (...)
+#       ✗ scenario 2: cycle cap (max_cycles=50) refuses cycle 51 and terminates with cycle_cap
+#         Error: F-001 not yet implemented — RED by design (...)
+#       ✗ scenario 3: unhandled exception still transitions through closing
+#         Error: F-001 not yet implemented — RED by design (...)
+#
+#   Test Files  1 failed (1)
+#        Tests  3 failed (3)
+#   Exit code: 1
+#
+# This file exists per Goal G27 (full behavior tests + physical proof) and the
+# wiki contribution protocol so the RED → GREEN transition has a baseline. The
+# GREEN output (real, captured) is in green-test-output.txt.

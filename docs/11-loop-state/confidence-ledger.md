@@ -162,6 +162,15 @@ Total wave-1 confidence-ledger rows: **~42** finding clusters/lessons (vs. ~120 
 
 ## Entries — Wave 8 (introduced 2026-05-07)
 
+### Lane A — F-014 RED → GREEN (this lane)
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-A-w8-F-014-GREEN | packages/engine-core/src/index.ts + tests/unit/F-014-pre-close-retro-signal.test.ts + docs/09-examples-proof/F-014/ | HIGH | wave-008 / lane-a | (current) | Third feature transition RED → GREEN in the repo (after F-001 wave-005, F-002 wave-006). First M2 (governance triad) feature to flip GREEN. ~180 LOC impl adds RetroSignal interface (5-axis Likert + 7 pattern fields + outcome + optional trigger_evidence_sha256), RetroMissingError class with .missingFields, and closeSession() boundary contract. 8/8 acceptance scenarios pass — 3 ledger scenarios + halted-by carve-out + 4 extended Likert/pattern validation cases. Pre-close retro discipline for ce:FR-CORE-004 + halted-by trigger evidence for ce:FR-CORE-005. |
+| Lane-A-w8-RED-baseline-captured | docs/09-examples-proof/F-014/red-test-output.txt | HIGH | wave-008 / lane-a | (current) | Wave-5 retro proposal pattern continued: RED commit d896ecb landed the failing test + baseline output BEFORE the impl flip; GREEN commit ba54036 landed the impl + green-test-output.txt. RED state showed 7/8 fail with TypeError + 1 spurious pass on a no-throw scenario; GREEN state showed 8/8 PASS. |
+| Lane-A-w8-prompt-vs-ledger-naming | wave-008 lane-a brief vs docs/03-feature-catalog/M0-bootstrap/F-003-repo-scaffolding.md vs docs/03-feature-catalog/M2-governance-triad/F-014-pre-close-retro-signal.md | HIGH | wave-008 / lane-a | (current) | Prompt named the work "F-003-pre-close-signal-capture" — but F-003 in M0 is `repo-scaffolding` (RED, separate ledger). The behavior contract authored by the prompt (closeSession + 5-axis Likert + 7 pattern fields + halted-by carve-out) matches F-014 (M2) verbatim. Lane A executed against the existing F-014 ledger rather than silently rewriting F-003's contract — `rules/canonical-skill-only.md` + `rules/no-silent-deferrals.md` say don't unilaterally rename ledgers. Loop-improvement candidate: brief generation should validate F-NNN ↔ slug pairing against the live catalog before issuing wave-008 lane briefs. |
+| Lane-A-w8-disjoint-append-coexistence | packages/engine-core/src/index.ts (F-014 added at top-half append zone; F-015 added at bottom-half) | HIGH | wave-008 / lane-a | (current) | Two parallel lanes (Lane A: F-014 retro signal; Lane B: F-015 hash chain) both modify the same file but in disjoint sections. Lane A committed first with F-015 work explicitly stripped from the F-014 commit (per `rules/scope-discipline.md`), then restored Lane B's F-015 working-tree state for Lane B to commit independently. No single-line conflict because both lanes appended new exports rather than editing shared lines. Validates the wave-008 multi-lane append-only convention. |
+
 ### Lane B — F-015 RED → GREEN (this lane)
 
 | Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |

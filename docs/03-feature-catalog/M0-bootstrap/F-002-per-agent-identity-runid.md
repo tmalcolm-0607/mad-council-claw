@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-006 / lane-d
     note: "RED test scaffold + impl landed in same lane (RED-then-GREEN micro-session per wave-5 retro proposal). Test at tests/unit/F-002-per-agent-identity-runid.test.ts, impl at packages/engine-core/src/index.ts (~110 LOC added: createAgent, createSession, stampIdentity, internal uuidV7). 3/3 acceptance scenarios passing across 5 consecutive stable runs (vitest 2.1.9, Node 24.13.1). RED baseline captured at docs/09-examples-proof/F-002/red-test-output.txt BEFORE flip; GREEN at green-test-output.txt."
+  - status: locked
+    at: 2026-05-07
+    by: wave-012 / lane-d
+    note: "Council review verdict ACCEPT (Verdict consensus: APPROVE; median confidence 90; 0 CRITICAL / 0 MAJOR / 3 MINOR / 3 PRAISE) at docs/05-design-reviews/council-reviews/F-002-per-agent-identity-runid-review.md. red-green-rule predicate satisfied: GREEN AND review file with verdict ACCEPT. MINOR findings are honest scope-narrowing notes per no-silent-deferrals.md (crypto signing v1.5; audit-writer integration follow-on; sub-ms ordering caveat). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/identity.ts (146 LOC). 3/3 acceptance scenarios continue to PASS unchanged. Second LOCKED transition in the repo after F-001 (wave-011 / lane-b)."
 feature-id: F-002
 short-slug: per-agent-identity-runid
 milestone: M0

@@ -1,0 +1,68 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-015-hash-chained-audit-log.test.ts [2m([22m[2m4 tests[22m[2m | [22m[31m4 failed[39m[2m)[22m[90m 9[2mms[22m[39m
+[31m   [31m×[31m F-015 hash-chained-audit-log[2m > [22mscenario 1: first entry on empty log has prev_sha256 === GENESIS and 64-hex entry_sha256[90m 6[2mms[22m[31m[39m
+[31m     → appendAuditEntry is not a function[39m
+[31m   [31m×[31m F-015 hash-chained-audit-log[2m > [22mscenario 2: tampering with entry K invalidates chain with precise broken_at index[90m 1[2mms[22m[31m[39m
+[31m     → appendAuditEntry is not a function[39m
+[31m   [31m×[31m F-015 hash-chained-audit-log[2m > [22mscenario 3: appending M+1 to a valid 1..M chain keeps the chain valid[90m 0[2mms[22m[31m[39m
+[31m     → appendAuditEntry is not a function[39m
+[31m   [31m×[31m F-015 hash-chained-audit-log[2m > [22mscenario 4: tampering with prev_sha256 also invalidates with prev_sha256 reason[90m 0[2mms[22m[31m[39m
+[31m     → appendAuditEntry is not a function[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 4 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-015-hash-chained-audit-log.test.ts[2m > [22mF-015 hash-chained-audit-log[2m > [22mscenario 1: first entry on empty log has prev_sha256 === GENESIS and 64-hex entry_sha256
+[31m[1mTypeError[22m: appendAuditEntry is not a function[39m
+[36m [2m❯[22m tests/unit/F-015-hash-chained-audit-log.test.ts:[2m44:19[22m[39m
+    [90m 42| [39m  [34mit[39m([32m'scenario 1: first entry on empty log has prev_sha256 === GENESIS[39m…
+    [90m 43| [39m    [35mconst[39m log[33m:[39m [33mAuditEntry[39m[] [33m=[39m [][33m;[39m
+    [90m 44| [39m    [35mconst[39m entry [33m=[39m [34mappendAuditEntry[39m(log[33m,[39m {
+    [90m   | [39m                  [31m^[39m
+    [90m 45| [39m      cycle[33m:[39m [34m1[39m[33m,[39m
+    [90m 46| [39m      action[33m:[39m [32m'engine.boot'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-015-hash-chained-audit-log.test.ts[2m > [22mF-015 hash-chained-audit-log[2m > [22mscenario 2: tampering with entry K invalidates chain with precise broken_at index
+[31m[1mTypeError[22m: appendAuditEntry is not a function[39m
+[36m [2m❯[22m tests/unit/F-015-hash-chained-audit-log.test.ts:[2m64:5[22m[39m
+    [90m 62| [39m  [34mit[39m([32m'scenario 2: tampering with entry K invalidates chain with precis[39m…
+    [90m 63| [39m    [35mconst[39m log[33m:[39m [33mAuditEntry[39m[] [33m=[39m [][33m;[39m
+    [90m 64| [39m    [34mappendAuditEntry[39m(log[33m,[39m { cycle[33m:[39m [34m1[39m[33m,[39m action[33m:[39m [32m'engine.boot'[39m[33m,[39m fields[33m:[39m {…
+    [90m   | [39m    [31m^[39m
+    [90m 65| [39m    [34mappendAuditEntry[39m(log[33m,[39m { cycle[33m:[39m [34m2[39m[33m,[39m action[33m:[39m [32m'agent.spawn'[39m[33m,[39m fields[33m:[39m {…
+    [90m 66| [39m    [34mappendAuditEntry[39m(log[33m,[39m { cycle[33m:[39m [34m3[39m[33m,[39m action[33m:[39m [32m'tool.invoke'[39m[33m,[39m fields[33m:[39m {…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-015-hash-chained-audit-log.test.ts[2m > [22mF-015 hash-chained-audit-log[2m > [22mscenario 3: appending M+1 to a valid 1..M chain keeps the chain valid
+[31m[1mTypeError[22m: appendAuditEntry is not a function[39m
+[36m [2m❯[22m tests/unit/F-015-hash-chained-audit-log.test.ts:[2m88:7[22m[39m
+    [90m 86| [39m    [35mconst[39m log[33m:[39m [33mAuditEntry[39m[] [33m=[39m [][33m;[39m
+    [90m 87| [39m    [35mfor[39m ([35mlet[39m cycle [33m=[39m [34m1[39m[33m;[39m cycle [33m<=[39m [34m10[39m[33m;[39m cycle[33m++[39m) {
+    [90m 88| [39m      [34mappendAuditEntry[39m(log[33m,[39m {
+    [90m   | [39m      [31m^[39m
+    [90m 89| [39m        cycle[33m,[39m
+    [90m 90| [39m        action[33m:[39m [32m`engine.cycle.[39m[36m${[39mcycle[36m}[39m[32m`[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-015-hash-chained-audit-log.test.ts[2m > [22mF-015 hash-chained-audit-log[2m > [22mscenario 4: tampering with prev_sha256 also invalidates with prev_sha256 reason
+[31m[1mTypeError[22m: appendAuditEntry is not a function[39m
+[36m [2m❯[22m tests/unit/F-015-hash-chained-audit-log.test.ts:[2m113:5[22m[39m
+    [90m111| [39m  [34mit[39m([32m'scenario 4: tampering with prev_sha256 also invalidates with pre[39m…
+    [90m112| [39m    [35mconst[39m log[33m:[39m [33mAuditEntry[39m[] [33m=[39m [][33m;[39m
+    [90m113| [39m    [34mappendAuditEntry[39m(log[33m,[39m { cycle[33m:[39m [34m1[39m[33m,[39m action[33m:[39m [32m'engine.boot'[39m[33m,[39m fields[33m:[39m {…
+    [90m   | [39m    [31m^[39m
+    [90m114| [39m    [34mappendAuditEntry[39m(log[33m,[39m { cycle[33m:[39m [34m2[39m[33m,[39m action[33m:[39m [32m'engine.cycle'[39m[33m,[39m fields[33m:[39m …
+    [90m115| [39m    [34mappendAuditEntry[39m(log[33m,[39m { cycle[33m:[39m [34m3[39m[33m,[39m action[33m:[39m [32m'engine.cycle'[39m[33m,[39m fields[33m:[39m …
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[90m (4)[39m
+[2m   Start at [22m 23:30:55
+[2m   Duration [22m 937ms[2m (transform 81ms, setup 0ms, collect 80ms, tests 9ms, environment 0ms, prepare 369ms)[22m
+

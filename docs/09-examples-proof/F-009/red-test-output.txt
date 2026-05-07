@@ -1,0 +1,50 @@
+    [90m 88| [39m
+    [90m 89| [39m  [34mit[39m([32m'scenario 3: sendPrompt streams a token event then a finish event[39m…
+    [90m 90| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mStubBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m 91| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m 92| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-009-ibackend-provider.test.ts[2m > [22mF-009 ibackend-provider[2m > [22mscenario 4: sendPrompt on unknown session id throws
+[31m[1mTypeError[22m: StubBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-009-ibackend-provider.test.ts:[2m115:21[22m[39m
+    [90m113| [39m
+    [90m114| [39m  [34mit[39m([32m'scenario 4: sendPrompt on unknown session id throws'[39m[33m,[39m [35masync[39m () [33m=[39m…
+    [90m115| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mStubBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m116| [39m    [90m// Iteration is required to surface the error from an AsyncGenerat[39m…
+    [90m117| [39m    [35mawait[39m [34mexpect[39m([35masync[39m () [33m=>[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-009-ibackend-provider.test.ts[2m > [22mF-009 ibackend-provider[2m > [22mscenario 5: halt accepts a RunHaltedVerdict and removes the session
+[31m[1mTypeError[22m: StubBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-009-ibackend-provider.test.ts:[2m126:21[22m[39m
+    [90m124| [39m
+    [90m125| [39m  [34mit[39m([32m'scenario 5: halt accepts a RunHaltedVerdict and removes the sess[39m…
+    [90m126| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mStubBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m127| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m128| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-009-ibackend-provider.test.ts[2m > [22mF-009 ibackend-provider[2m > [22mscenario 6: stopSession removes the session
+[31m[1mTypeError[22m: StubBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-009-ibackend-provider.test.ts:[2m149:21[22m[39m
+    [90m147| [39m
+    [90m148| [39m  [34mit[39m([32m'scenario 6: stopSession removes the session'[39m[33m,[39m [35masync[39m () [33m=>[39m {
+    [90m149| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mStubBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m150| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m151| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 08:30:35
+[2m   Duration [22m 1.40s[2m (transform 176ms, setup 0ms, collect 236ms, tests 13ms, environment 1ms, prepare 385ms)[22m
+

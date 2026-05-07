@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-016 / lane-c
     note: "RED → GREEN: tests/node/F-028-cli-entry.test.ts (7 scenarios) PASS against packages/cli/src/index.ts (~95 LOC). First M4 feature to flip; Headless CLI reaches 3R + 1G + 0L."
+  - status: locked
+    at: 2026-05-07
+    by: wave-018 / lane-a
+    note: "GREEN → LOCKED transition; post-impl council review verdict ACCEPT (median confidence 87; Advocate APPROVE 90, Skeptic APPROVE-WITH-SUGGESTIONS 75, Architect APPROVE 87; 0 CRITICAL / 0 MAJOR / 5 MINOR / 3 PRAISE). Review file: docs/05-design-reviews/council-reviews/F-028-cli-entry-review.md. MINOR findings: exit code on unknown subcommand is `1`, not `64` (sysexits.h normalization deferred chain — F-028 deferred to F-029, F-029 deferred to future M4+ wave); Windows-no-flash + IPv6 dual-stack belong to F-031 binary launcher not JS dispatcher; --state-dir + MAD_COUNCIL_* env vars deferred to concrete subcommands; binary name divergence (ledger names mad-council, package.json bin is nested-quilt — override mechanism exists); F-030 stripJsonFlag dispatcher-side strip is forward-compatible additive responsibility documented in dispatcher docblock. PRAISE: async dispatcher returning Promise<number> is canonical exit-code carrier shape; vi.spyOn-based in-process testing is right shape (~12ms scenario time); F-029+F-030 compose against F-028 with zero contract drift validating tight callable+record+options shape. First M4 (Headless CLI) feature LOCKED — establishes the precedent shape for M4 remaining LOCKED transitions. Re-verified at review time: 7/7 PASS, full suite 225/225 across 31 test files."
 feature-id: F-028
 short-slug: cli-entry
 milestone: M4

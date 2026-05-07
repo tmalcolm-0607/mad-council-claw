@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-016 / lane-b
     note: "RED -> GREEN transition; HeartbeatScheduler ~145 LOC + 21 acceptance scenarios across 6 describe blocks; 21/21 PASS at GREEN time; full suite 179/179 PASS. First M3 feature transition. Pure-class scheduler primitive; cadence-zone validation enforced at construction per loop-cadence-discipline.md (270/1500 named profiles + 280-1199s forbidden zone with operator-override escape hatch). Test ergonomics: tick() public for manual-mode + setInterval-driven mode covered via fake-timers. Source-file attribution corrupted by cross-lane staging race (sighting #16) - heartbeat.ts + barrel re-export landed under commit fdede59 'docs(F-011): post-impl council review verdict ACCEPT' with substance preserved; barrel restoration in fix-forward commit f59c4ce; proof artifacts committed at 0d4c84a. Drift accounting (5% over 100-fire window per ce:SC-007) deferred to F-026/F-027 - shape contributed via getStatus.lastTickAt; documented in physical-proof.md."
+  - status: locked
+    at: 2026-05-07
+    by: wave-018 / lane-a
+    note: "GREEN -> LOCKED transition; post-impl council review verdict ACCEPT (median confidence 88; Advocate APPROVE 90, Skeptic APPROVE-WITH-SUGGESTIONS 76, Architect APPROVE 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Review file: docs/05-design-reviews/council-reviews/F-023-cron-heartbeat-review.md. MINOR findings: behavior-contract scope narrowing (cron-schedules.json reading + cron-fires.jsonl appending + F-001 run-spawn deferred to caller integration); acceptance-scenario divergence (21 implemented scenarios go deeper on primitive contract vs ledger's 3 end-to-end scenarios); CADENCE_FORBIDDEN_ZONE error code naming (impl uses 'forbidden zone 280-1199s' + remediation pointer, semantically equivalent); drift accounting deferred to F-026/F-027 (F-023 contributes shape only). PRAISE: cadence-zone enforcement directly mechanizes loop-cadence-discipline.md; public tick() is the right test ergonomics; same-class extension by F-024+F-025 preserves the contract. First M3 (cron / heartbeat) feature LOCKED — establishes the precedent shape for the milestone's remaining LOCKED transitions. Re-verified at review time: 21/21 PASS, full suite 225/225 across 31 test files."
 feature-id: F-023
 short-slug: cron-heartbeat
 milestone: M3

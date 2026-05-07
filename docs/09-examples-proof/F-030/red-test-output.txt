@@ -1,0 +1,17 @@
+$ pnpm test:node 2>&1 | tail -10
+# (RED capture — pre-impl, before packages/cli/src/json-output.ts exists)
+
+ FAIL  tests/node/F-030-cli-json-output.test.ts [ tests/node/F-030-cli-json-output.test.ts ]
+Error: Failed to resolve entry for package "@mad-council-claw/cli/json-output".
+       The package may have incorrect main/exports specified in its package.json.
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  35 passed (35)
+
+The 5 prior node-suite files stay GREEN. The failure is scoped to the F-030
+import boundary — the `@mad-council-claw/cli/json-output` subpath does not
+exist in the package exports map yet, so vitest's resolver cannot load the
+test file.
+
+This RED matches F-030 ledger §red-green-rule:
+  RED if any test file is missing OR any runner returns non-zero exit.

@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-003 / lane-a
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-017 / lane-d
+    note: "RED → GREEN: tests/node/F-030-cli-json-output.test.ts (7 scenarios) PASS against packages/cli/src/json-output.ts (~50 LOC, ESM) + 1-import + 1-line edit to packages/cli/src/index.ts to strip --json before subcommand dispatch. Minimum-viable {ok, data?, error?} envelope + flag detection primitives shipped; per-subcommand schemas + NDJSON streaming deferred per no-silent-deferrals.md."
 feature-id: F-030
 short-slug: json-output
 milestone: M4
@@ -18,11 +22,12 @@ provenance:
 fr-coverage: []
 test-files:
   unit: []
-  node: []
+  node:
+    - tests/node/F-030-cli-json-output.test.ts
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects: [node]
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -70,4 +75,90 @@ Every CLI subcommand (per F-029) supports two output modes: `--format text` (def
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+### Wave 017 / Lane D — RED → GREEN (2026-05-07)
+
+Implementation lives at `packages/cli/src/json-output.ts` (~50 LOC, ESM).
+Surface:
+
+```typescript
+export interface JsonOutput {
+  ok: boolean;
+  data?: unknown;
+  error?: string;
+}
+export function hasJsonFlag(args: string[]): boolean;
+export function stripJsonFlag(args: string[]): string[];
+export function emitJson(output: JsonOutput): void;
+```
+
+`packages/cli/src/index.ts` gains a 1-import + 1-line edit so `runCli`
+strips `--json` from `subArgs` before forwarding to the matched
+subcommand:
+
+```typescript
+import { stripJsonFlag } from './json-output.js';
+// ...inside runCli, after subcommand resolution:
+const forwarded = stripJsonFlag(subArgs);
+return await subcommand(forwarded);
+```
+
+Tested by `tests/node/F-030-cli-json-output.test.ts` (7 scenarios) — all
+PASS at GREEN. Full proof at `docs/09-examples-proof/F-030/`. Composes
+against F-028's `runCli` surface + F-029's `standardSubcommands` without
+changing either's external API.
+
+### Scope deviations from original ledger acceptance scenarios
+
+Four deviations recorded openly per `verification-protocol.md` Rule 1
+(FETCH BEFORE CITE) + `no-silent-deferrals.md`:
+
+1. **NDJSON streaming deferred.** Original §Acceptance scenario 2 calls
+   for `audit query --format json` over 50,000 audit entries to emit
+   NDJSON (one JSON object per line, parseable independently, <200MB
+   memory bound). v1 ships only the single-line `emitJson` + `JsonOutput`
+   envelope; NDJSON is its own future feature when concrete `audit
+   query` behavior lands (currently an F-029 stub).
+2. **Per-subcommand schemas deferred.** Original §Acceptance scenario 1
+   envisions `mad-council run status <run_id> --format json` emitting
+   `{run_id, lifecycle, cycle_count, last_audit_entry_sha256}`. v1
+   provides only the structural envelope `{ok, data?, error?}`;
+   per-subcommand schemas land with each subcommand's concrete behavior.
+3. **`--format` flag → `--json` flag scope simplification.** Original
+   §Behavior contract specifies `--format text` (default) | `--format
+   json`. v1 ships boolean `--json` (presence = JSON mode). The
+   `--format` flag is a deferred future feature; the current envelope
+   shape will accept that extension without re-shaping.
+4. **Sysexits.h exit-code normalization deferred.** Original scenario 3
+   calls for exit code 65 (EX_DATAERR) for missing-run lookups under
+   `--json`. F-028's `1` exit code is preserved unchanged; cross-cutting
+   sysexits.h normalization is its own future feature (called out also
+   in F-028 + F-029 ledger §Implementation notes scope-deviations).
+
+### Composition notes
+
+The `index.ts` edit is intentionally minimal — `stripJsonFlag` is called
+inside the existing dispatcher after subcommand-name resolution. The
+subcommand never sees `--json` in its own args; orchestrator-level
+JSON-mode wrap of subcommand output via `emitJson` is the caller's
+responsibility (or a future wrapping skill that replaces subcommand
+stubs with real behavior). This keeps the F-028 dispatcher contract
+backward-compatible while making the F-030 primitive available for
+downstream use.
+
+The minimum-viable `{ok, data?, error?}` envelope was deliberately
+chosen so future per-subcommand schemas can extend the `data` field
+without re-shaping the envelope itself.
+
+### Cross-references
+
+- Test: `tests/node/F-030-cli-json-output.test.ts` (7 scenarios)
+- Impl: `packages/cli/src/json-output.ts` (~50 LOC)
+- Wiring: `packages/cli/src/index.ts` (1-import + 1-line edit),
+  `packages/cli/package.json` (exports `./json-output` subpath)
+- Proof: `docs/09-examples-proof/F-030/{red,green}-test-output.txt`
+  + `physical-proof.md`
+- Lane summary: `docs/06-agent-team-outputs/wave-017/lane-d-summary.md`
+- Sibling-this-wave: F-029 cli-subcommands (this lane); F-024/F-025/
+  F-026/F-027 (sibling lanes B/C — M3 features)
+- Downstream: future M4+ features will wrap their structured output
+  via `emitJson` when `hasJsonFlag` returns true

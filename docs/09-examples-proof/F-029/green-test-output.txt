@@ -1,0 +1,29 @@
+$ pnpm test:node 2>&1 | tail -15
+# (GREEN capture — post-impl, after packages/cli/src/subcommands.ts authored
+# + packages/cli/package.json exports map updated to include "./subcommands"
+# subpath. Wave-017 / Lane D 56/56 across 8 node test files.)
+
+ ✓ tests/node/F-030-cli-json-output.test.ts (7 tests) 26ms
+ ✓ tests/node/F-005-deps-pinning.test.ts (4 tests) 11ms
+ ✓ tests/node/F-029-cli-subcommands.test.ts (8 tests) 14ms
+ ✓ tests/node/F-003-repo-scaffolding.test.ts (11 tests) 17ms
+ ✓ tests/node/F-028-cli-entry.test.ts (7 tests) 12ms
+ ✓ tests/node/F-004-vitest-playwright-config.test.ts (7 tests) 7ms
+ ✓ tests/node/F-026-resume-from-checkpoint.test.ts (6 tests) 36ms
+ ✓ tests/node/F-008-local-storage-layout.test.ts (6 tests) 52ms
+
+ Test Files  8 passed (8)
+      Tests  56 passed (56)
+   Start at  12:51:53
+   Duration  1.61s (transform 522ms, setup 0ms, collect 1.34s, tests 175ms, ...)
+
+F-029 8/8 PASS at GREEN time. Full node-suite 56/56 across 8 test files
+(was 35/35 across 5 pre-F-029 — 21 NEW tests across F-029 8 + F-030 7 +
+sibling-lane F-026 6 since the wave-016 baseline).
+
+This GREEN matches F-029 ledger §red-green-rule:
+  GREEN if all test files exist AND all runners return zero exit.
+
+LOCKED is a future-wave candidate per the wave-15/wave-16 LOCKED-flip
+pattern (post-impl council review with verdict ACCEPT writes
+docs/05-design-reviews/council-reviews/F-029-cli-subcommands-review.md).

@@ -1,0 +1,22 @@
+$ pnpm test:node 2>&1 | tail -15
+# (GREEN capture — post-impl, after packages/cli/src/json-output.ts authored
+# + packages/cli/package.json exports map updated to include "./json-output"
+# subpath + packages/cli/src/index.ts updated to import stripJsonFlag and
+# strip --json from subArgs before forwarding to the matched subcommand.)
+
+ ✓ tests/node/F-030-cli-json-output.test.ts (7 tests) 26ms
+ ✓ tests/node/F-005-deps-pinning.test.ts (4 tests) 11ms
+ ✓ tests/node/F-029-cli-subcommands.test.ts (8 tests) 14ms
+ ✓ tests/node/F-003-repo-scaffolding.test.ts (11 tests) 17ms
+ ✓ tests/node/F-028-cli-entry.test.ts (7 tests) 12ms
+ ✓ tests/node/F-004-vitest-playwright-config.test.ts (7 tests) 7ms
+ ✓ tests/node/F-026-resume-from-checkpoint.test.ts (6 tests) 36ms
+ ✓ tests/node/F-008-local-storage-layout.test.ts (6 tests) 52ms
+
+ Test Files  8 passed (8)
+      Tests  56 passed (56)
+
+F-030 7/7 PASS at GREEN time. Full node-suite 56/56 across 8 test files.
+
+This GREEN matches F-030 ledger §red-green-rule:
+  GREEN if all test files exist AND all runners return zero exit.

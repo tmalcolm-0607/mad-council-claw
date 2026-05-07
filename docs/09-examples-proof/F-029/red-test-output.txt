@@ -1,0 +1,17 @@
+$ pnpm test:node 2>&1 | tail -10
+# (RED capture — pre-impl, before packages/cli/src/subcommands.ts exists)
+
+ FAIL  tests/node/F-029-cli-subcommands.test.ts [ tests/node/F-029-cli-subcommands.test.ts ]
+Error: Failed to resolve entry for package "@mad-council-claw/cli/subcommands".
+       The package may have incorrect main/exports specified in its package.json.
+
+ Test Files  1 failed | 5 passed (6)
+      Tests  35 passed (35)
+
+The 5 prior node-suite files stay GREEN (F-003 11/11, F-004 7/7, F-005 4/4,
+F-008 6/6, F-028 7/7). The failure is scoped to the F-029 import boundary —
+the `@mad-council-claw/cli/subcommands` subpath does not exist in the package
+exports map yet, so vitest's resolver cannot load the test file.
+
+This RED matches F-029 ledger §red-green-rule:
+  RED if any test file is missing OR any runner returns non-zero exit.

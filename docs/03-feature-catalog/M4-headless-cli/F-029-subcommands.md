@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-003 / lane-a
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-017 / lane-d
+    note: "RED → GREEN: tests/node/F-029-cli-subcommands.test.ts (8 scenarios) PASS against packages/cli/src/subcommands.ts (~70 LOC, ESM). Closed 11-name registry shipped as MINIMUM-VIABLE STUBS per no-silent-deferrals.md; concrete behavior deferred to subsequent M4+ features."
 feature-id: F-029
 short-slug: subcommands
 milestone: M4
@@ -18,11 +22,12 @@ provenance:
 fr-coverage: []
 test-files:
   unit: []
-  node: []
+  node:
+    - tests/node/F-029-cli-subcommands.test.ts
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects: [node]
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -85,4 +90,78 @@ Every subcommand is non-interactive: no prompts, no TUI, no waiting on stdin unl
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+### Wave 017 / Lane D — RED → GREEN (2026-05-07)
+
+Implementation lives at `packages/cli/src/subcommands.ts` (~70 LOC, ESM).
+Surface:
+
+```typescript
+import type { Subcommand } from './index.js';
+
+export const standardSubcommands: Record<string, Subcommand> = {
+  start, status, halt, retro, replay,
+  'query-audit', 'list-sessions',
+  archive, restore,
+  version,    // emits "0.0.0\n" + returns 0
+  help,       // emits a help-pointer line + returns 0
+};
+// 9 stubs each emit: "F-029 stub: subcommand '<name>' (args: ...)" + return 0
+```
+
+Tested by `tests/node/F-029-cli-subcommands.test.ts` (8 scenarios) — all
+PASS at GREEN. Full proof at `docs/09-examples-proof/F-029/`. Composes
+against F-028's `Subcommand` callable type without touching it (the
+wave-011/lane-a "shared types live with their FIRST owner" convention).
+
+### Scope deviations from original ledger acceptance scenarios
+
+Three deviations recorded openly per `verification-protocol.md` Rule 1
+(FETCH BEFORE CITE) + `no-silent-deferrals.md`:
+
+1. **Stubs only — concrete behavior deferred.** Original §Acceptance
+   scenarios envision real subcommands invoking the F-001 engine
+   kernel (`run start <config>`), F-016 audit query (`audit query`),
+   F-008 storage layer (`archive`/`restore`), F-031 daemon
+   (`daemon start`/`daemon stop`), etc. v1/wave-017 ships
+   MINIMUM-VIABLE STUBS only — every stub returns 0 + emits a
+   deterministic "F-029 stub: subcommand '<name>' (args: ...)" line.
+   Concrete implementations land in subsequent M4+ features.
+2. **Sysexits.h exit-code normalization deferred.** Original scenario 2
+   specifies exit code 64 (EX_USAGE) on unknown-subcommand path.
+   F-028's `runCli` still returns `1` (per F-028 ledger §Implementation
+   notes scope-deviation #1); F-029 layer doesn't change that. The
+   exit-code surface across the subcommand set is its own future
+   feature.
+3. **Bulk-halt consent gate (scenario 3) deferred** to whichever future
+   feature implements concrete cron pause/resume (`/cron pause` is
+   currently a F-029 stub). The consent-gate is in F-027's territory
+   once `cron pause` leaves stub state.
+
+### New ledger-deferral idiom
+
+"Minimum-viable-stub-with-deterministic-stdout" — registered as a
+deferral pattern in the project lexicon. Distinct from:
+
+- F-010/F-011's "stub-body-vs-deferred-real-SDK" (those have full
+  IBackendProvider contract behavior; just no real network call)
+- F-004's "config-present, runtime-deferred" (config file lands;
+  runtime activation deferred to consumer wave)
+
+F-029 stubs satisfy nothing structural beyond "runs + returns 0 +
+emits a deterministic line" — the stub line itself is the verification
+hook for downstream features that will replace each stub with a real
+implementation.
+
+### Cross-references
+
+- Test: `tests/node/F-029-cli-subcommands.test.ts` (8 scenarios)
+- Impl: `packages/cli/src/subcommands.ts` (~70 LOC)
+- Wiring: `packages/cli/package.json` (exports `./subcommands` subpath)
+- Proof: `docs/09-examples-proof/F-029/{red,green}-test-output.txt`
+  + `physical-proof.md`
+- Lane summary: `docs/06-agent-team-outputs/wave-017/lane-d-summary.md`
+- Sibling-this-wave: F-030 cli-json-output (this lane); F-024/F-025/
+  F-026/F-027 (sibling lanes B/C — M3 features)
+- Downstream: F-031 daemon-mode (only RED M4 feature remaining); future
+  M4+ features will swap each stub for concrete behavior + integrate
+  with F-030 `--json` mode

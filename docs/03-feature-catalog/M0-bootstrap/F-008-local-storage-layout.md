@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-002 / lane-b)
-status: green
+generated-by: hand-authored (wave-002 / lane-b); LOCKED flip wave-012 / lane-d
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -16,6 +16,10 @@ status-history:
     at: 2026-05-07
     by: wave-010 / lane-d
     note: "Impl landed at packages/engine-core/src/index.ts (F-008 region ~150 LOC): StorageLayout interface + getStorageLayout / ensureStorageLayout / atomicWriteJson / readJson. 6/6 acceptance scenarios pass; full unit suite 39/39 GREEN-feature tests still passing (F-001/F-002/F-006/F-014/F-015/F-016/F-018). GREEN proof at docs/09-examples-proof/F-008/green-test-output.txt."
+  - status: locked
+    at: 2026-05-07
+    by: wave-012 / lane-d
+    note: "Council review verdict ACCEPT (Verdict consensus: APPROVE; median confidence 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE) at docs/05-design-reviews/council-reviews/F-008-local-storage-layout-review.md. red-green-rule predicate satisfied: GREEN AND review file with verdict ACCEPT. MINOR findings are honest scope-narrowing notes per no-silent-deferrals.md (per-run subdirectory creation follow-on; .tmp orphan sweep; concurrent-writer race harness; encrypted-at-rest M8 scope). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/storage.ts (119 LOC). 6/6 acceptance scenarios continue to PASS unchanged. Fourth LOCKED transition in the repo (sibling with F-002 + F-006 in wave-012 / lane-d)."
 feature-id: F-008
 short-slug: local-storage-layout
 milestone: M0

@@ -1,0 +1,138 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-018-failure-pattern-halt.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m9 failed[39m[2m)[22m[90m 15[2mms[22m[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mscenario 1: 3 consecutive failures fire halted_by="consecutive_failures_3"[90m 8[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mscenario 4: recordSuccess() resets the consecutive_failures counter[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mscenario 2: 5 consecutive read-only Tool calls (overplanning) halts with overplanning_5[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22moverplanning resets when a write/edit tool fires[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mscenario 3: threshold override raises consecutive_failures_3 from 3 to 10[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mscenario 5: iteration_cap fires when iterations exhaust the configured maximum[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mscenario 6: tool_calls_quota fires when tool-call count exhausts the configured maximum[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mscenario 7: manualHalt() emits a halt verdict with trigger="manual" and the caller-supplied reason[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+[31m   [31m×[31m F-018 failure-pattern-halt[2m > [22mverdict carries optional run_id and agent_id correlation triple when provided[90m 1[2mms[22m[31m[39m
+[31m     → HaltDetector is not a constructor[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 9 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mscenario 1: 3 consecutive failures fire halted_by="consecutive_failures_3"
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m70:22[22m[39m
+    [90m 68| [39m[34mdescribe[39m([32m'F-018 failure-pattern-halt'[39m[33m,[39m () [33m=>[39m {
+    [90m 69| [39m  [34mit[39m([32m'scenario 1: 3 consecutive failures fire halted_by="consecutive_f[39m…
+    [90m 70| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m()[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m 71| [39m
+    [90m 72| [39m    [90m// First two failures accumulate without firing.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mscenario 4: recordSuccess() resets the consecutive_failures counter
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m90:22[22m[39m
+    [90m 88| [39m
+    [90m 89| [39m  [34mit[39m([32m'scenario 4: recordSuccess() resets the consecutive_failures coun[39m…
+    [90m 90| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m()[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m 91| [39m    detector[33m.[39m[34mrecordFailure[39m()[33m;[39m
+    [90m 92| [39m    detector[33m.[39m[34mrecordFailure[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mscenario 2: 5 consecutive read-only Tool calls (overplanning) halts with overplanning_5
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m110:22[22m[39m
+    [90m108| [39m
+    [90m109| [39m  [34mit[39m([32m'scenario 2: 5 consecutive read-only Tool calls (overplanning) ha[39m…
+    [90m110| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m()[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m111| [39m
+    [90m112| [39m    [90m// First four read-only tool calls accumulate without firing.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22moverplanning resets when a write/edit tool fires
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m128:22[22m[39m
+    [90m126| [39m
+    [90m127| [39m  [34mit[39m([32m'overplanning resets when a write/edit tool fires'[39m[33m,[39m () [33m=>[39m {
+    [90m128| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m()[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m129| [39m    detector[33m.[39m[34mrecordReadOnlyTool[39m()[33m;[39m
+    [90m130| [39m    detector[33m.[39m[34mrecordReadOnlyTool[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mscenario 3: threshold override raises consecutive_failures_3 from 3 to 10
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m152:22[22m[39m
+    [90m150| [39m
+    [90m151| [39m  [34mit[39m([32m'scenario 3: threshold override raises consecutive_failures_3 fro[39m…
+    [90m152| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m({ maxConsecutiveFailures[33m:[39m [34m10[39m })[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m153| [39m
+    [90m154| [39m    [90m// 5 consecutive failures — well below the override of 10 — should[39m…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mscenario 5: iteration_cap fires when iterations exhaust the configured maximum
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m175:22[22m[39m
+    [90m173| [39m
+    [90m174| [39m  [34mit[39m([32m'scenario 5: iteration_cap fires when iterations exhaust the conf[39m…
+    [90m175| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m({ maxIterations[33m:[39m [34m5[39m })[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m176| [39m
+    [90m177| [39m    [90m// Iterations 1..4 accumulate.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mscenario 6: tool_calls_quota fires when tool-call count exhausts the configured maximum
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m192:22[22m[39m
+    [90m190| [39m
+    [90m191| [39m  [34mit[39m([32m'scenario 6: tool_calls_quota fires when tool-call count exhausts[39m…
+    [90m192| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m({ maxToolCalls[33m:[39m [34m3[39m })[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m193| [39m
+    [90m194| [39m    [34mexpect[39m(detector[33m.[39m[34mrecordToolCall[39m())[33m.[39m[34mtoBeNull[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mscenario 7: manualHalt() emits a halt verdict with trigger="manual" and the caller-supplied reason
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m206:22[22m[39m
+    [90m204| [39m
+    [90m205| [39m  [34mit[39m([32m'scenario 7: manualHalt() emits a halt verdict with trigger="manu[39m…
+    [90m206| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m()[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m207| [39m    [35mconst[39m verdict[33m:[39m [33mRunHaltedVerdict[39m [33m=[39m detector[33m.[39m[34mmanualHalt[39m([32m'operator pr[39m…
+    [90m208| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/9]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-018-failure-pattern-halt.test.ts[2m > [22mF-018 failure-pattern-halt[2m > [22mverdict carries optional run_id and agent_id correlation triple when provided
+[31m[1mTypeError[22m: HaltDetector is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-018-failure-pattern-halt.test.ts:[2m217:22[22m[39m
+    [90m215| [39m
+    [90m216| [39m  [34mit[39m([32m'verdict carries optional run_id and agent_id correlation triple [39m…
+    [90m217| [39m    [35mconst[39m detector [33m=[39m [35mnew[39m [33mHaltDetector[39m()[33m;[39m
+    [90m   | [39m                     [31m^[39m
+    [90m218| [39m    [35mconst[39m verdict [33m=[39m detector[33m.[39m[34mmanualHalt[39m([32m'test'[39m[33m,[39m {
+    [90m219| [39m      run_id[33m:[39m [32m'run-uuid-v7'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/9]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m9 failed[39m[22m[90m (9)[39m
+[2m   Start at [22m 00:06:39
+[2m   Duration [22m 2.00s[2m (transform 155ms, setup 0ms, collect 165ms, tests 15ms, environment 0ms, prepare 677ms)[22m
+

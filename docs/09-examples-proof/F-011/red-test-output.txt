@@ -1,0 +1,115 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "tests/unit/F-011-copilot-backend.test.ts"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-011-copilot-backend.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[90m 12[2mms[22m[39m
+[31m   [31m×[31m F-011 copilot-backend[2m > [22mscenario 1: CopilotBackend implements IBackendProvider with origin="copilot"[90m 7[2mms[22m[31m[39m
+[31m     → CopilotBackend is not a constructor[39m
+[31m   [31m×[31m F-011 copilot-backend[2m > [22mscenario 2: startSession returns a sessionId tagged with the copilot- prefix[90m 1[2mms[22m[31m[39m
+[31m     → CopilotBackend is not a constructor[39m
+[31m   [31m×[31m F-011 copilot-backend[2m > [22mscenario 3: sendPrompt streams a token event (with model id) then a finish event[90m 1[2mms[22m[31m[39m
+[31m     → CopilotBackend is not a constructor[39m
+[31m   [31m×[31m F-011 copilot-backend[2m > [22mscenario 4: sendPrompt on unknown session id throws[90m 0[2mms[22m[31m[39m
+[31m     → CopilotBackend is not a constructor[39m
+[31m   [31m×[31m F-011 copilot-backend[2m > [22mscenario 5: halt prevents further token responses (yields finish/error)[90m 1[2mms[22m[31m[39m
+[31m     → CopilotBackend is not a constructor[39m
+[31m   [31m×[31m F-011 copilot-backend[2m > [22mscenario 6: stopSession removes the session (subsequent sendPrompt throws)[90m 0[2mms[22m[31m[39m
+[31m     → CopilotBackend is not a constructor[39m
+[31m   [31m×[31m F-011 copilot-backend[2m > [22mscenario 7: halt is idempotent (calling twice on same session is a no-op)[90m 1[2mms[22m[31m[39m
+[31m     → CopilotBackend is not a constructor[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 7 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-011-copilot-backend.test.ts[2m > [22mF-011 copilot-backend[2m > [22mscenario 1: CopilotBackend implements IBackendProvider with origin="copilot"
+[31m[1mTypeError[22m: CopilotBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-011-copilot-backend.test.ts:[2m85:39[22m[39m
+    [90m 83| [39m[34mdescribe[39m([32m'F-011 copilot-backend'[39m[33m,[39m () [33m=>[39m {
+    [90m 84| [39m  [34mit[39m([32m'scenario 1: CopilotBackend implements IBackendProvider with orig[39m…
+    [90m 85| [39m    [35mconst[39m backend[33m:[39m [33mIBackendProvider[39m [33m=[39m [35mnew[39m [33mCopilotBackend[39m()[33m;[39m
+    [90m   | [39m                                      [31m^[39m
+    [90m 86| [39m    [34mexpect[39m(backend[33m.[39morigin)[33m.[39m[34mtoBe[39m([32m'copilot'[39m)[33m;[39m
+    [90m 87| [39m    [90m// Structural witness — TS2420 at compile time if any required met[39m…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-011-copilot-backend.test.ts[2m > [22mF-011 copilot-backend[2m > [22mscenario 2: startSession returns a sessionId tagged with the copilot- prefix
+[31m[1mTypeError[22m: CopilotBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-011-copilot-backend.test.ts:[2m95:21[22m[39m
+    [90m 93| [39m
+    [90m 94| [39m  [34mit[39m([32m'scenario 2: startSession returns a sessionId tagged with the cop[39m…
+    [90m 95| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mCopilotBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m 96| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m 97| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-011-copilot-backend.test.ts[2m > [22mF-011 copilot-backend[2m > [22mscenario 3: sendPrompt streams a token event (with model id) then a finish event
+[31m[1mTypeError[22m: CopilotBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-011-copilot-backend.test.ts:[2m106:21[22m[39m
+    [90m104| [39m
+    [90m105| [39m  [34mit[39m([32m'scenario 3: sendPrompt streams a token event (with model id) the[39m…
+    [90m106| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mCopilotBackend[39m([32m'gpt-5'[39m)[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m107| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m108| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-011-copilot-backend.test.ts[2m > [22mF-011 copilot-backend[2m > [22mscenario 4: sendPrompt on unknown session id throws
+[31m[1mTypeError[22m: CopilotBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-011-copilot-backend.test.ts:[2m133:21[22m[39m
+    [90m131| [39m
+    [90m132| [39m  [34mit[39m([32m'scenario 4: sendPrompt on unknown session id throws'[39m[33m,[39m [35masync[39m () [33m=[39m…
+    [90m133| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mCopilotBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m134| [39m    [35mawait[39m [34mexpect[39m([35masync[39m () [33m=>[39m {
+    [90m135| [39m      [90m// eslint-disable-next-line @typescript-eslint/no-unused-vars[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-011-copilot-backend.test.ts[2m > [22mF-011 copilot-backend[2m > [22mscenario 5: halt prevents further token responses (yields finish/error)
+[31m[1mTypeError[22m: CopilotBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-011-copilot-backend.test.ts:[2m143:21[22m[39m
+    [90m141| [39m
+    [90m142| [39m  [34mit[39m([32m'scenario 5: halt prevents further token responses (yields finish[39m…
+    [90m143| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mCopilotBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m144| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m145| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-011-copilot-backend.test.ts[2m > [22mF-011 copilot-backend[2m > [22mscenario 6: stopSession removes the session (subsequent sendPrompt throws)
+[31m[1mTypeError[22m: CopilotBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-011-copilot-backend.test.ts:[2m173:21[22m[39m
+    [90m171| [39m
+    [90m172| [39m  [34mit[39m([32m'scenario 6: stopSession removes the session (subsequent sendProm[39m…
+    [90m173| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mCopilotBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m174| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m175| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-011-copilot-backend.test.ts[2m > [22mF-011 copilot-backend[2m > [22mscenario 7: halt is idempotent (calling twice on same session is a no-op)
+[31m[1mTypeError[22m: CopilotBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-011-copilot-backend.test.ts:[2m189:21[22m[39m
+    [90m187| [39m
+    [90m188| [39m  [34mit[39m([32m'scenario 7: halt is idempotent (calling twice on same session is[39m…
+    [90m189| [39m    [35mconst[39m backend [33m=[39m [35mnew[39m [33mCopilotBackend[39m()[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m190| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m191| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m7 failed[39m[22m[90m (7)[39m
+[2m   Start at [22m 09:08:56
+[2m   Duration [22m 3.52s[2m (transform 1.26s, setup 0ms, collect 1.33s, tests 12ms, environment 0ms, prepare 1.04s)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

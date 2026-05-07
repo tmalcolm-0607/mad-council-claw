@@ -14,15 +14,29 @@ Per memory entry `feedback_documented_rules_need_hooks.md`: "Documented rules wi
 
 | Rule path | Promotion target | # times observed | Source observations | Confidence | Blocking |
 |---|---|---|---|---|---|
-
-_seed entries to be filled by Wave 2+ from `[A:rules-without-hooks-audit.md]` review — top-5 ranked candidates from prior session belong here once we copy them across_
+| `.claude/rules/no-top-n-capping.md` | already a PreToolUse:Task hook (`detect-top-n-capping.js`) — but the audit found multiple subagent prompts still missing the sentinel | hook exists; recurrence is in human-authored prompts that bypass the hook by being authored in a session-tool that doesn't run hooks | wave-001 across all lanes — every lane subagent prompt had to include the sentinel verbatim per CLAUDE.md | HIGH | extend hook to detect prompts authored in `.mad/scratch/`, not just Task spawns |
+| `.claude/rules/no-silent-deferrals.md` | PostToolUse hook (`content-scan-deferrals.js`) exists; but kept being violated in iter-41 collab-engine session | hook exists but the override `--force-raw` and self-trigger exemptions can mask hits | wave-001 lane-d (canonical-e v1.5 deferrals enumerated; some were sanctioned, others were silent) | HIGH | hook needs stricter exemption-list and clearer "what's exempt" doc |
+| `.claude/rules/canonical-skill-only.md` | PreToolUse:Write\|Edit hook (`validate-mad-pipeline.js`) exists | hook exists; iter-41 closed the Edit loophole | wave-001 lane-d (kit inventory confirmed hook coverage) | HIGH (hook live) | none; this one is closed |
+| `.claude/rules/canonical-artifact-frontmatter.md` | PostToolUse hook (`enforce-skill-canonical-marker.js`) exists | hook exists | wave-001 lane-d kit inventory | HIGH (hook live) | none; this one is closed |
+| `.claude/rules/scope-discipline.md` | NO hook today — recurring violation pattern: "out of scope without backlog entry" | the iter-41 spiral was driven by silent scope-drift; user-mandated fix was to add backlog rows + commit-time enforcement | wave-001 lane-d + memory `feedback_create_skill_when_pitfalls_repeat.md` | HIGH | hook needed: PreToolUse:Bash on `git commit` — block if any new file under specs/ lacks a backlog row OR a "scope-discipline" rationale in the commit message |
+| `.claude/rules/loop-cadence-discipline.md` | NO hook today — would catch `delaySeconds` in forbidden zone (280-1199s) | recurring drift: "let's check every 10 minutes" pattern lands in forbidden zone | wave-001 lane-zero implicit (cron cadence) + memory `feedback_skill_speed_expectations.md` | MEDIUM | hook needed: PreToolUse:ScheduleWakeup that rejects forbidden-zone delays; SDK extension required (no hook surface today) — backlog as feature, not rule |
+| `.claude/rules/autonomous-loop-discipline.md` | NO hook today — orchestrator-discipline rule (no mechanical surface) | drift: orchestrator pauses for permission between iters | session 6ac2f083 (in CLAUDE.md) | MEDIUM | not hook-able; rule-only enforcement; codify in cron prompt template |
+| `.claude/rules/loop-stop-language-discipline.md` | NO hook today — output-content rule | drift: "Final state" / "loop complete" language used mid-loop | session 6ac2f083 | MEDIUM | hook needed: PostToolUse on assistant-final-message that scans for forbidden phrasings; SDK has no such hook today |
+| `.claude/rules/no-invented-constraints.md` | NO hook today | drift: invented "5M-token soft cap" that user never set | session 249a59a7 | MEDIUM | hook needed: scan summaries for budget/cap framing; not currently hook-able |
+| `.claude/rules/orchestration.md` | PreToolUse hook (`enforce-orchestration.js`) exists | hook exists; blocks main-thread Read on code files | wave-001 lane-d kit inventory | HIGH (hook live) | none; this one is closed |
+| `.claude/rules/verification-protocol.md` | NO hook today — "FETCH BEFORE CITE" + "ACTUAL BEFORE PRESENT" rules | drift: claimed test results without running them; cited files without reading | memory `feedback_no_speculation.md` | MEDIUM | hook concept: scan assistant message for "tests pass" / "build succeeds" / "as noted in `<file>`" without preceding Bash dotnet test / Read of `<file>` in prior turns; not currently hook-able |
+| `.claude/rules/dangerous-operations-policy.md` | partial PreToolUse hooks (`pre-bash-validate.js` blocks some destructive git ops) | recurring drift: `az` / `gh` destructive ops not always gated | session 6ac2f083 + multiple LENS deploy sessions | HIGH | extend `pre-bash-validate.js` to also block `az group delete`, `az resource delete`, `gh repo delete` without explicit consent |
 
 ## Top-5 from prior session (per `[A:rules-without-hooks-audit.md]`)
 
-> _to be reviewed and copied into the entries table above by Wave 2; for now this header pre-claims the promotion-candidate slots_
+> _Per session 6ac2f083 + 249a59a7 + collab-engine iter-1-41 retro_
 
-1. _slot 1_
-2. _slot 2_
-3. _slot 3_
-4. _slot 4_
-5. _slot 5_
+1. **`scope-discipline.md`** — 12+ recurrence; HIGH promotion priority; commit-time hook needed
+2. **`no-silent-deferrals.md`** — 8+ recurrence; HIGH promotion priority; existing hook needs exemption-list tightening
+3. **`loop-stop-language-discipline.md`** — 6+ recurrence (mostly mid-loop); MEDIUM; SDK gap (no assistant-message hook surface)
+4. **`no-invented-constraints.md`** — 4+ recurrence; MEDIUM; SDK gap
+5. **`verification-protocol.md` ACTUAL BEFORE PRESENT** — recurring across LENS deploy sessions; HIGH-MEDIUM; tooling gap (would need cross-message-history scan)
+
+## Wave-2 / Lane D update
+
+Per Lane D wave-1 finding "5 anti-pattern hooks are LOAD-BEARING" — these promotion candidates extend that list. The five top candidates above represent the rules most likely to recur if the engine is rebuilt without re-applying. **F-22..F-X engine telemetry tests should explicitly exercise each rule's triggering condition** to catch regression.

@@ -1,0 +1,117 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-014-pre-close-retro-signal.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m7 failed[39m[2m)[22m[90m 16[2mms[22m[39m
+[31m   [31m×[31m F-014 pre-close-retro-signal[2m > [22mscenario 1: closeSession with valid retro returns ok and accepts outcome=completed[90m 5[2mms[22m[31m[39m
+[31m     → closeSession is not a function[39m
+[31m   [31m×[31m F-014 pre-close-retro-signal[2m > [22mscenario 2: closeSession with no retro rejects with RETRO_MISSING[90m 5[2mms[22m[31m[39m
+[31m     → expected [Function] to throw error matching /RETRO_MISSING/ but got 'closeSession is…'[39m
+[31m   [31m×[31m F-014 pre-close-retro-signal[2m > [22mscenario 3a: closeSession with retro missing one Likert axis rejects[90m 1[2mms[22m[31m[39m
+[31m     → The instanceof assertion needs a constructor but undefined was given.[39m
+[31m   [31m×[31m F-014 pre-close-retro-signal[2m > [22mscenario 3b: closeSession with retro missing one pattern field rejects[90m 1[2mms[22m[31m[39m
+[31m     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string[39m
+[31m   [31m×[31m F-014 pre-close-retro-signal[2m > [22mscenario 3c: closeSession with Likert score out of 1-5 range rejects[90m 1[2mms[22m[31m[39m
+[31m     → Cannot read properties of undefined (reading 'join')[39m
+[31m   [31m×[31m F-014 pre-close-retro-signal[2m > [22mhalted-by carve-out: outcome=halted_by_kill_switch requires trigger_evidence_sha256[90m 1[2mms[22m[31m[39m
+[31m     → the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string[39m
+[31m   [31m×[31m F-014 pre-close-retro-signal[2m > [22mhalted-by carve-out: halted retro with trigger_evidence_sha256 succeeds[90m 0[2mms[22m[31m[39m
+[31m     → closeSession is not a function[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 7 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-014-pre-close-retro-signal.test.ts[2m > [22mF-014 pre-close-retro-signal[2m > [22mscenario 1: closeSession with valid retro returns ok and accepts outcome=completed
+[31m[1mTypeError[22m: closeSession is not a function[39m
+[36m [2m❯[22m tests/unit/F-014-pre-close-retro-signal.test.ts:[2m58:20[22m[39m
+    [90m 56| [39m
+    [90m 57| [39m  [34mit[39m([32m'scenario 1: closeSession with valid retro returns ok and accepts[39m…
+    [90m 58| [39m    [35mconst[39m result [33m=[39m [34mcloseSession[39m([34mvalidRetro[39m())[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m 59| [39m    [34mexpect[39m(result[33m.[39mok)[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m 60| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-014-pre-close-retro-signal.test.ts[2m > [22mF-014 pre-close-retro-signal[2m > [22mscenario 2: closeSession with no retro rejects with RETRO_MISSING
+[31m[1mAssertionError[22m: expected [Function] to throw error matching /RETRO_MISSING/ but got 'closeSession is…'[39m
+
+[32m- Expected:[39m 
+/RETRO_MISSING/
+
+[31m+ Received:[39m 
+"__vite_ssr_import_1__.closeSession is not a function"
+
+[36m [2m❯[22m tests/unit/F-014-pre-close-retro-signal.test.ts:[2m64:38[22m[39m
+    [90m 62| [39m  [34mit[39m([32m'scenario 2: closeSession with no retro rejects with RETRO_MISSIN[39m…
+    [90m 63| [39m    [34mexpect[39m(() [33m=>[39m [34mcloseSession[39m([35mnull[39m))[33m.[39m[34mtoThrow[39m([33mRetroMissingError[39m)[33m;[39m
+    [90m 64| [39m    [34mexpect[39m(() [33m=>[39m [34mcloseSession[39m([35mnull[39m))[33m.[39m[34mtoThrow[39m([36m/RETRO_MISSING/[39m)[33m;[39m
+    [90m   | [39m                                     [31m^[39m
+    [90m 65| [39m  })[33m;[39m
+    [90m 66| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-014-pre-close-retro-signal.test.ts[2m > [22mF-014 pre-close-retro-signal[2m > [22mscenario 3a: closeSession with retro missing one Likert axis rejects
+[31m[1mAssertionError[22m: The instanceof assertion needs a constructor but undefined was given.[39m
+[36m [2m❯[22m tests/unit/F-014-pre-close-retro-signal.test.ts:[2m74:17[22m[39m
+    [90m 72| [39m      [34mcloseSession[39m(partial)[33m;[39m
+    [90m 73| [39m    } [35mcatch[39m (e) {
+    [90m 74| [39m      [34mexpect[39m(e)[33m.[39m[34mtoBeInstanceOf[39m([33mRetroMissingError[39m)[33m;[39m
+    [90m   | [39m                [31m^[39m
+    [90m 75| [39m      [34mexpect[39m((e [35mas[39m [33mRetroMissingError[39m)[33m.[39mmissingFields)[33m.[39m[34mtoContain[39m([32m'tsg_al[39m…
+    [90m 76| [39m    }
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-014-pre-close-retro-signal.test.ts[2m > [22mF-014 pre-close-retro-signal[2m > [22mscenario 3b: closeSession with retro missing one pattern field rejects
+[31m[1mAssertionError[22m: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string[39m
+[36m [2m❯[22m tests/unit/F-014-pre-close-retro-signal.test.ts:[2m86:54[22m[39m
+    [90m 84| [39m      [34mcloseSession[39m(partial)[33m;[39m
+    [90m 85| [39m    } [35mcatch[39m (e) {
+    [90m 86| [39m      [34mexpect[39m((e [35mas[39m [33mRetroMissingError[39m)[33m.[39mmissingFields)[33m.[39m[34mtoContain[39m([32m'what_w[39m…
+    [90m   | [39m                                                     [31m^[39m
+    [90m 87| [39m    }
+    [90m 88| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-014-pre-close-retro-signal.test.ts[2m > [22mF-014 pre-close-retro-signal[2m > [22mscenario 3c: closeSession with Likert score out of 1-5 range rejects
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'join')[39m
+[36m [2m❯[22m tests/unit/F-014-pre-close-retro-signal.test.ts:[2m96:58[22m[39m
+    [90m 94| [39m      [34mcloseSession[39m(oor)[33m;[39m
+    [90m 95| [39m    } [35mcatch[39m (e) {
+    [90m 96| [39m      [35mconst[39m msg [33m=[39m (e [35mas[39m [33mRetroMissingError[39m)[33m.[39mmissingFields[33m.[39m[34mjoin[39m([32m','[39m)[33m;[39m
+    [90m   | [39m                                                         [31m^[39m
+    [90m 97| [39m      [34mexpect[39m(msg)[33m.[39m[34mtoMatch[39m([36m/accuracy/[39m)[33m;[39m
+    [90m 98| [39m    }
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-014-pre-close-retro-signal.test.ts[2m > [22mF-014 pre-close-retro-signal[2m > [22mhalted-by carve-out: outcome=halted_by_kill_switch requires trigger_evidence_sha256
+[31m[1mAssertionError[22m: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string[39m
+[36m [2m❯[22m tests/unit/F-014-pre-close-retro-signal.test.ts:[2m117:54[22m[39m
+    [90m115| [39m      [34mcloseSession[39m(halted)[33m;[39m
+    [90m116| [39m    } [35mcatch[39m (e) {
+    [90m117| [39m      [34mexpect[39m((e [35mas[39m [33mRetroMissingError[39m)[33m.[39mmissingFields)[33m.[39m[34mtoContain[39m(
+    [90m   | [39m                                                     [31m^[39m
+    [90m118| [39m        [32m'trigger_evidence_sha256'[39m[33m,[39m
+    [90m119| [39m      )[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/7]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-014-pre-close-retro-signal.test.ts[2m > [22mF-014 pre-close-retro-signal[2m > [22mhalted-by carve-out: halted retro with trigger_evidence_sha256 succeeds
+[31m[1mTypeError[22m: closeSession is not a function[39m
+[36m [2m❯[22m tests/unit/F-014-pre-close-retro-signal.test.ts:[2m129:20[22m[39m
+    [90m127| [39m      trigger_evidence_sha256[33m:[39m [32m'a'[39m[33m.[39m[34mrepeat[39m([34m64[39m)[33m,[39m
+    [90m128| [39m    }[33m;[39m
+    [90m129| [39m    [35mconst[39m result [33m=[39m [34mcloseSession[39m(halted)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m130| [39m    [34mexpect[39m(result[33m.[39mok)[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m131| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/7]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m7 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (8)[39m
+[2m   Start at [22m 23:32:07
+[2m   Duration [22m 744ms[2m (transform 62ms, setup 0ms, collect 64ms, tests 16ms, environment 0ms, prepare 263ms)[22m
+

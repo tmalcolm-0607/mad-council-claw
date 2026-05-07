@@ -1,0 +1,124 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-019-cost-ledger.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[90m 15[2mms[22m[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mscenario 4: append entries gain sequential seq starting at 0 and ISO-8601 timestamp[90m 9[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mscenario 1: usage:{input:1000, output:500} for claude-opus-4-7 → row with cost_usd from caller-supplied estimate[90m 1[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mscenario 5: identity stamps (run_id, agent_id) are present on every row[90m 1[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mscenario 2: aggregations across 50 rows / 3 agents — exact integer-token sums + 4-decimal dollars[90m 1[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mscenario 3: observable-only — logging $1000 cost does NOT halt or warn (no-invented-constraints)[90m 1[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mscenario 6: failure_mode is optional — undefined on success, set on failure[90m 1[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mscenario 7: failureRate computes correctly across mixed success/failure rows[90m 1[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+[31m   [31m×[31m F-019 cost-ledger[2m > [22mgetEntries returns a readonly view; CostEntry stamps preserve all fields[90m 1[2mms[22m[31m[39m
+[31m     → CostLedger is not a constructor[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 8 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mscenario 4: append entries gain sequential seq starting at 0 and ISO-8601 timestamp
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m65:20[22m[39m
+    [90m 63| [39m[34mdescribe[39m([32m'F-019 cost-ledger'[39m[33m,[39m () [33m=>[39m {
+    [90m 64| [39m  [34mit[39m([32m'scenario 4: append entries gain sequential seq starting at 0 and[39m…
+    [90m 65| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m 66| [39m
+    [90m 67| [39m    [35mconst[39m entry1 [33m=[39m ledger[33m.[39m[34mappend[39m({
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mscenario 1: usage:{input:1000, output:500} for claude-opus-4-7 → row with cost_usd from caller-supplied estimate
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m94:20[22m[39m
+    [90m 92| [39m
+    [90m 93| [39m  [34mit[39m([32m'scenario 1: usage:{input:1000, output:500} for claude-opus-4-7 →[39m…
+    [90m 94| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m 95| [39m    [90m// Caller-supplied usd_estimate (the price-table integration is F-[39m…
+    [90m 96| [39m    [90m// future job per ledger §Out of scope; this test validates the ro[39m…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mscenario 5: identity stamps (run_id, agent_id) are present on every row
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m117:20[22m[39m
+    [90m115| [39m
+    [90m116| [39m  [34mit[39m([32m'scenario 5: identity stamps (run_id, agent_id) are present on ev[39m…
+    [90m117| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m118| [39m    ledger[33m.[39m[34mappend[39m({
+    [90m119| [39m      agent_id[33m:[39m [32m'agent-A'[39m[33m,[39m run_id[33m:[39m [32m'run-1'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mscenario 2: aggregations across 50 rows / 3 agents — exact integer-token sums + 4-decimal dollars
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m140:20[22m[39m
+    [90m138| [39m
+    [90m139| [39m  [34mit[39m([32m'scenario 2: aggregations across 50 rows / 3 agents — exact integ[39m…
+    [90m140| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m141| [39m    [35mconst[39m agents [33m=[39m [[32m'agent-A'[39m[33m,[39m [32m'agent-B'[39m[33m,[39m [32m'agent-C'[39m][33m;[39m
+    [90m142| [39m    [90m// 50 rows, distribute round-robin across the 3 agents.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mscenario 3: observable-only — logging $1000 cost does NOT halt or warn (no-invented-constraints)
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m171:20[22m[39m
+    [90m169| [39m
+    [90m170| [39m  [34mit[39m([32m'scenario 3: observable-only — logging $1000 cost does NOT halt o[39m…
+    [90m171| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m172| [39m    [90m// Log a single $1000 entry — far above any reasonable real budget.[39m
+    [90m173| [39m    [35mconst[39m entry [33m=[39m ledger[33m.[39m[34mappend[39m({
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mscenario 6: failure_mode is optional — undefined on success, set on failure
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m197:20[22m[39m
+    [90m195| [39m
+    [90m196| [39m  [34mit[39m([32m'scenario 6: failure_mode is optional — undefined on success, set[39m…
+    [90m197| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m198| [39m    [35mconst[39m ok [33m=[39m ledger[33m.[39m[34mappend[39m({
+    [90m199| [39m      agent_id[33m:[39m [32m'agent-A'[39m[33m,[39m run_id[33m:[39m [32m'run-1'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mscenario 7: failureRate computes correctly across mixed success/failure rows
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m219:20[22m[39m
+    [90m217| [39m
+    [90m218| [39m  [34mit[39m([32m'scenario 7: failureRate computes correctly across mixed success/[39m…
+    [90m219| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m220| [39m    [90m// Empty ledger → 0 failure rate (not NaN).[39m
+    [90m221| [39m    [34mexpect[39m(ledger[33m.[39m[34mfailureRate[39m())[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-019-cost-ledger.test.ts[2m > [22mF-019 cost-ledger[2m > [22mgetEntries returns a readonly view; CostEntry stamps preserve all fields
+[31m[1mTypeError[22m: CostLedger is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-019-cost-ledger.test.ts:[2m247:20[22m[39m
+    [90m245| [39m
+    [90m246| [39m  [34mit[39m([32m'getEntries returns a readonly view; CostEntry stamps preserve al[39m…
+    [90m247| [39m    [35mconst[39m ledger [33m=[39m [35mnew[39m [33mCostLedger[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m248| [39m    ledger[33m.[39m[34mappend[39m({
+    [90m249| [39m      agent_id[33m:[39m [32m'agent-A'[39m[33m,[39m run_id[33m:[39m [32m'run-1'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m8 failed[39m[22m[90m (8)[39m
+[2m   Start at [22m 00:41:55
+[2m   Duration [22m 1.96s[2m (transform 121ms, setup 0ms, collect 137ms, tests 15ms, environment 0ms, prepare 602ms)[22m
+

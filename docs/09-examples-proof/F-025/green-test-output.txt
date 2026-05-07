@@ -1,0 +1,15 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "--run" "tests/unit/F-024-skip-on-overlap.test.ts" "tests/unit/F-025-idle-archival.test.ts"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [32m✓[39m tests/unit/F-024-skip-on-overlap.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 8[2mms[22m[39m
+ [32m✓[39m tests/unit/F-025-idle-archival.test.ts [2m([22m[2m8 tests[22m[2m)[22m[90m 10[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m2 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[32m16 passed[39m[22m[90m (16)[39m
+[2m   Start at [22m 12:53:35
+[2m   Duration [22m 1.29s[2m (transform 288ms, setup 0ms, collect 626ms, tests 18ms, environment 1ms, prepare 902ms)[22m
+

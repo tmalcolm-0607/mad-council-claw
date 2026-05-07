@@ -29,7 +29,7 @@ status: living
 
 | Milestone | Theme | Span | Total | RED | GREEN | LOCKED | DEFERRED | PLANNED |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| M0 | Project bootstrap | F-001..F-008 | 8 | 3 | 1 | 4 | 0 | 0 |
+| M0 | Project bootstrap | F-001..F-008 | 8 | 2 | 1 | 5 | 0 | 0 |
 | M1 | Pluggable backend | F-009..F-013 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M2 | Governance triad | F-014..F-022 | 9 | 0 | 9 | 0 | 0 | 0 |
 | M3 | Cron / heartbeat | F-023..F-027 | 5 | 5 | 0 | 0 | 0 | 0 |
@@ -50,7 +50,7 @@ status: living
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 3 | 0 | 0 | 0 | 0 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M19 | Deferred (user-acknowledged tracking row) | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **112** | **10** | **4** | **18** | **0** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **111** | **10** | **5** | **18** | **0** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
 
@@ -64,6 +64,10 @@ status: living
 
 > Wave-12 / Lane B transition note: F-017 (pii-redaction-egress) flipped RED → GREEN. New `packages/engine-core/src/redaction.ts` (~104 LOC) lands the `redact()` + `redactObject()` helper primitives — pattern-based PII redactor for engine egress paths (audit-log writes, telemetry exports, outbound LLM-call prompts) with 4 built-in categories (emails, phones, GUIDs, home paths) + `customPatterns` for project-specific tokens. Order-of-operations (emails → GUIDs → phones → home paths → custom) prevents GUID-vs-phone false-match. Reject-on-detect orchestration (ledger's stricter `PII_DETECTED: <category>` semantics), F-015 audit-log emission tie-in, M16 telemetry-export integration, M1 LLM-call integration, and adversarial-eval lane deferred per `rules/no-silent-deferrals.md`. M2 row 1R + 8G → 0R + 9G; TOTAL 113R / 9G → 112R / 10G. **M2 governance triad now fully RED-cleared.**
 
+> Wave-13 / Lane A transition note: **F-021 finalization** (deferred from wave-12 / lane-a). No row state change — F-021 is already 🟢 GREEN at wave-12 HEAD via commits `8d79b1f` (RED test stub) + `226acaa` (GREEN impl). Lane finalizes the deferred docs + proof artifacts that the wave-12 / lane-a ledger commit (intended SHA `395b79b`) failed to land due to the pre-commit-hook subject-rerouting pathology (commit `395b79b` actually landed F-017 redaction files under the F-021 ledger subject). This lane lands: F-021 ledger frontmatter flip (status: red → green + status-history append + Implementation notes section), `docs/09-examples-proof/F-021/{red,green}-test-output.txt` proof artifacts, wave-13 confidence-ledger entries, and this transition note. M2 row 0R + 9G unchanged; TOTAL 112R / 10G / 4L unchanged. Full suite at finalization time: 94/94 PASS across 14 test files (no regressions vs wave-12 / lane-b checkpoint).
+
+> Wave-13 / Lane B transition note: **F-005 RED → GREEN** + **F-007 GREEN → LOCKED** (paired flip in same lane). F-005 deps-pinning lands `tests/node/F-005-deps-pinning.test.ts` (4 tests; root + workspace package.json exact-pin sweep, lockfile presence, engines.node specified) — RED captured (5 `^`-prefixed devDeps), root `package.json` updated to exact pins (vitest 2.1.9, @vitest/ui 2.1.9, happy-dom 15.11.7, typescript 5.9.3, @types/node 20.19.39) + `packageManager: pnpm@9.0.0` declared, `pnpm-lock.yaml` regenerated with exact-pin specifiers, GREEN captured (4/4 PASS); package-manager choice (npm → pnpm) recorded in F-005 ledger §Implementation notes (transfers F-005 intent: committed lockfile + reproducible install + frozen-lockfile install path). F-007 ipc-contract-scaffold council review at `docs/05-design-reviews/council-reviews/F-007-ipc-contract-scaffold-review.md` verdict ACCEPT (median confidence per Advocate / Skeptic / Architect lenses; 0 CRITICAL / 0 MAJOR; scaffold-shape contract only, M5 integration scenarios deferred per F-007 ledger). M0 row 3R + 1G + 4L → 2R + 1G + 5L; TOTAL 112R + 10G + 4L → 111R + 10G + 5L. **Fifth LOCKED transition in the repo** (after F-001 wave-11, F-002 + F-006 + F-008 wave-12). Full suite at GREEN time: 98/98 across 15 test files (was 94/94 across 14 pre-F-005).
+
 ## Per-milestone detail
 
 ### M0 — Project bootstrap
@@ -76,9 +80,9 @@ status: living
 | F-002 | per-agent-identity-runid | 🔒 LOCKED | `tests/unit/F-002-per-agent-identity-runid.test.ts` (3/3 PASS); council review verdict ACCEPT (median 90) — wave-12 / lane-d |
 | F-003 | repo-scaffolding | 🔴 RED | TBD |
 | F-004 | vitest-playwright-config | 🔴 RED | TBD |
-| F-005 | deps-pinning | 🔴 RED | TBD |
+| F-005 | deps-pinning | 🟢 GREEN | `tests/node/F-005-deps-pinning.test.ts` (4/4 PASS) — wave-13/lane-b flip; root + workspace package.json exact-pin sweep + lockfile presence + engines.node check; package-manager choice (npm → pnpm) recorded in §Implementation notes (transfers F-005 intent: committed lockfile + reproducible-install discipline); cross-OS byte-identity + drift-fails-CI deferred to M16 per `no-silent-deferrals.md` |
 | F-006 | logging-pipeline | 🔒 LOCKED | `tests/unit/F-006-logging-pipeline.test.ts` (4/4 PASS); council review verdict ACCEPT (median 86) — wave-12 / lane-d |
-| F-007 | ipc-contract-scaffold | 🟢 GREEN | `tests/unit/F-007-ipc-contract-scaffold.test.ts` (3/3 PASS) — wave-11/lane-a flip; scaffold-shape contract; M5 integration scenarios deferred |
+| F-007 | ipc-contract-scaffold | 🔒 LOCKED | `tests/unit/F-007-ipc-contract-scaffold.test.ts` (3/3 PASS); council review verdict ACCEPT — wave-13 / lane-b; scaffold-shape contract; M5 integration scenarios deferred |
 | F-008 | local-storage-layout | 🔒 LOCKED | `tests/node/F-008-local-storage-layout.test.ts` (6/6 PASS); council review verdict ACCEPT (median 88) — wave-12 / lane-d |
 
 ### M1 — Pluggable backend

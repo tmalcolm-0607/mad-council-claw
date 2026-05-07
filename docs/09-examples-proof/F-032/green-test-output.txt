@@ -1,0 +1,15 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [32m✓[39m tests/unit/F-032-window.test.ts[2m > [22mF-032 window[2m > [22mscenario 1: createMainWindow with no opts returns descriptor with default state + canonical security webPreferences
+ [32m✓[39m tests/unit/F-032-window.test.ts[2m > [22mF-032 window[2m > [22mscenario 2: createMainWindow with windowState restores last position + maximized state (ledger scenario 2)
+ [32m✓[39m tests/unit/F-032-window.test.ts[2m > [22mF-032 window[2m > [22mscenario 3: createMainWindow with custom preload path uses caller-supplied preload (preload-mediated IPC per F-007)
+ [32m✓[39m tests/unit/F-032-window.test.ts[2m > [22mF-032 window[2m > [22mscenario 4: createMainWindow declares IPC channel registrations the window will subscribe to via the F-007 bridge
+ [32m✓[39m tests/unit/F-032-window.test.ts[2m > [22mF-032 window[2m > [22mscenario 5: resolveWindowState merges restored state with defaults (partial state hydration)
+ [32m✓[39m tests/unit/F-032-window.test.ts[2m > [22mF-032 window[2m > [22mscenario 6: descriptor is a plain object — type witness + structural cloneability
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 15:58:37
+[2m   Duration [22m 978ms[2m (transform 85ms, setup 0ms, collect 92ms, tests 9ms, environment 0ms, prepare 388ms)[22m
+

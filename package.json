@@ -21,7 +21,8 @@
     "typescript": "5.9.3",
     "@types/node": "20.19.39",
     "@mad-council-claw/engine-core": "workspace:*",
-    "@mad-council-claw/cli": "workspace:*"
+    "@mad-council-claw/cli": "workspace:*",
+    "@mad-council-claw/desktop-shell": "workspace:*"
   },
   "engines": {
     "node": ">=20"

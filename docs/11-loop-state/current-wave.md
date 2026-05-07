@@ -74,3 +74,16 @@ Wave-12 starts when wave-11 lanes A + B + C close (Lane D self-closes on commit 
 > Summary of new backlog items: F-205 kit-bootstrap (M0, HIGH priority, soft-blocks F-206..F-210 + M19 reopen verdict); F-206..F-210 m-relay-main lift candidates (M9); F-D-018 activity-protocol-teams-outlook ledger authored from scratch (was RESERVED); M19 reopen-request package for F-D-008/F-D-010/F-D-018 (gated on /council-review verdict, which is itself gated on F-205 execution).
 >
 > Audit synthesis: `C:/Users/tonym/Repos/MAD - Clean/.mad/reports/mad-council-claw-audit-2026-05-07.md`
+
+---
+
+## Wave-history line (added 2026-05-07 by wave-18 lane D)
+
+Recent wave activity (this file's wave-11 / lane plan above is preserved as historical state; live progression is below):
+
+- **Wave 18 (in-flight, 2026-05-07)** — Lane A: F-023 cron-heartbeat + F-028 cli-entry LOCKED; Lane B: F-031 GREEN; Lane C: F-032 GREEN + M5 desktop-shell milestone opens; Lane D: cleanup + audit-finding followups (this lane).
+- **Wave 17 closed 2026-05-07** — see `wave-history/wave-017-tmp-stash-archive/README.md` for the cross-lane staging-race recovery debris archived this wave.
+- **Waves 12-16 closed** — see `wave-history/wave-{012..016}.md` (subset; backfill ongoing).
+- **Waves 1-10 closed** — see `wave-history/wave-{001..010}.md`.
+
+Test count at wave-18 lane-D HEAD: **225 / 225 PASS** across 31 vitest files.

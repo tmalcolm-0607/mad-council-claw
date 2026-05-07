@@ -905,3 +905,11 @@ Per user directive 2026-05-07: subagents must **NOT** use `git reset` (any flavo
 
 Every subagent prompt should include verbatim: **"DO NOT use git reset (any flavor) for staging-race recovery — use git restore --staged or selective add instead."**
 
+### Absolute paths in lane prompts
+
+Per user directive 2026-05-07: every lane prompt the orchestrator hands to a subagent MUST use **absolute paths** for any file reference (e.g. `C:/Users/tonym/Repos/mad-council-claw/docs/...`), never relative paths (`docs/...`, `./...`, `../...`). Rationale: subagent threads reset cwd between bash calls (per the kit's agent-tool guidance); relative paths break silently across calls and produce wrong-file edits or "file not found" errors that are misdiagnosed as logic bugs.
+
+Forward-slash form is preferred on Windows (`C:/Users/tonym/...`) over backslash (`C:\Users\tonym\...`) because forward-slashes survive Git Bash, PowerShell, and Node tooling without escaping (per `platform-conventions.md` "Git paths" rule). Both work; forward-slash is the default.
+
+Every subagent prompt for mad-council-claw waves should include verbatim: **"ALL FILE PATHS BELOW ARE ABSOLUTE — DO NOT use relative paths."**
+

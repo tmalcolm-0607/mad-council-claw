@@ -11,6 +11,9 @@ importers:
       '@mad-council-claw/cli':
         specifier: workspace:*
         version: link:packages/cli
+      '@mad-council-claw/desktop-shell':
+        specifier: workspace:*
+        version: link:packages/desktop-shell
       '@mad-council-claw/engine-core':
         specifier: workspace:*
         version: link:packages/engine-core

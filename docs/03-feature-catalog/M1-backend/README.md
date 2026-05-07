@@ -4,7 +4,7 @@ generated-by: hand-authored (wave-002 / lane-b)
 status: red
 milestone: M1
 short-slug: backend
-features: F-009..F-013
+features: F-009..F-013, F-124
 authored: 2026-05-07
 ---
 
@@ -21,6 +21,7 @@ Goal G7 (`foundational-plan.md`): "Both Anthropic SDK + GitHub Copilot SDK plugg
 | F-011 | copilot-sdk-provider | Concrete `IBackendProvider` wrapping the GitHub Copilot CLI/SDK, model selection, child-process cancel |
 | F-012 | backend-factory | `createBackendProvider(name, opts)` — single entry point; env-var override; engine-core forbidden from direct SDK import |
 | F-013 | event-normalization | `NormalizedEvent` discriminated union: every backend's native stream maps to the same shape |
+| F-124 | multi-tier-routing | Per-call routing across model tiers (`fast`/`balanced`/`deep`) within a single provider; rules-based default (D-4 OPEN); routing decisions audit + cost-ledger captured (NEW from frontier research) |
 
 ## Dependency DAG
 
@@ -44,7 +45,7 @@ F-001 (engine kernel from M0) ──→ F-009 (interface) ──→ F-013 (event
 ## Frontier-research follow-ups (NEW F-NNN candidates per `foundational-plan.md` § True Synthesis)
 
 These extend M1 in subsequent waves; not included in the M1 exit criteria:
-- F-124 — multi-tier-routing (Haiku for cheap calls, Opus for hard reasoning)
+- F-124 — multi-tier-routing (Haiku for cheap calls, Opus for hard reasoning) — ledger authored wave-012/lane-c (RED); D-4 closure pending before flip to GREEN
 
 ## Out of scope (tracked elsewhere)
 

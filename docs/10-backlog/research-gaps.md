@@ -33,3 +33,14 @@ Topics queued for upcoming waves. Items here become wave research lanes per QG2 
 ## Wave-2 / Lane D handoff note
 
 Per Lane A wave-1 loop-improvement #5 ("subgroup the 63 F-NNN candidates by engine-area so Lane B and Lane C produce orthogonal cross-cuts"): wave-3 Lane A should produce a "candidates-promotion priority list" — HIGH confidence + cross-topic convergence + low engine-implementation cost = promote first. The consolidation in `wave-001-new-fnnn-candidates-consolidated.md` is the seed for that priority list.
+
+## Wave-9 / Lane D update — additional gaps surfaced from Microsoft 2026 frontier deep-dive
+
+| ID | Topic | Source | Date | Confidence | Suggested next wave |
+|---|---|---|---|---|---|
+| RG-18 | TypeScript Foundry-hosted-runtime not documented; engine must use hybrid TS-control + Python-Foundry-worker IPC pattern. Bridge shape + IPC protocol unspecified. | `foundry-agent-service.md` § Hybrid pattern | 2026-05-07 | HIGH | wave-N (M15 packaging) lane: spec the IPC contract; close D-12 |
+| RG-19 | Microsoft Agent Framework TS bridge — no native port; 3 options (gRPC bridge / reimplement / skip) lack ROI comparison. | `agent-framework-typescript-bridge.md` § Bridge options | 2026-05-07 | HIGH | wave-N (M0/M2 council-review) close D-9 |
+| RG-20 | Brief-vs-repo source-file divergence: wave-9 lane-d brief named 5 source files that don't exist in repo; substantive content lives at different paths. Brief-generation skill needs `git ls-files` validation pre-flight. | wave-9 lane-d intake observation | 2026-05-07 | HIGH | wave-N kit improvement: extend brief-generation skill |
+| RG-21 | F-D-NNN namespace gap: F-D-018 → jump to F-D-127 in wave-9. Either renumber or treat F-D-127+ as "frontier-deferred" sub-namespace. | wave-9 lane-d allocation observation | 2026-05-07 | MEDIUM | wave-N consolidation lane: D-30 closure |
+| RG-22 | A2A v1.0 default-binding choice (HTTP+JSON vs JSON-RPC) is load-bearing for WorkIQ compat; not yet decided in engine spec. | `workiq-a2a-impl-patterns.md` § Migration cliffs | 2026-05-07 | HIGH | wave-N (M9) F-122 design phase; close D-31 |
+

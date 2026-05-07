@@ -4,7 +4,7 @@ generated-by: hand-authored (wave-003 / lane-a)
 status: red
 milestone: M4
 short-slug: headless-cli
-features: F-028..F-031
+features: F-028..F-031, F-122
 authored: 2026-05-07
 ---
 
@@ -20,6 +20,7 @@ The non-interactive surface (`foundational-plan.md` § Architecture, V:8). Exter
 | F-029 | subcommands | Canonical surface: `run start/status/halt/list`, `cron list/pause/resume/fires`, `audit query/verify`, `daemon start/stop/status`; non-interactive |
 | F-030 | json-output | `--format json` for single records, NDJSON for streaming; error envelopes go to stdout; sysexits.h conventions |
 | F-031 | daemon-mode | Long-lived background hosts cron + archival; IPC via local socket; PID-file singleton; graceful-shutdown <60s |
+| F-122 | a2a-endpoint-exposure | A2A v1.0 HTTP+JSON endpoint (`mad-council a2a serve`); `/.well-known/agent-card.json`; default-off + 127.0.0.1-only; cross-org consent gate (NEW from frontier research) |
 
 ## Dependency DAG
 

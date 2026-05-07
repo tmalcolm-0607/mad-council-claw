@@ -48,13 +48,15 @@ status: living
 | M16 | Telemetry | F-110..F-113 | 4 | 4 | 0 | 0 | 0 | 0 |
 | M17 | Documentation | F-114..F-118 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 3 | 0 | 0 | 0 | 0 |
-| **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 0 | 0 | 0 | 0 | 5 |
+| **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M19 | Deferred (user-acknowledged tracking row) | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **109** | **12** | **0** | **18** | **5** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **114** | **12** | **0** | **18** | **0** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
 
 > Wave-10 transition note (closing summary `docs/11-loop-state/wave-history/wave-010.md`): F-008 (M0), F-019 / F-020 / F-022 (M2) flipped RED → GREEN. Wave-11 in flight: Lane A (F-007 ipc-contract-scaffold), Lane B (F-001 GREEN → LOCKED candidate via post-impl council review), Lane C (M5 desktop-shell ledger refresh + RED→GREEN candidate), Lane D (this lane — roadmap freshness).
+
+> Wave-12 / Lane C transition note: F-122..F-126 (the 5 frontier-research candidates that had been PLANNED for several waves) flipped PLANNED → RED. Ledgers now exist in their respective milestone directories: F-122 (M4), F-123 (M16), F-124 (M1), F-125 (M7), F-126 (M8). Provenance traces to wave-1 Lane A (findings 21, 23) + Lane B (findings 10, 15, 16). D-3 (F-125 default cap) and D-4 (F-124 default policy) remain OPEN; closure is prerequisite for RED → GREEN flips.
 
 ## Per-milestone detail
 
@@ -314,15 +316,15 @@ status: living
 
 ### NEW from research (foundational-plan §"Plus 5 NEW F-NNN candidates")
 
-⚪ PLANNED — added during loop iter-1..4 frontier research; allocated to existing milestones. Ledger files not yet authored.
+🔴 RED — added during loop iter-1..4 frontier research; allocated to existing milestones. Ledgers authored wave-012/lane-c.
 
 | F-ID | Slug | Target milestone | Status | Source |
 |---|---|---|---|---|
-| F-122 | a2a-endpoint-exposure | M4 | ⚪ PLANNED | `[R:WorkIQ + msft-learn finding 10]` |
-| F-123 | otel-genai-spans | M16 | ⚪ PLANNED | `[R:msft-learn Foundry observability]` |
-| F-124 | multi-tier-routing-haiku-opus | M1 | ⚪ PLANNED | `[R:WebSearch frontier 2026 architecture]` |
-| F-125 | mcp-tool-cap-per-workspace | M7 | ⚪ PLANNED | `[R:WorkIQ internal tool-explosion lesson]` |
-| F-126 | context-budget-allocation | M8 | ⚪ PLANNED | `[R:WebSearch frontier 2026]` |
+| F-122 | a2a-endpoint-exposure | M4 | 🔴 RED | `[R:WorkIQ + msft-learn finding 10]` (wave-1 lane-b finding 10) |
+| F-123 | otel-genai-spans | M16 | 🔴 RED | `[R:msft-learn Foundry observability]` (wave-1 lane-b finding 16) |
+| F-124 | multi-tier-routing-haiku-opus | M1 | 🔴 RED | `[R:WebSearch frontier 2026 architecture]` (wave-1 lane-a finding 21) |
+| F-125 | mcp-tool-cap-per-workspace | M7 | 🔴 RED | `[R:WorkIQ internal tool-explosion lesson]` (wave-1 lane-b finding 15) |
+| F-126 | context-budget-allocation | M8 | 🔴 RED | `[R:WebSearch frontier 2026]` (wave-1 lane-a finding 23) |
 
 ### M19 — Deferred (tracking only; user-acknowledged)
 

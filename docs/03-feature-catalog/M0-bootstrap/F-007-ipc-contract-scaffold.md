@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-011 / lane-a
+    note: "Scaffold flip: common/ipc-contract.ts created with empty IpcInvokeMap + IpcInvokeChannel/Request/Response helper types; tests/unit/F-007-ipc-contract-scaffold.test.ts authored RED→GREEN (3/3 PASS); full suite 75/75 PASS. Build-time + runtime helpers for M5+ to fill in. Same wave that refactored packages/engine-core/src/index.ts into per-feature files."
 feature-id: F-007
 short-slug: ipc-contract-scaffold
 milestone: M0
@@ -18,12 +22,14 @@ provenance:
     - kit:rules/orchestrator-identity.md
 fr-coverage: []
 test-files:
-  unit: []
+  unit:
+    - tests/unit/F-007-ipc-contract-scaffold.test.ts
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - unit
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -52,8 +58,9 @@ Every IPC channel between the Electron main process and renderer is declared in 
 
 | Test file | Project | Initial state | Verifies |
 |---|---|---|---|
-| (TBD) `tests/unit/ipc/contract-types.test.ts` | unit | RED | scenarios 1, 3 |
-| (TBD) `tests/integration/ipc/context-bridge.test.ts` | integration | RED | scenario 2 |
+| `tests/unit/F-007-ipc-contract-scaffold.test.ts` | unit | RED → **GREEN (wave-011/lane-a)** | scaffold-shape contract: IpcInvokeMap export + IpcInvokeChannel = keyof IpcInvokeMap + IpcInvokeRequest/Response helper types + module is importable at runtime |
+| (deferred to M5) `tests/integration/ipc/context-bridge.test.ts` | integration | RED | scenario 2 — runtime contextBridge isolation verification (requires Electron harness; lands with M5 desktop-shell features F-032..F-043) |
+| (deferred to M5) `tests/integration/ipc/handler-type-failure.test.ts` | integration | RED | scenario 3 — build-time TS failure when handler not registered in contract (requires actual handler call site) |
 
 ## Dependencies
 
@@ -71,4 +78,28 @@ Every IPC channel between the Electron main process and renderer is declared in 
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+### Wave-011 / lane-a flip (2026-05-07)
+
+`common/ipc-contract.ts` (new file at repo root) exports:
+
+- `IpcInvokeMap` — empty type, populated by future channel additions
+- `IpcInvokeChannel` — `keyof IpcInvokeMap` (= `never` until first channel)
+- `IpcInvokeRequest<C>` / `IpcInvokeResponse<C>` — helper types for pulling
+  request/response shapes by channel name
+
+The scaffold lands the SHAPE contract that M5+ desktop-shell features and
+later milestones extend. The integration scenarios (context-bridge isolation,
+build-time type-check failure on missing handler) are deferred to M5 per the
+test wire-up table — they require an actual handler call site + Electron
+harness to verify.
+
+`tsconfig.json` `include` extended to add `common/**/*.ts` so the scaffold
+participates in the type-check sweep alongside `packages/*/src/` and `tests/`.
+
+Scope co-shipped with the wave-011/lane-a refactor of
+`packages/engine-core/src/index.ts` into per-feature files
+(`bootstrap.ts`, `identity.ts`, `logger.ts`, `storage.ts`, `retro.ts`,
+`audit.ts`, `halt.ts`, `cost.ts`, `killswitch.ts`, `quota.ts`) — that
+refactor eliminated the cross-lane staging race that recurred 5+ times across
+waves 5-10. F-007 was authored in the same wave because it doesn't touch
+engine-core (separate file tree), so the lane was a natural pairing.

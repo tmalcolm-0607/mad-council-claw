@@ -68,7 +68,24 @@ export type BackendEvent =
   | { type: 'token'; text: string }
   | { type: 'tool_call'; name: string; arguments: Record<string, unknown> }
   | { type: 'tool_result'; name: string; result: unknown }
-  | { type: 'finish'; reason: 'stop' | 'length' | 'tool' | 'error'; details?: string };
+  | { type: 'finish'; reason: 'stop' | 'length' | 'tool' | 'error'; details?: string }
+  // F-139 usage variant (added wave-019 / lane-b). Concrete backends emit this
+  // after `finish` so engine-cycle composers (F-138) can compute cost-ledger
+  // rows (F-019) without re-implementing token-count extraction. The 4 token
+  // counts mirror F-019's CostEntry schema; `model` ties the row to the per-
+  // model price table; `backend` is optional and surfaces the provider tag
+  // when known. F-013 type guards extend with isUsageEvent; eventTextContent
+  // extends with a `[usage: input=N output=M cache_read=R cache_write=W]`
+  // descriptor so the exhaustive-switch witness keeps compiling.
+  | {
+      type: 'usage';
+      input_tokens: number;
+      output_tokens: number;
+      cache_read_tokens: number;
+      cache_write_tokens: number;
+      model: string;
+      backend?: string;
+    };
 
 /**
  * Configuration passed to `IBackendProvider.startSession`.

@@ -24,7 +24,15 @@ export type RetroOutcome =
   | 'completed'
   | 'halted_by_kill_switch'
   | 'halted_by_failure_pattern'
-  | 'halted_by_tool_quota';
+  | 'halted_by_tool_quota'
+  // F-140 (added wave-019 / lane-b). F-021 DegradationLadder emits a halt
+  // verdict with trigger='degrade_escalate' when the ladder reaches its
+  // terminal 'halt' rung. This 5th RetroOutcome value lets F-014's
+  // closeSession boundary classify degradation halts and accept the
+  // halted-by carve-out (trigger_evidence_sha256 required). See
+  // packages/engine-core/src/retro-degradation.ts for the validated-retro
+  // builder helper.
+  | 'halted_by_degradation';
 
 /**
  * The retro signal emitted during `closing` before the run reaches `closed`.
@@ -104,6 +112,7 @@ const HALTED_OUTCOMES: ReadonlySet<RetroOutcome> = new Set([
   'halted_by_kill_switch',
   'halted_by_failure_pattern',
   'halted_by_tool_quota',
+  'halted_by_degradation', // F-140
 ]);
 
 /**
@@ -164,6 +173,7 @@ export function closeSession(
     'halted_by_kill_switch',
     'halted_by_failure_pattern',
     'halted_by_tool_quota',
+    'halted_by_degradation', // F-140
   ]);
   if (outcome === undefined) {
     missing.push('outcome');

@@ -81,6 +81,16 @@ export function isFinishEvent(e: BackendEvent): e is Extract<BackendEvent, { typ
 }
 
 /**
+ * Type guard for `usage` events (F-139). Narrows to expose the 4 token-count
+ * fields + `model` + optional `backend`. Engine-cycle composers (F-138) use
+ * this to filter the BackendEvent stream and route only usage events to
+ * F-019 CostLedger.append via the F-139 `usageEventToCostEntry` mapper.
+ */
+export function isUsageEvent(e: BackendEvent): e is Extract<BackendEvent, { type: 'usage' }> {
+  return e.type === 'usage';
+}
+
+/**
  * Render a single-line string for any `BackendEvent`.
  *
  * Intended for log/audit/UI surfaces that need a deterministic summary
@@ -104,6 +114,12 @@ export function eventTextContent(e: BackendEvent): string {
   if (e.type === 'tool_call') return `[tool_call: ${e.name}]`;
   if (e.type === 'tool_result') return `[tool_result: ${e.name}]`;
   if (e.type === 'finish') return `[finish: ${e.reason}${e.details ? ' ' + e.details : ''}]`;
+  // F-139 usage variant: deterministic descriptor with all 4 token counts
+  // surfaced. Greppable for log-mining; consistent with the existing
+  // `[finish: <reason>]` and `[tool_call: <name>]` formats.
+  if (e.type === 'usage') {
+    return `[usage: input=${e.input_tokens} output=${e.output_tokens} cache_read=${e.cache_read_tokens} cache_write=${e.cache_write_tokens}]`;
+  }
   // Exhaustive-switch witness. If a new BackendEvent variant is added
   // without a branch here, TS narrows `e` to `never` and the assignment
   // below fails TS2322. The empty-string fallback is a runtime safety

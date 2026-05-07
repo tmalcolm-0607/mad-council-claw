@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-019 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-019 / lane-b
-    note: "Initial creation. Behavior contract + 4 acceptance scenarios drafted. Promoted from wave-016/lane-d Copilot CLI design review m-1 (Opus Minor; gpt-5.5 didn't flag separately): RetroOutcome lacks halted_by_degradation. F-021 DegradationLadder emits a halt with trigger='degrade_escalate' (the 14th HaltTrigger value, added in wave-012/lane-a) but no matching RetroOutcome enum value — degradation halts are unreportable via F-014 closeSession() because the Likert validation rejects the halted-by carve-out (which requires the outcome to start with halted_by_*). Lane B authors RED test scaffold + GREEN impl in same micro-session per the wave-5 retro proposal validated by F-138's pattern. Owner milestone is M2 because the new RetroOutcome enum value extends the F-014 RetroOutcome union which lives at packages/engine-core/src/retro.ts (F-014 owner); the helper that surfaces the halted-by-degradation closeSession path lives at packages/engine-core/src/retro-degradation.ts and reuses retro.ts's RetroSignal + closeSession + RetroMissingError without modifying retro.ts beyond the additive enum value."
+    note: "Initial creation. Behavior contract + 6 acceptance scenarios drafted. Promoted from wave-016/lane-d Copilot CLI design review m-1 (Opus Minor; gpt-5.5 didn't flag separately): RetroOutcome lacks halted_by_degradation. F-021 DegradationLadder emits a halt with trigger='degrade_escalate' (the 14th HaltTrigger value, added in wave-012/lane-a) but no matching RetroOutcome enum value — degradation halts are unreportable via F-014 closeSession() because the Likert validation rejects the halted-by carve-out (which requires the outcome to start with halted_by_*). Lane B authors RED test scaffold + GREEN impl in same micro-session per the wave-5 retro proposal validated by F-138's pattern. Owner milestone is M2 because the new RetroOutcome enum value extends the F-014 RetroOutcome union which lives at packages/engine-core/src/retro.ts (F-014 owner); the helper that surfaces the halted-by-degradation closeSession path lives at packages/engine-core/src/retro-degradation.ts and reuses retro.ts's RetroSignal + closeSession + RetroMissingError without modifying retro.ts beyond the additive enum value."
+  - status: green
+    at: 2026-05-07
+    by: wave-019 / lane-b
+    note: "RED test scaffold + impl landed in same lane (RED-then-GREEN micro-session per wave-5 retro proposal validated by F-138). Test at tests/unit/F-140-retro-outcome-degradation.test.ts (6 scenarios across one describe block). Impl at packages/engine-core/src/retro-degradation.ts (~75 LOC: buildDegradationRetro helper + DegradationRetroFields + DegradationRetroOptions types). Additive extension to retro.ts (5th RetroOutcome value: 'halted_by_degradation'; HALTED_OUTCOMES + validOutcomes sets each gain the new entry). The boundary check throws Error (not RetroMissingError) when verdict.trigger != 'degrade_escalate' — defensive boundary preventing wrong-shape verdicts from producing misleading halted_by_degradation retros. 6/6 acceptance scenarios passing (full suite 323/323 across 38 test files via `pnpm test`). Resolves wave-016/lane-d F21/m-1 (Opus single-model Minor); degradation halts are now reportable via F-014's mandatory close-transition. Cross-lane staging-race: per user directive 2026-05-07, NO `git reset` for staging-race recovery; explicit `git add <paths>` for each commit. RED commit aa1632d landed cleanly with no sweep; GREEN commit pending."
 feature-id: F-140
 short-slug: retro-outcome-degradation
 milestone: M2
@@ -102,9 +106,9 @@ The `RetroOutcome` discriminated union (F-014 owner) gains a 5th value: `halted_
 
 ## Red→green wire-up
 
-| Test file | Project | State | Verifies |
+| Test file | Project | Final state | Verifies |
 |---|---|---|---|
-| `tests/unit/F-140-retro-outcome-degradation.test.ts` | unit | RED at lane start; GREEN after impl lands | scenarios 1, 2, 3, 4, 5, 6 |
+| `tests/unit/F-140-retro-outcome-degradation.test.ts` | unit | GREEN — 6/6 scenarios PASS | scenarios 1, 2, 3, 4, 5, 6 |
 
 ## Dependencies
 

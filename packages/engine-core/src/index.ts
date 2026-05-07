@@ -26,6 +26,8 @@
  *   - backend-events.ts    — F-013 (event-normalization) — type guards + `eventTextContent` for BackendEvent
  *   - heartbeat.ts         — F-023 (cron-heartbeat) — HeartbeatScheduler + cadence-zone validation per loop-cadence-discipline.md
  *   - cycle.ts             — F-138 (engine-cycle-orchestrator) — runEngineCycle composes F-001/F-002/F-009/F-014/F-015/F-018/F-019; resolves wave-016 HARD-BLOCK F1
+ *   - backend-event-variant.ts — F-139 (backend-event-usage-variant) — usageEventToCostEntry mapper; resolves wave-016 D-36 (BackendEvent gains 'usage' variant in backend.ts)
+ *   - retro-degradation.ts — F-140 (retro-outcome-degradation) — buildDegradationRetro helper for halted_by_degradation RetroOutcome (added in retro.ts)
  *
  * Cross-feature type sharing rule: shared types live with their FIRST owner;
  * later features import via `./<owner>.js` (ESM extension required even for
@@ -53,3 +55,5 @@ export * from './heartbeat.js';
 export * from './checkpoint.js';
 export * from './manual-halt.js';
 export * from './cycle.js';
+export * from './backend-event-variant.js';
+export * from './retro-degradation.js';

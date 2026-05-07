@@ -1,0 +1,19 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "tests/unit/F-140-retro-outcome-degradation.test.ts" "--reporter=verbose"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [32m✓[39m tests/unit/F-140-retro-outcome-degradation.test.ts[2m > [22mF-140 retro-outcome-degradation[2m > [22mscenario 1: degrade_escalate verdict + valid fields + valid SHA -> validated RetroSignal; closeSession returns {ok:true}
+ [32m✓[39m tests/unit/F-140-retro-outcome-degradation.test.ts[2m > [22mF-140 retro-outcome-degradation[2m > [22mscenario 2: 60-char SHA (too short) -> closeSession throws RetroMissingError with trigger_evidence_sha256 in missingFields
+ [32m✓[39m tests/unit/F-140-retro-outcome-degradation.test.ts[2m > [22mF-140 retro-outcome-degradation[2m > [22mscenario 3: wrong-trigger verdict -> buildDegradationRetro throws Error mentioning expected trigger
+ [32m✓[39m tests/unit/F-140-retro-outcome-degradation.test.ts[2m > [22mF-140 retro-outcome-degradation[2m > [22mscenario 4: historyRender callback supplied -> meta_observations contains rendered history verbatim
+ [32m✓[39m tests/unit/F-140-retro-outcome-degradation.test.ts[2m > [22mF-140 retro-outcome-degradation[2m > [22mscenario 5: no historyRender callback -> meta_observations is caller-supplied verbatim (no auto-injection)
+ [32m✓[39m tests/unit/F-140-retro-outcome-degradation.test.ts[2m > [22mF-140 retro-outcome-degradation[2m > [22mscenario 6: RetroOutcome union extends to 5 values; closeSession accepts halted_by_degradation
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 16:46:10
+[2m   Duration [22m 2.43s[2m (transform 466ms, setup 0ms, collect 583ms, tests 9ms, environment 0ms, prepare 955ms)[22m
+

@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-019 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-019 / lane-b
-    note: "Initial creation. Behavior contract + 4 acceptance scenarios drafted. Promoted from wave-016/lane-d Copilot CLI design review C-2 (Opus Critical, single-model demoted under cross-model rule but reasoning concrete: F-019 cost ledger has no event source because BackendEvent has no usage variant — see D-36 in design-decisions-pending.md). Resolves the F-138 §out-of-scope-notes gap that names this feature explicitly: 'cycle.ts does NOT compute cost-ledger rows from BackendEvent because BackendEvent has no usage variant per wave-016 D-36. CostLedger is instantiated and totalUsd() reported in RunOutcome, but no rows are appended in v1. F-139 backend-event-usage-variant (D-36) closes this gap.' Lane B authors RED test scaffold + GREEN impl in same micro-session per the wave-5 retro proposal validated by F-138's RED-then-GREEN micro-session pattern. Owner milestone is M1 because the new variant extends BackendEvent which lives at packages/engine-core/src/backend.ts (F-009 owner); the variant-mapping helper lives at packages/engine-core/src/backend-event-variant.ts and reuses CostEntryInput from cost.ts (F-019 owner) without modifying cost.ts."
+    note: "Initial creation. Behavior contract + 6 acceptance scenarios drafted. Promoted from wave-016/lane-d Copilot CLI design review C-2 (Opus Critical, single-model demoted under cross-model rule but reasoning concrete: F-019 cost ledger has no event source because BackendEvent has no usage variant — see D-36 in design-decisions-pending.md). Resolves the F-138 §out-of-scope-notes gap that names this feature explicitly: 'cycle.ts does NOT compute cost-ledger rows from BackendEvent because BackendEvent has no usage variant per wave-016 D-36. CostLedger is instantiated and totalUsd() reported in RunOutcome, but no rows are appended in v1. F-139 backend-event-usage-variant (D-36) closes this gap.' Lane B authors RED test scaffold + GREEN impl in same micro-session per the wave-5 retro proposal validated by F-138's RED-then-GREEN micro-session pattern. Owner milestone is M1 because the new variant extends BackendEvent which lives at packages/engine-core/src/backend.ts (F-009 owner); the variant-mapping helper lives at packages/engine-core/src/backend-event-variant.ts and reuses CostEntryInput from cost.ts (F-019 owner) without modifying cost.ts."
+  - status: green
+    at: 2026-05-07
+    by: wave-019 / lane-b
+    note: "RED test scaffold + impl landed in same lane (RED-then-GREEN micro-session per wave-5 retro proposal validated by F-138). Test at tests/unit/F-139-backend-event-usage-variant.test.ts (6 scenarios across one describe block). Impl at packages/engine-core/src/backend-event-variant.ts (~70 LOC: usageEventToCostEntry mapper + UsageEventContext + PriceLookup types). Additive extension to backend.ts (5th BackendEvent variant: usage); additive extension to backend-events.ts (isUsageEvent type guard + eventTextContent 5th branch returning [usage: input=N output=M cache_read=R cache_write=W] descriptor; const _exhaustive: never witness keeps compiling). 6/6 acceptance scenarios passing (full suite 323/323 across 38 test files via `pnpm test`). Resolves wave-016/lane-d D-36; F-138 cycle.ts can begin computing cost-ledger rows from BackendEvent in a future iteration. Cross-lane staging-race: per user directive 2026-05-07, NO `git reset` for staging-race recovery; explicit `git add <paths>` for each commit. RED commit aa1632d landed cleanly with no sweep; GREEN commit pending."
 feature-id: F-139
 short-slug: backend-event-usage-variant
 milestone: M1
@@ -102,9 +106,9 @@ The discriminated `BackendEvent` union (F-009 owner) gains a 5th variant: `{type
 
 ## Red→green wire-up
 
-| Test file | Project | State | Verifies |
+| Test file | Project | Final state | Verifies |
 |---|---|---|---|
-| `tests/unit/F-139-backend-event-usage-variant.test.ts` | unit | RED at lane start; GREEN after impl lands | scenarios 1, 2, 3, 4, 5, 6 |
+| `tests/unit/F-139-backend-event-usage-variant.test.ts` | unit | GREEN — 6/6 scenarios PASS | scenarios 1, 2, 3, 4, 5, 6 |
 
 ## Dependencies
 

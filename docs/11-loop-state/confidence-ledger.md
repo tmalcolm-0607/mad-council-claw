@@ -88,3 +88,55 @@ Per kit's `verification-protocol.md` and the user directive "as new items get ad
 - 9 Lane-D structural findings logged (8 HIGH + 1 now-resolved MEDIUM)
 
 Total wave-1 confidence-ledger rows: **~42** finding clusters/lessons (vs. ~120 raw findings before clustering). Cluster-shaped because that's what survives consolidation; per-finding tracking would inflate the ledger without adding signal.
+
+## Entries — Wave 2 (introduced 2026-05-07)
+
+### Lane A — Software-build patterns (8 topics)
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-A-w2-cluster-1 (orchestrator-worker reinforced) | software-patterns/orchestrator-worker-pattern.md (7 sources, anthropic.com canonical) | HIGH | wave-002 / lane-a | wave-003 / lane-d | Reinforces F-128 (wave-1 Lane A 4-way convergence) |
+| Lane-A-w2-cluster-2 (multi-tier model routing Haiku/Opus established) | software-patterns/multi-tier-model-routing.md (6 sources) | HIGH | wave-002 / lane-a | wave-003 / lane-d | Reinforces F-124 (NEW from research) |
+| Lane-A-w2-cluster-3 (RAG patterns 2026 baseline) | software-patterns/rag-patterns.md (8 sources incl. msft-learn + arxiv) | HIGH | wave-002 / lane-a | wave-003 / lane-d | F-074..F-078 surfaced; M1+M11 dependencies |
+| Lane-A-w2-cluster-4 (context window management baseline) | software-patterns/context-window-management.md (6 sources incl. claude docs) | HIGH | wave-002 / lane-a | wave-003 / lane-d | Reinforces F-126 (NEW from research) |
+| Lane-A-w2-cluster-5 (agent autonomy + sandboxing baseline) | software-patterns/agent-autonomy-sandboxing.md (8 sources incl. arxiv) | HIGH | wave-002 / lane-a | wave-003 / lane-d | Reinforces F-D-012 (deferred sandboxing) at HIGH |
+| Lane-A-w2-cluster-6 (spec-driven development / SpecKit) | software-patterns/spec-driven-development.md (8 sources incl. github.blog + msft developer) | HIGH | wave-002 / lane-a | wave-003 / lane-d | Closes Goal G14 evidence baseline |
+| Lane-A-w2-cluster-7 (AI-native architecture 2026 baseline) | software-patterns/ai-native-architecture-2026.md (6 sources) | HIGH | wave-002 / lane-a | wave-003 / lane-d | F-064..F-068 surfaced |
+| Lane-A-w2-cluster-8 (2026 emerging patterns gap analysis) | software-patterns/2026-emerging-patterns.md (8 sources) | MEDIUM | wave-002 / lane-a | wave-003 / lane-d | "Digital assembly line" returned no strong 2026 sources; concept maps to Pipeline pattern. F-099..F-104 inherit MEDIUM until corroborated. |
+
+### Lane B — M0-M2 catalog drop (22 ledgers)
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-B-w2-ledger-shape | All 22 ledgers + 3 milestone READMEs | HIGH | wave-002 / lane-b | wave-003 / lane-d | Per-feature ledger frontmatter contract established; status-history list, status-since, generated-by, generated-by-version, feature-id, milestone, provenance.surfaces, fr-coverage, test-files. All subsequent ledgers inherit this shape. |
+| Lane-B-w2-22-RED-ledgers | F-001..F-022 | HIGH | wave-002 / lane-b | wave-003 / lane-d | All 22 in RED state; tests + impl deferred to subsequent waves. Behavior contract + acceptance scenarios authored per ledger. |
+
+### Lane C — Copilot CLI design review (partial)
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-C-w2-gpt5-review | docs/05-design-reviews/copilot-cli-design-reviews/2026-05-XX-foundation-review.md | HIGH | wave-002 / lane-c | wave-003 / lane-d | gpt-5.5 voice delivered (5 critical findings tagged HARD-BLOCK pending opus voice in wave-3 retry); 8 NEW F-NNN candidates F-127..F-134 surfaced (already merged into wave-1 Lane D consolidation as part of F-127..F-204) |
+| Lane-C-w2-opus-timeout | dispatcher log | MEDIUM | wave-002 / lane-c | wave-003 / lane-d | Opus voice timed out at default timeout. Retry target wave-3 Lane E with 600s opus timeout. |
+
+### Lane D — Wave-1 consolidation + backlog hygiene
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-D-w2-78-FNNN-allocation | wave-001-new-fnnn-candidates-consolidated.md | HIGH | wave-002 / lane-d | wave-003 / lane-d | ~78 unique allocations as F-127..F-204; ~19 dedup'd as merged-into-existing |
+| Lane-D-w2-3-D-closures (D-20 + D-22 + D-23) | design-decisions-pending.md | HIGH | wave-002 / lane-d | wave-003 / lane-d | First 3 design decisions closed at HIGH; cost-ledger=observability-only; halt-precedence ladder; refresh-token-per-role |
+| Lane-D-w2-12-RG-entries | research-gaps.md | MEDIUM | wave-002 / lane-d | wave-003 / lane-d | RG-1..RG-12 (12 research gaps surfaced); wave-3 Lane A targets RG-7..RG-12 |
+
+## Entries — Wave 3 (introduced 2026-05-07)
+
+### Lane C — RED test scaffold + toolchain
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-C-w3-RED-scaffold | tests/unit/F-001-engine-bootstrap-loop.test.ts + vitest.config.ts + tsconfig.json + packages/engine-core/ | HIGH | wave-003 / lane-c | (current) | First runnable RED test in repo; 3 assertions match F-001 ledger acceptance contract (lifecycle order, cycle cap, halt-path shape). FETCH BEFORE CITE win — Lane C deviated from brief to match the ledger. |
+
+### Lane D — roadmap + wave-002 close + wave-003 setup (this lane)
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-D-w3-roadmap | roadmap.md (repo root) | HIGH | wave-003 / lane-d | (current) | Navigable view of M0..M19 + 144 catalog items + dependency graph. Auto-update protocol documented. Closes foundational-plan "Self-improvement scaffolding" gap. |
+| Lane-D-w3-wave2-close | docs/11-loop-state/wave-history/wave-002.md | HIGH | wave-003 / lane-d | (current) | Wave-2 sealed atomically; ~43 commits across 4 lanes; loop-improvement proposal applied to wave-3. |

@@ -11,10 +11,28 @@ Per quality gate QG5: every wave ends with a loop-improvement proposal feeding t
 - No Copilot CLI dispatch yet (deferred to wave 3+ per QG7 cadence N=5)
 - All findings written to disk per lane, not returned through chat (per MR10)
 
-## Wave 1 loop-improvement proposal (filled in after Lanes A-D land)
+## Wave 1 loop-improvement proposal (applied wave-2 onward)
 
-_Pending — orchestrator will append after Lane A-D synthesis._
+Per `docs/11-loop-state/wave-history/wave-001.md` § Loop-improvement proposal:
+
+1. Different lanes than wave-1 (research-extension lanes RG-7..RG-12 deferred to wave-3).
+2. First Copilot CLI design review attempted in wave-2 Lane C (partial — gpt-5.5 delivered, opus timed out).
+3. Lane numbering vs F-NNN allocation rule codified (slug-only naming until consolidation step).
+4. Cross-lane dependency pattern: lanes fully independent OR cross-lane work happens at end-of-wave consolidation only.
+5. Memory-checkpoint cadence: future waves append to confidence-ledger.md, not refresh.
+
+## Wave 2 → wave 3 methodology evolution
+
+Per `docs/11-loop-state/wave-history/wave-002.md` § Loop-improvement proposal — wave-3 methodology:
+
+1. **First runnable RED test scaffold** — wave-3 Lane C dropped real Vitest + TypeScript + ESLint + Prettier toolchain + `tests/unit/F-001-engine-bootstrap-loop.test.ts` (3 RED assertions matching the F-001 ledger's actual acceptance contract). Closes Goal G37 (immediate working product) and ratifies the FETCH BEFORE CITE discipline (Lane C deviated from the brief because the ledger said something different).
+2. **Navigable roadmap.md** — wave-3 Lane D authored the roadmap as a navigable view of M0..M19 with feature counts + per-feature status + auto-update protocol. Ledgers were the per-feature truth; roadmap.md is the human-navigable index. Closes the foundational-plan "Self-improvement scaffolding" gap.
+3. **Re-dispatch Copilot CLI with longer Opus timeout** — wave-3 Lane E queued; per memory `feedback_pr_review_calibration_20260503.md` default 600s. First-dispatch baseline from wave-2 Lane C established gpt-5.5 timing; opus retry needed for full agreement-table.
+4. **M3-M5 ledger drop in flight** — wave-3 Lane B authoring (F-023, F-024 landed; F-025..F-043 pending). Per the closing-pattern of wave-2 Lane B (which dropped M0-M2), wave-3 extends the catalog two milestones at a time.
+5. **Wave-002 closing summary written by wave-3 Lane D** — same atomic close-then-pickup pattern wave-001 used. Closing summary lands at wave-N+1 start; preserves wave-N as a fully sealed artifact.
 
 ## Backlog of methodology improvements (collected, applied opportunistically)
 
-- _empty — first entries land after Wave 1 retro_
+- **roadmap.md auto-update on ledger transition** — wave-3 Lane D documented the protocol in `roadmap.md` itself; mechanical enforcement (a hook scanning ledger frontmatter changes) is wave-5+ work.
+- **Per-lane wall-clock tracking** — wave-2 Lane C surfaced the opus-timeout problem because the lane was timed; future waves should record start/end UTC per lane in lane summaries to make future timeout-class issues visible without re-reading dispatcher logs.
+- **Cross-lane visibility for in-flight waves** — wave-3 has 4 lanes mid-flight; the claim-table in `current-wave.md` is the only coordination surface. If any lane's output overlaps another's, the ordering matters. Future improvement: per-lane "depends-on" + "produces" frontmatter so the orchestrator can detect drift.

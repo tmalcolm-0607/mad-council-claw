@@ -1,0 +1,237 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "--run" "tests/unit/F-024-skip-on-overlap.test.ts" "tests/unit/F-025-idle-archival.test.ts"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-025-idle-archival.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[90m 17[2mms[22m[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mthreshold semantics[2m > [22marchiveAfterMinutes triggers callback when idle exceeds threshold[90m 9[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mthreshold semantics[2m > [22mno callback when idle is below threshold[90m 1[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mthreshold semantics[2m > [22midle measured from lastTickAt (not from creation)[90m 1[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mcallback registration[2m > [22mmultiple callbacks supported (broadcast pattern)[90m 1[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mcallback registration[2m > [22mdefault archiveAfterMinutes=undefined disables the trigger[90m 1[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mobservability[2m > [22mcallback receives idleMinutes argument equal to elapsed time[90m 1[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mobservability[2m > [22mcallback fires on each tick where idle exceeds threshold[90m 2[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+[31m   [31m×[31m F-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mcomposition with F-024 skip-on-overlap[2m > [22mskipped ticks do not fire idle-archival callback[90m 1[2mms[22m[31m[39m
+[31m     → sch.onIdleArchive is not a function[39m
+ [31m❯[39m tests/unit/F-024-skip-on-overlap.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[33m 15066[2mms[22m[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mbasic skip-on-overlap[2m > [22mtick skips when prior tick is still in-flight[33m 5019[2mms[22m[31m[39m
+[31m     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mbasic skip-on-overlap[2m > [22mskippedTicks counter increments on each skipped fire[33m 5011[2mms[22m[31m[39m
+[31m     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22min-flight flag lifecycle[2m > [22min-flight clears after handler completes — next tick runs[90m 8[2mms[22m[31m[39m
+[31m     → Cannot read properties of undefined (reading 'ran')[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22min-flight flag lifecycle[2m > [22min-flight clears even when handler throws[90m 6[2mms[22m[31m[39m
+[31m     → expected undefined to be false // Object.is equality[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22msequential vs parallel ticks[2m > [22msequential ticks (no overlap) both run normally[90m 1[2mms[22m[31m[39m
+[31m     → Cannot read properties of undefined (reading 'ran')[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22msequential vs parallel ticks[2m > [22mparallel manual tick calls return correct ran flags[33m 5015[2mms[22m[31m[39m
+[31m     → Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mgetStatus observability[2m > [22mreports skippedTicks=0 + isInFlight=false initially[90m 1[2mms[22m[31m[39m
+[31m     → expected undefined to be +0 // Object.is equality[39m
+[31m   [31m×[31m F-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mgetStatus observability[2m > [22misInFlight is true while handler runs, false after[90m 1[2mms[22m[31m[39m
+[31m     → expected undefined to be true // Object.is equality[39m
+
+[31m⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 16 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mbasic skip-on-overlap[2m > [22mtick skips when prior tick is still in-flight
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mbasic skip-on-overlap[2m > [22mskippedTicks counter increments on each skipped fire
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22msequential vs parallel ticks[2m > [22mparallel manual tick calls return correct ran flags
+[31m[1mError[22m: Test timed out in 5000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".[39m
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22min-flight flag lifecycle[2m > [22min-flight clears after handler completes — next tick runs
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'ran')[39m
+[36m [2m❯[22m tests/unit/F-024-skip-on-overlap.test.ts:[2m109:19[22m[39m
+    [90m107| [39m      [35mtry[39m {
+    [90m108| [39m        [35mconst[39m r1 [33m=[39m [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+    [90m109| [39m        [34mexpect[39m(r1[33m.[39mran)[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m110| [39m        [34mexpect[39m(sch[33m.[39m[34mgetStatus[39m()[33m.[39misInFlight)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m111| [39m        [35mconst[39m r2 [33m=[39m [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22min-flight flag lifecycle[2m > [22min-flight clears even when handler throws
+[31m[1mAssertionError[22m: expected undefined to be false // Object.is equality[39m
+
+[32m- Expected:[39m 
+false
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m tests/unit/F-024-skip-on-overlap.test.ts:[2m128:44[22m[39m
+    [90m126| [39m        [90m// Despite the throw, in-flight must have cleared so the next[39m
+    [90m127| [39m        [90m// tick is not stuck in a permanent skip state.[39m
+    [90m128| [39m        [34mexpect[39m(sch[33m.[39m[34mgetStatus[39m()[33m.[39misInFlight)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m   | [39m                                           [31m^[39m
+    [90m129| [39m        [90m// And a follow-up tick can still run.[39m
+    [90m130| [39m        [35mawait[39m [34mexpect[39m(sch[33m.[39m[34mtick[39m())[33m.[39mrejects[33m.[39m[34mtoThrow[39m([32m'boom'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22msequential vs parallel ticks[2m > [22msequential ticks (no overlap) both run normally
+[31m[1mTypeError[22m: Cannot read properties of undefined (reading 'ran')[39m
+[36m [2m❯[22m tests/unit/F-024-skip-on-overlap.test.ts:[2m146:19[22m[39m
+    [90m144| [39m        [35mconst[39m r1 [33m=[39m [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+    [90m145| [39m        [35mconst[39m r2 [33m=[39m [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+    [90m146| [39m        [34mexpect[39m(r1[33m.[39mran)[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m147| [39m        [34mexpect[39m(r2[33m.[39mran)[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m148| [39m        [34mexpect[39m(r1[33m.[39mskipped)[33m.[39m[34mtoBeUndefined[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mgetStatus observability[2m > [22mreports skippedTicks=0 + isInFlight=false initially
+[31m[1mAssertionError[22m: expected undefined to be +0 // Object.is equality[39m
+
+[32m- Expected:[39m 
+0
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m tests/unit/F-024-skip-on-overlap.test.ts:[2m189:30[22m[39m
+    [90m187| [39m      [35mconst[39m sch [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'mad-iteration'[39m })[33m;[39m
+    [90m188| [39m      [35mconst[39m s [33m=[39m sch[33m.[39m[34mgetStatus[39m()[33m;[39m
+    [90m189| [39m      [34mexpect[39m(s[33m.[39mskippedTicks)[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m   | [39m                             [31m^[39m
+    [90m190| [39m      [34mexpect[39m(s[33m.[39misInFlight)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m191| [39m    })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-024-skip-on-overlap.test.ts[2m > [22mF-024 skip-on-overlap — HeartbeatScheduler in-flight guard[2m > [22mgetStatus observability[2m > [22misInFlight is true while handler runs, false after
+[31m[1mAssertionError[22m: expected undefined to be true // Object.is equality[39m
+
+[32m- Expected:[39m 
+true
+
+[31m+ Received:[39m 
+undefined
+
+[36m [2m❯[22m tests/unit/F-024-skip-on-overlap.test.ts:[2m202:26[22m[39m
+    [90m200| [39m      [35mtry[39m {
+    [90m201| [39m        [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+    [90m202| [39m        [34mexpect[39m(observed)[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m                         [31m^[39m
+    [90m203| [39m        [34mexpect[39m(sch[33m.[39m[34mgetStatus[39m()[33m.[39misInFlight)[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m204| [39m      } [35mfinally[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mthreshold semantics[2m > [22marchiveAfterMinutes triggers callback when idle exceeds threshold
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m67:11[22m[39m
+    [90m 65| [39m      })[33m;[39m
+    [90m 66| [39m      [35mconst[39m archiveCb [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m 67| [39m      sch[33m.[39m[34monIdleArchive[39m(archiveCb)[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m 68| [39m      [90m// First tick records lastTickAt at baseTime.[39m
+    [90m 69| [39m      [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mthreshold semantics[2m > [22mno callback when idle is below threshold
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m89:11[22m[39m
+    [90m 87| [39m      })[33m;[39m
+    [90m 88| [39m      [35mconst[39m archiveCb [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m 89| [39m      sch[33m.[39m[34monIdleArchive[39m(archiveCb)[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m 90| [39m      [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+    [90m 91| [39m      [90m// Advance only 5 minutes.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mthreshold semantics[2m > [22midle measured from lastTickAt (not from creation)
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m106:11[22m[39m
+    [90m104| [39m      })[33m;[39m
+    [90m105| [39m      [35mconst[39m archiveCb [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m106| [39m      sch[33m.[39m[34monIdleArchive[39m(archiveCb)[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m107| [39m      [90m// Advance 20 minutes BEFORE first tick — should NOT trigger,[39m
+    [90m108| [39m      [90m// because idle is measured from lastTickAt and we haven't[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mcallback registration[2m > [22mmultiple callbacks supported (broadcast pattern)
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m134:11[22m[39m
+    [90m132| [39m      [35mconst[39m cb2 [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m133| [39m      [35mconst[39m cb3 [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m134| [39m      sch[33m.[39m[34monIdleArchive[39m(cb1)[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m135| [39m      sch[33m.[39m[34monIdleArchive[39m(cb2)[33m;[39m
+    [90m136| [39m      sch[33m.[39m[34monIdleArchive[39m(cb3)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mcallback registration[2m > [22mdefault archiveAfterMinutes=undefined disables the trigger
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m152:11[22m[39m
+    [90m150| [39m      [35mconst[39m sch [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'mad-iteration'[39m })[33m;[39m
+    [90m151| [39m      [35mconst[39m archiveCb [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m152| [39m      sch[33m.[39m[34monIdleArchive[39m(archiveCb)[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m153| [39m      [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+    [90m154| [39m      [90m// Advance well past any reasonable threshold.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mobservability[2m > [22mcallback receives idleMinutes argument equal to elapsed time
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m171:11[22m[39m
+    [90m169| [39m      })[33m;[39m
+    [90m170| [39m      [35mconst[39m observed[33m:[39m number[] [33m=[39m [][33m;[39m
+    [90m171| [39m      sch[33m.[39m[34monIdleArchive[39m((idleMinutes) [33m=>[39m observed[33m.[39m[34mpush[39m(idleMinutes))[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m172| [39m      [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m
+    [90m173| [39m      vi[33m.[39m[34msetSystemTime[39m([35mnew[39m [33mDate[39m(baseTime[33m.[39m[34mgetTime[39m() [33m+[39m [34m7[39m [33m*[39m [34m60_000[39m))[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mobservability[2m > [22mcallback fires on each tick where idle exceeds threshold
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m191:11[22m[39m
+    [90m189| [39m      })[33m;[39m
+    [90m190| [39m      [35mconst[39m archiveCb [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m191| [39m      sch[33m.[39m[34monIdleArchive[39m(archiveCb)[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m192| [39m      [35mawait[39m sch[33m.[39m[34mtick[39m()[33m;[39m [90m// t=0; lastTickAt = baseTime[39m
+    [90m193| [39m      vi[33m.[39m[34msetSystemTime[39m([35mnew[39m [33mDate[39m(baseTime[33m.[39m[34mgetTime[39m() [33m+[39m [34m10[39m [33m*[39m [34m60_000[39m))[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/16]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-025-idle-archival.test.ts[2m > [22mF-025 idle-archival — HeartbeatScheduler idle trigger[2m > [22mcomposition with F-024 skip-on-overlap[2m > [22mskipped ticks do not fire idle-archival callback
+[31m[1mTypeError[22m: sch.onIdleArchive is not a function[39m
+[36m [2m❯[22m tests/unit/F-025-idle-archival.test.ts:[2m215:11[22m[39m
+    [90m213| [39m      })[33m;[39m
+    [90m214| [39m      [35mconst[39m archiveCb [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m215| [39m      sch[33m.[39m[34monIdleArchive[39m(archiveCb)[33m;[39m
+    [90m   | [39m          [31m^[39m
+    [90m216| [39m      [35mlet[39m release[33m:[39m (() [33m=>[39m [35mvoid[39m) [33m|[39m [35mnull[39m [33m=[39m [35mnull[39m[33m;[39m
+    [90m217| [39m      [35mconst[39m slow [33m=[39m () [33m=>[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/16]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m16 failed[39m[22m[90m (16)[39m
+[2m   Start at [22m 12:46:17
+[2m   Duration [22m 16.22s[2m (transform 214ms, setup 0ms, collect 446ms, tests 15.08s, environment 0ms, prepare 766ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

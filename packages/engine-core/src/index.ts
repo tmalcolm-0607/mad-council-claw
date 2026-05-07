@@ -21,6 +21,7 @@
  *   - degradation.ts — F-021 (degradation-fallback) — imports RunHaltedVerdict from halt.ts
  *   - backend.ts     — F-009 (ibackend-provider) — imports Agent/Session from identity.ts + RunHaltedVerdict from halt.ts
  *   - backend-anthropic.ts — F-010 (anthropic-sdk-provider) — implements IBackendProvider; origin='anthropic'
+ *   - backend-copilot.ts   — F-011 (copilot-sdk-provider) — implements IBackendProvider; origin='copilot'
  *
  * Cross-feature type sharing rule: shared types live with their FIRST owner;
  * later features import via `./<owner>.js` (ESM extension required even for
@@ -41,3 +42,4 @@ export * from './quota.js';
 export * from './degradation.js';
 export * from './backend.js';
 export * from './backend-anthropic.js';
+export * from './backend-copilot.js';

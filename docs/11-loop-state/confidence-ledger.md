@@ -138,5 +138,14 @@ Total wave-1 confidence-ledger rows: **~42** finding clusters/lessons (vs. ~120 
 
 | Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
 |---|---|---|---|---|---|
-| Lane-D-w3-roadmap | roadmap.md (repo root) | HIGH | wave-003 / lane-d | (current) | Navigable view of M0..M19 + 144 catalog items + dependency graph. Auto-update protocol documented. Closes foundational-plan "Self-improvement scaffolding" gap. |
+| Lane-D-w3-roadmap | roadmap.md (repo root) | HIGH | wave-003 / lane-d | wave-005 / lane-d | Navigable view of M0..M19 + 144 catalog items + dependency graph. Auto-update protocol documented. Closes foundational-plan "Self-improvement scaffolding" gap. F-001 row first GREEN transition logged 2026-05-07. |
 | Lane-D-w3-wave2-close | docs/11-loop-state/wave-history/wave-002.md | HIGH | wave-003 / lane-d | (current) | Wave-2 sealed atomically; ~43 commits across 4 lanes; loop-improvement proposal applied to wave-3. |
+
+## Entries — Wave 5 (introduced 2026-05-07)
+
+### Lane D — F-001 RED → GREEN (this lane)
+
+| Finding ID | Source | Confidence | Wave introduced | Last revisited | Notes |
+|---|---|---|---|---|---|
+| Lane-D-w5-F-001-GREEN | packages/engine-core/src/index.ts + tests/unit/F-001-engine-bootstrap-loop.test.ts + docs/09-examples-proof/F-001/ | HIGH | wave-005 / lane-d | (current) | First feature transition RED → GREEN in the repo. ~95 LOC impl satisfies all 3 acceptance scenarios from the F-001 ledger (lifecycle order, cycle cap, halt-path shape). Vitest 3/3 PASS. Closes Goal G37 (immediate working product) for the engine kernel. |
+| Lane-D-w5-toolchain-hops | pnpm-workspace.yaml + package.json devDep + test:unit script | HIGH | wave-005 / lane-d | (current) | Three small toolchain fixes landed alongside F-001 GREEN: (1) pnpm-workspace.yaml because pnpm v10+ ignores the `workspaces` field in package.json; (2) added `@mad-council-claw/engine-core: workspace:*` devDep on root so the package is resolvable from the test suite; (3) `test:unit` script switched from broken `vitest run --project unit` to working `vitest run tests/unit` (vitest 2.1.9 project-filter quirk). All three are minimum-change fixes per `minimum-change.md`. |

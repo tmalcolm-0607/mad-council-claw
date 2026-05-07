@@ -29,7 +29,7 @@ status: living
 
 | Milestone | Theme | Span | Total | RED | GREEN | LOCKED | DEFERRED | PLANNED |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| M0 | Project bootstrap | F-001..F-008 | 8 | 8 | 0 | 0 | 0 | 0 |
+| M0 | Project bootstrap | F-001..F-008 | 8 | 7 | 1 | 0 | 0 | 0 |
 | M1 | Pluggable backend | F-009..F-013 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M2 | Governance triad | F-014..F-022 | 9 | 9 | 0 | 0 | 0 | 0 |
 | M3 | Cron / heartbeat | F-023..F-027 | 5 | 5 | 0 | 0 | 0 | 0 |
@@ -50,7 +50,7 @@ status: living
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 0 | 0 | 0 | 0 | 3 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 0 | 0 | 0 | 0 | 5 |
 | M19 | Deferred / out-of-scope | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **36** | **0** | **0** | **18** | **90** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **35** | **1** | **0** | **18** | **90** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
 
@@ -62,7 +62,7 @@ status: living
 
 | F-ID | Slug | Status | Test files |
 |---|---|---|---|
-| F-001 | engine-bootstrap-loop | 🔴 RED | `tests/unit/F-001-engine-bootstrap-loop.test.ts` |
+| F-001 | engine-bootstrap-loop | 🟢 GREEN | `tests/unit/F-001-engine-bootstrap-loop.test.ts` (3/3 PASS) |
 | F-002 | per-agent-identity-runid | 🔴 RED | TBD |
 | F-003 | repo-scaffolding | 🔴 RED | TBD |
 | F-004 | vitest-playwright-config | 🔴 RED | TBD |

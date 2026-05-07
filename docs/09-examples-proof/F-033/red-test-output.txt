@@ -1,0 +1,27 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "tests/unit/F-033-chat-history-pane.test.ts"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-033-chat-history-pane.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[90m 11[2mms[22m[39m
+[31m   [31m×[31m F-033 chat-history-pane[2m > [22mscenario 1: buildHistoryPane with no opts returns descriptor with default state (empty entries; default virtualization threshold; default live-update channel)[90m 7[2mms[22m[31m[39m
+[31m     → buildHistoryPane is not a function[39m
+[31m   [31m×[31m F-033 chat-history-pane[2m > [22mscenario 2: buildHistoryPane sorts entries by lastActivityUtc DESC (ledger scenario 1: most-recent run first)[90m 1[2mms[22m[31m[39m
+[31m     → buildHistoryPane is not a function[39m
+[31m   [31m×[31m F-033 chat-history-pane[2m > [22mscenario 3: virtualization toggles based on entry count vs threshold (ledger scenario 3: virtualize >100 runs)[90m 1[2mms[22m[31m[39m
+[31m     → buildHistoryPane is not a function[39m
+[31m   [31m×[31m F-033 chat-history-pane[2m > [22mscenario 4: selectedRunId + liveUpdateChannel pass-through (ledger scenario 2: live updates via IPC; selection state)[90m 0[2mms[22m[31m[39m
+[31m     → buildHistoryPane is not a function[39m
+[31m   [31m×[31m F-033 chat-history-pane[2m > [22mscenario 5: resolveHistoryEntry hydrates partial input with safe defaults; never throws on null/undefined/{}[90m 1[2mms[22m[31m[39m
+[31m     → resolveHistoryEntry is not a function[39m
+[31m   [31m×[31m F-033 chat-history-pane[2m > [22mscenario 6: descriptor is a plain object — JSON-cloneable + type witness (mirrors F-032 idiom)[90m 0[2mms[22m[31m[39m
+[31m     → buildHistoryPane is not a function[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 16:39:06
+[2m   Duration [22m 1.00s[2m (transform 125ms, setup 0ms, collect 117ms, tests 11ms, environment 0ms, prepare 368ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

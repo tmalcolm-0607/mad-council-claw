@@ -1,0 +1,27 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "tests/unit/F-034-session-info-panel.test.ts"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-034-session-info-panel.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[90m 13[2mms[22m[39m
+[31m   [31m×[31m F-034 session-info-panel[2m > [22mscenario 1: buildInfoPanel with no opts returns descriptor with default state (panel open; placeholder fields; chain status null)[90m 8[2mms[22m[31m[39m
+[31m     → buildInfoPanel is not a function[39m
+[31m   [31m×[31m F-034 session-info-panel[2m > [22mscenario 2: active run with audit chain green + live cost breakdown (ledger scenario 1: all metadata fields present + live sub-totals)[90m 1[2mms[22m[31m[39m
+[31m     → buildInfoPanel is not a function[39m
+[31m   [31m×[31m F-034 session-info-panel[2m > [22mscenario 3: tampered audit chain → status red + costBreakdown masked + contextGap line (ledger scenario 2: chain broken → red badge + integrity warning + cost masked)[90m 1[2mms[22m[31m[39m
+[31m     → buildInfoPanel is not a function[39m
+[31m   [31m×[31m F-034 session-info-panel[2m > [22mscenario 4: missing cost-ledger file → cost section shows placeholders + Context Gap line (ledger scenario 3: NOT silent zeros)[90m 0[2mms[22m[31m[39m
+[31m     → buildInfoPanel is not a function[39m
+[31m   [31m×[31m F-034 session-info-panel[2m > [22mscenario 5: closed run renders retroSummary; killSwitchActive surfaces verbatim[90m 1[2mms[22m[31m[39m
+[31m     → buildInfoPanel is not a function[39m
+[31m   [31m×[31m F-034 session-info-panel[2m > [22mscenario 6: descriptor is a plain object — JSON-cloneable + isOpen toggle + resolveInfoPanelField hydrator[90m 1[2mms[22m[31m[39m
+[31m     → buildInfoPanel is not a function[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 16:39:10
+[2m   Duration [22m 1.01s[2m (transform 67ms, setup 0ms, collect 80ms, tests 13ms, environment 0ms, prepare 337ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

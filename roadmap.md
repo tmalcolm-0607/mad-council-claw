@@ -31,7 +31,7 @@ status: living
 |---|---|---|---:|---:|---:|---:|---:|---:|
 | M0 | Project bootstrap | F-001..F-008 | 8 | 5 | 3 | 0 | 0 | 0 |
 | M1 | Pluggable backend | F-009..F-013 | 5 | 5 | 0 | 0 | 0 | 0 |
-| M2 | Governance triad | F-014..F-022 | 9 | 7 | 2 | 0 | 0 | 0 |
+| M2 | Governance triad | F-014..F-022 | 9 | 6 | 3 | 0 | 0 | 0 |
 | M3 | Cron / heartbeat | F-023..F-027 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M4 | Headless CLI | F-028..F-031 | 4 | 4 | 0 | 0 | 0 | 0 |
 | M5 | Desktop chat shell | F-032..F-043 | 12 | 5 | 0 | 0 | 0 | 7 |
@@ -50,7 +50,7 @@ status: living
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 0 | 0 | 0 | 0 | 3 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 0 | 0 | 0 | 0 | 5 |
 | M19 | Deferred / out-of-scope | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **31** | **5** | **0** | **18** | **90** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **30** | **6** | **0** | **18** | **90** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
 
@@ -91,7 +91,7 @@ status: living
 |---|---|---|---|
 | F-014 | pre-close-retro-signal | 🟢 GREEN | `tests/unit/F-014-pre-close-retro-signal.test.ts` (8/8 PASS) |
 | F-015 | hash-chained-audit-log | 🟢 GREEN | `tests/unit/F-015-hash-chained-audit-log.test.ts` (4/4 PASS) |
-| F-016 | query-audit-log | 🔴 RED | TBD |
+| F-016 | query-audit-log | 🟢 GREEN | `tests/unit/F-016-query-audit-log.test.ts` (8/8 PASS) |
 | F-017 | pii-redaction-egress | 🔴 RED | TBD |
 | F-018 | failure-pattern-halt | 🔴 RED | TBD |
 | F-019 | cost-ledger | 🔴 RED | TBD |

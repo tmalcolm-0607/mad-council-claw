@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-003 / lane-a
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-016 / lane-c
+    note: "RED → GREEN: tests/node/F-028-cli-entry.test.ts (7 scenarios) PASS against packages/cli/src/index.ts (~95 LOC). First M4 feature to flip; Headless CLI reaches 3R + 1G + 0L."
 feature-id: F-028
 short-slug: cli-entry
 milestone: M4
@@ -19,11 +23,12 @@ provenance:
 fr-coverage: []
 test-files:
   unit: []
-  node: []
+  node:
+    - tests/node/F-028-cli-entry.test.ts
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects: [node]
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -72,4 +77,57 @@ The headless CLI is a single executable entrypoint (`mad-council` on POSIX, `mad
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+### Wave 016 / Lane C — RED → GREEN (2026-05-07)
+
+Implementation lives at `packages/cli/src/index.ts` (~95 LOC, ESM).
+Surface:
+
+```typescript
+export type Subcommand = (args: string[]) => Promise<number>;
+export interface CliOptions {
+  subcommands: Record<string, Subcommand>;
+  defaultSubcommand?: string;
+  programName?: string;
+}
+export async function runCli(argv: string[], opts: CliOptions): Promise<number>
+```
+
+The dispatcher takes `process.argv`-shape input (slices off `[node, script]`),
+resolves the first user arg as a subcommand name against `opts.subcommands`,
+and either prints root help (no args / `--help` / `-h`), invokes the matched
+subcommand with remaining args, or writes a stderr error + help on unknown
+subcommand.
+
+Tested by `tests/node/F-028-cli-entry.test.ts` (7 scenarios) — all PASS at
+GREEN. Full proof at `docs/09-examples-proof/F-028/`.
+
+### Scope deviations from original ledger acceptance scenarios
+
+Three deviations recorded openly per `verification-protocol.md` Rule 1
+(FETCH BEFORE CITE) + `no-silent-deferrals.md`:
+
+1. **Exit code on unknown subcommand is `1`, not `64` (EX_USAGE).** The
+   original ledger §Acceptance scenarios scenario 2 specifies `64` per
+   `sysexits.h`. The v1 scaffold uses `1`; F-029 (subcommands) will
+   normalize the exit-code surface. The behavior contract is preserved
+   (non-zero exit + stderr error); only the specific code differs.
+2. **Windows-no-flash + IPv6 dual-stack (ledger scenario 3) NOT
+   exercised in v1.** Those concerns belong to the binary launcher
+   (electron-builder / native shim), not the JS dispatcher. The
+   scaffold cannot exercise them; tracked in F-031 (daemon-mode).
+3. **`--state-dir` flag + `MAD_COUNCIL_*` env-var resolution (ledger
+   §Behavior contract) deferred to F-029.** They belong with concrete
+   subcommands that read state, not with the entry dispatcher.
+
+### Cross-references
+
+- Test: `tests/node/F-028-cli-entry.test.ts` (7 scenarios)
+- Impl: `packages/cli/src/index.ts` (~95 LOC)
+- Wiring: `packages/cli/package.json` (exports + bin); `package.json`
+  (root devDependency `@mad-council-claw/cli: workspace:*`)
+- Proof: `docs/09-examples-proof/F-028/{red,green}-test-output.txt`
+  + `physical-proof.md`
+- Lane summary: `docs/06-agent-team-outputs/wave-016/lane-c-summary.md`
+- Downstream: F-029 (subcommands), F-030 (json-output), F-031
+  (daemon-mode) all RED — they wire concrete behavior into this
+  dispatcher.

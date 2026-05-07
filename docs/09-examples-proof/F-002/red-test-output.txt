@@ -1,0 +1,62 @@
+# F-002 RED test output — captured 2026-05-07 by wave-006 / lane-d
+#
+# Per the wave-5 lane-d retro proposal: "Capture RED output BEFORE flipping to
+# GREEN" so the transition has a real before/after pair instead of a
+# reconstructed one. This is the RED baseline — captured immediately after
+# authoring tests/unit/F-002-per-agent-identity-runid.test.ts but BEFORE
+# adding F-002 implementation symbols (createAgent / createSession /
+# stampIdentity) to packages/engine-core/src/index.ts.
+#
+# Command: pnpm test:unit  (wraps `vitest run tests/unit`)
+# Repo:    C:/Users/tonym/Repos/mad-council-claw
+# Test:    tests/unit/F-002-per-agent-identity-runid.test.ts
+# Vitest:  2.1.9
+# Node:    v24.13.1
+#
+# === Captured output (ANSI stripped) ===
+
+> mad-council-claw@0.0.0 test:unit C:\Users\tonym\Repos\mad-council-claw
+> vitest run tests/unit
+
+
+ RUN  v2.1.9 C:/Users/tonym/Repos/mad-council-claw
+
+ ❯ tests/unit/F-002-per-agent-identity-runid.test.ts (3 tests | 3 failed) 8ms
+   × F-002 per-agent-identity-runid > scenario 1: createSession returns a Session whose runId is UUID v7 (time-ordered) 5ms
+     → createSession is not a function
+   × F-002 per-agent-identity-runid > scenario 2: spawned agent carries parent run_id and a fresh distinct agent_id 0ms
+     → createSession is not a function
+   × F-002 per-agent-identity-runid > scenario 3: stampIdentity without an agent rejects with IDENTITY_MISSING 0ms
+     → createSession is not a function
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts (3 tests) 6ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/unit/F-002-per-agent-identity-runid.test.ts > F-002 per-agent-identity-runid > scenario 1: createSession returns a Session whose runId is UUID v7 (time-ordered)
+TypeError: createSession is not a function
+ ❯ tests/unit/F-002-per-agent-identity-runid.test.ts:31:21
+
+ FAIL  tests/unit/F-002-per-agent-identity-runid.test.ts > F-002 per-agent-identity-runid > scenario 2: spawned agent carries parent run_id and a fresh distinct agent_id
+TypeError: createSession is not a function
+ ❯ tests/unit/F-002-per-agent-identity-runid.test.ts:44:22
+
+ FAIL  tests/unit/F-002-per-agent-identity-runid.test.ts > F-002 per-agent-identity-runid > scenario 3: stampIdentity without an agent rejects with IDENTITY_MISSING
+TypeError: createSession is not a function
+ ❯ tests/unit/F-002-per-agent-identity-runid.test.ts:68:21
+
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  3 failed | 3 passed (6)
+   Start at  ...
+   Duration  ~1s
+
+# Exit code: 1 (vitest signals failure)
+#
+# Interpretation:
+#   - F-001 still passes (3/3) — unrelated to F-002 work; nothing regressed.
+#   - F-002 scenarios all fail with the same TypeError ("createSession is not a
+#     function") because the symbols have not been exported yet from
+#     packages/engine-core/src/index.ts. This is the canonical RED state.
+#   - Once the GREEN impl lands in the next commit, this same `pnpm test:unit`
+#     command should report 6/6 tests passing across both files (see
+#     green-test-output.txt).

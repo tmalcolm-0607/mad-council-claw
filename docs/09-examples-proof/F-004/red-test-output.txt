@@ -1,0 +1,151 @@
+
+> mad-council-claw@0.0.0 test:node C:\Users\tonym\Repos\mad-council-claw
+> vitest run tests/node
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [32m✓[39m tests/node/F-005-deps-pinning.test.ts [2m([22m[2m4 tests[22m[2m)[22m[90m 13[2mms[22m[39m
+ [31m❯[39m tests/node/F-003-repo-scaffolding.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[90m 26[2mms[22m[39m
+[31m   [31m×[31m F-003 repo-scaffolding[2m > [22mpackages/desktop-shell/package.json exists with name @mad-council-claw/desktop-shell[90m 12[2mms[22m[31m[39m
+[31m     → packages/desktop-shell/package.json missing: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-003 repo-scaffolding[2m > [22mpackages/cli/package.json exists with name @mad-council-claw/cli[90m 1[2mms[22m[31m[39m
+[31m     → packages/cli/package.json missing: expected false to be true // Object.is equality[39m
+ [31m❯[39m tests/node/F-004-vitest-playwright-config.test.ts [2m([22m[2m7 tests[22m[2m | [22m[31m3 failed[39m[2m)[22m[90m 22[2mms[22m[39m
+[31m   [31m×[31m F-004 — vitest + playwright config[2m > [22mvitest.config.ts declares the browser project (4th project per F-004 ledger)[90m 10[2mms[22m[31m[39m
+[31m     → expected 'import { defineConfig } from \'vitest…' to match /name:\s*['"]browser['"]/[39m
+[31m   [31m×[31m F-004 — vitest + playwright config[2m > [22mplaywright.config.ts exists at repo root[90m 3[2mms[22m[31m[39m
+[31m     → expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-004 — vitest + playwright config[2m > [22mplaywright.config.ts is parseable as a Playwright defineConfig invocation[90m 2[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\playwright.config.ts'[39m
+ [32m✓[39m tests/node/F-008-local-storage-layout.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 51[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 5 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-003-repo-scaffolding.test.ts[2m > [22mF-003 repo-scaffolding[2m > [22mpackages/desktop-shell/package.json exists with name @mad-council-claw/desktop-shell
+[31m[1mAssertionError[22m: packages/desktop-shell/package.json missing: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m tests/node/F-003-repo-scaffolding.test.ts:[2m115:77[22m[39m
+    [90m113| [39m  [34mit[39m([32m'packages/desktop-shell/package.json exists with name @mad-counci[39m…
+    [90m114| [39m    [35mconst[39m path [33m=[39m [34mjoin[39m(repoRoot[33m,[39m [32m'packages'[39m[33m,[39m [32m'desktop-shell'[39m[33m,[39m [32m'package.[39m…
+    [90m115| [39m    [34mexpect[39m([34mexistsSync[39m(path)[33m,[39m [32m'packages/desktop-shell/package.json miss[39m…
+    [90m   | [39m                                                                            [31m^[39m
+    [90m116| [39m    [35mconst[39m pkg [33m=[39m loadJson[33m<[39m[33mPackageJson[39m[33m>[39m(path)[33m;[39m
+    [90m117| [39m    [34mexpect[39m(pkg[33m.[39mname)[33m.[39m[34mtoBe[39m([32m'@mad-council-claw/desktop-shell'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/5]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-003-repo-scaffolding.test.ts[2m > [22mF-003 repo-scaffolding[2m > [22mpackages/cli/package.json exists with name @mad-council-claw/cli
+[31m[1mAssertionError[22m: packages/cli/package.json missing: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m tests/node/F-003-repo-scaffolding.test.ts:[2m122:67[22m[39m
+    [90m120| [39m  [34mit[39m([32m'packages/cli/package.json exists with name @mad-council-claw/cli[39m…
+    [90m121| [39m    [35mconst[39m path [33m=[39m [34mjoin[39m(repoRoot[33m,[39m [32m'packages'[39m[33m,[39m [32m'cli'[39m[33m,[39m [32m'package.json'[39m)[33m;[39m
+    [90m122| [39m    [34mexpect[39m([34mexistsSync[39m(path)[33m,[39m [32m'packages/cli/package.json missing'[39m)[33m.[39m[34mtoBe[39m…
+    [90m   | [39m                                                                  [31m^[39m
+    [90m123| [39m    [35mconst[39m pkg [33m=[39m loadJson[33m<[39m[33mPackageJson[39m[33m>[39m(path)[33m;[39m
+    [90m124| [39m    [34mexpect[39m(pkg[33m.[39mname)[33m.[39m[34mtoBe[39m([32m'@mad-council-claw/cli'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/5]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-004-vitest-playwright-config.test.ts[2m > [22mF-004 — vitest + playwright config[2m > [22mvitest.config.ts declares the browser project (4th project per F-004 ledger)
+[31m[1mAssertionError[22m: expected 'import { defineConfig } from \'vitest…' to match /name:\s*['"]browser['"]/[39m
+
+[32m- Expected:[39m 
+/name:\s*['"]browser['"]/
+
+[31m+ Received:[39m 
+"import { defineConfig } from 'vitest/config';
+
+export default defineConfig({
+  test: {
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'unit',
+          environment: 'happy-dom',
+          include: ['tests/unit/**/*.test.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'node',
+          environment: 'node',
+          include: ['tests/node/**/*.test.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'integration',
+          environment: 'node',
+          include: ['tests/integration/**/*.test.ts'],
+          testTimeout: 30_000,
+        },
+      },
+    ],
+  },
+});
+"
+
+[36m [2m❯[22m tests/node/F-004-vitest-playwright-config.test.ts:[2m75:21[22m[39m
+    [90m 73| [39m  [34mit[39m([32m'vitest.config.ts declares the browser project (4th project per F[39m…
+    [90m 74| [39m    [35mconst[39m content [33m=[39m [34mreadFileSync[39m([33mVITEST_CONFIG[39m[33m,[39m [32m'utf8'[39m)[33m;[39m
+    [90m 75| [39m    [34mexpect[39m(content)[33m.[39m[34mtoMatch[39m([36m/name:\s*['"]browser['"]/[39m)[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m 76| [39m  })[33m;[39m
+    [90m 77| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/5]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-004-vitest-playwright-config.test.ts[2m > [22mF-004 — vitest + playwright config[2m > [22mplaywright.config.ts exists at repo root
+[31m[1mAssertionError[22m: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m tests/node/F-004-vitest-playwright-config.test.ts:[2m79:43[22m[39m
+    [90m 77| [39m
+    [90m 78| [39m  [34mit[39m([32m'playwright.config.ts exists at repo root'[39m[33m,[39m () [33m=>[39m {
+    [90m 79| [39m    [34mexpect[39m([34mexistsSync[39m([33mPLAYWRIGHT_CONFIG[39m))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m                                          [31m^[39m
+    [90m 80| [39m  })[33m;[39m
+    [90m 81| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/5]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-004-vitest-playwright-config.test.ts[2m > [22mF-004 — vitest + playwright config[2m > [22mplaywright.config.ts is parseable as a Playwright defineConfig invocation
+[31m[1mError[22m: ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\playwright.config.ts'[39m
+[36m [2m❯[22m tests/node/F-004-vitest-playwright-config.test.ts:[2m83:21[22m[39m
+    [90m 81| [39m
+    [90m 82| [39m  [34mit[39m([32m'playwright.config.ts is parseable as a Playwright defineConfig i[39m…
+    [90m 83| [39m    [35mconst[39m content [33m=[39m [34mreadFileSync[39m([33mPLAYWRIGHT_CONFIG[39m[33m,[39m [32m'utf8'[39m)[33m;[39m
+    [90m   | [39m                    [31m^[39m
+    [90m 84| [39m    [90m// Structural check: contains defineConfig import + invocation.[39m
+    [90m 85| [39m    [90m// M5 e2e specs will exercise sharedTest/test fixtures; v1 only re[39m…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/5]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m2 passed[39m[22m[90m (4)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m23 passed[39m[22m[90m (28)[39m
+[2m   Start at [22m 08:29:57
+[2m   Duration [22m 2.07s[2m (transform 334ms, setup 0ms, collect 516ms, tests 112ms, environment 1ms, prepare 2.61s)[22m
+
+ ELIFECYCLE  Command failed with exit code 1.

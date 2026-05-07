@@ -1,0 +1,23 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "--run" "tests/unit/F-007-ipc-contract-scaffold.test.ts"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-007-ipc-contract-scaffold.test.ts [2m([22m[2m0 test[22m[2m)[22m
+
+[31m⎯⎯⎯⎯⎯⎯[1m[7m Failed Suites 1 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-007-ipc-contract-scaffold.test.ts[2m [ tests/unit/F-007-ipc-contract-scaffold.test.ts ][22m
+[31m[1mError[22m: Failed to load url ../../common/ipc-contract.js (resolved id: ../../common/ipc-contract.js) in C:/Users/tonym/Repos/mad-council-claw/tests/unit/F-007-ipc-contract-scaffold.test.ts. Does the file exist?[39m
+[90m [2m❯[22m loadAndTransform node_modules/.pnpm/vite@5.4.21_@types+node@20.19.39/node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:[2m51969:17[22m[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [2mno tests[22m
+[2m   Start at [22m 01:19:22
+[2m   Duration [22m 1.98s[2m (transform 129ms, setup 0ms, collect 0ms, tests 0ms, environment 0ms, prepare 562ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

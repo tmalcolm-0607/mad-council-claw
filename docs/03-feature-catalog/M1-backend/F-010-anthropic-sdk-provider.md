@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-015 / lane-b
+    note: "RED → GREEN. AnthropicBackend implements IBackendProvider (F-009 session shape) with deterministic stub body; 7/7 scenarios passing (129/129 suite). Real @anthropic-ai/sdk integration deferred per out-of-scope-notes (gated on F-070 secure-storage + recorded-fixture harness)."
 feature-id: F-010
 short-slug: anthropic-sdk-provider
 milestone: M1
@@ -17,12 +21,14 @@ provenance:
     - cp:src/services/llm/anthropic
 fr-coverage: []
 test-files:
-  unit: []
+  unit:
+    - tests/unit/F-010-anthropic-backend.test.ts
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - vitest.config.ts
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -70,4 +76,30 @@ confidence: high
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+**Wave 15 / Lane B — RED → GREEN (2026-05-07).**
+
+Shape: F-009's session-oriented surface (`startSession` / `sendPrompt` / `halt` /
+`stopSession`) replaces the ledger's draft `complete(prompt, opts)` + `cancel(handle)`
+shape. Documented in the file header of `packages/engine-core/src/backend-anthropic.ts`
+and in the test file's scope-deviation block. Same ledger acceptance scenarios are
+honored; only the surface name changed (per the F-009 / F-010 wave-014 / lane-d
+precedent).
+
+v1 implementation: deterministic STUB internally. Returns one `token` event
+(echoing the prompt with model id surfaced for traceability) and one `finish`
+event with reason `stop`. Halt path yields a `finish/error` event with
+`details: 'Session halted'` per F-018's RUN_HALTED observability requirement.
+
+**Real @anthropic-ai/sdk wiring is explicitly deferred** per `out-of-scope-notes`:
+gated on F-070 secure-storage for `ANTHROPIC_API_KEY` and a recorded-fixture test
+harness. Swapping the stub body for a real SDK call is self-contained — F-009
+contract surface, origin tag, and BackendEvent shape are stable, so no other
+module updates when the swap happens.
+
+| File | Role |
+|---|---|
+| `packages/engine-core/src/backend-anthropic.ts` | `AnthropicBackend` class — IBackendProvider impl |
+| `packages/engine-core/src/index.ts` | Barrel re-export `export * from './backend-anthropic.js'` |
+| `tests/unit/F-010-anthropic-backend.test.ts` | 7 scenarios (1 IBackendProvider compliance, 1 startSession tagging, 1 sendPrompt streaming, 1 unknown-session error, 1 halt → finish/error, 1 stopSession dispose, 1 halt idempotency) |
+
+Suite state at GREEN: 129/129 passing (122 prior + 7 new).

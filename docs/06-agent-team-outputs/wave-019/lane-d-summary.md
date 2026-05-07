@@ -91,6 +91,17 @@ Both jobs completed within the 1200s budget; no Timeout / ConcurrencyLimited fal
 
 Per user directive 2026-05-07 + waves 13-18 precedent: NO `git reset` (any flavor); use `git restore --staged` or selective `git add <paths>` only. This lane's commits use explicit `git add <paths>` only; no `git add .` / `git add -A`.
 
+### Sighting #19 (CHRONIC since wave-9; same pattern as F-031 sighting #18)
+
+The first commit attempt (`7be3b24`) titled "docs(wave-019/lane-d): QG7 Copilot CLI multi-model design review" did NOT land the two Lane D files; it instead swept 14 sibling-lane files (F-139 / F-140 / F-033 / F-034 ledgers + their proof artifacts + lane-b summary + supporting source under `packages/engine-core/src/`). Pre-commit hook scope crossed the explicit `git add` set during execution. Same root cause as wave-018 sighting #18(b): the pre-commit-hook scope is broader than the explicit `git add` set when sibling lanes' working-tree modifications exist at hook-execution time.
+
+Per `non-negotiable-rules.md` (NO `git reset` per user directive 2026-05-07), no rebase/reset to fix history. The mis-attributed HEAD commit (`7be3b24`) preserved real lane-b work; the two Lane D files re-staged + committed in a follow-up commit at this sighting. Substance preserved on both sides; credit attribution recorded openly here.
+
+Pattern is now CHRONIC across waves 9-19 (sightings #14-#19). Strategic fix candidates pending council retro at end of wave-19+:
+(a) per-lane branches when concurrent lane count >= 3
+(b) pre-commit hook scope-restriction to `git diff --cached --name-only` only -- the chronic root cause; the hook should NEVER touch the working tree
+(c) per-feature scope manifest at `.mad/wave-N/lane-X/scope.txt` with hook-enforced reject on cached-but-not-listed files
+
 ## Push at end
 
 Per user directive 2026-05-07 (`Push at end is AUTHORIZED for this loop session`), this lane pushes after the commit lands cleanly.

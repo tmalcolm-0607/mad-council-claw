@@ -53,7 +53,9 @@ export type HaltTrigger =
   | 'iteration_cap'
   | 'tool_calls_quota'
   // F-022 per-spawn (per agent_id) quota:
-  | 'tool_calls';
+  | 'tool_calls'
+  // F-021 escalation-ladder reaching its top (all fallbacks exhausted):
+  | 'degrade_escalate';
 
 /**
  * RUN_HALTED verdict shape — emitted when any halt trigger fires.

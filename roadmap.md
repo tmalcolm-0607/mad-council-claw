@@ -1,8 +1,8 @@
 ---
 artifact-class: navigable-roadmap
-generated-by: wave-003 / lane-d
-generated-by-version: 0.1.0
-wave: wave-003
+generated-by: wave-011 / lane-d
+generated-by-version: 0.2.0
+wave: wave-011
 date: 2026-05-07
 status: living
 ---
@@ -15,7 +15,7 @@ status: living
 
 - 🔴 **RED** — ledger exists, status=red; test exists or planned, implementation absent, test fails
 - 🟢 **GREEN** — ledger exists, status=green; test exists, implementation present, test passes
-- 🔒 **LOCKED** — ledger exists, status=green AND post-impl council-review verdict ACCEPT
+- 🔒 **LOCKED** — ledger exists, status=green AND post-impl council-review verdict ACCEPT (post-impl review verdict file must exist alongside the ledger)
 - ⏸ **DEFERRED** — explicitly out of v1 (user-acknowledged); re-open trigger noted in `docs/10-backlog/`
 - ⚪ **PLANNED** — feature ID reserved in foundational-plan catalog; ledger not yet authored
 
@@ -29,30 +29,32 @@ status: living
 
 | Milestone | Theme | Span | Total | RED | GREEN | LOCKED | DEFERRED | PLANNED |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| M0 | Project bootstrap | F-001..F-008 | 8 | 4 | 3 | 1 | 0 | 0 |
+| M0 | Project bootstrap | F-001..F-008 | 8 | 3 | 5 | 0 | 0 | 0 |
 | M1 | Pluggable backend | F-009..F-013 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M2 | Governance triad | F-014..F-022 | 9 | 2 | 7 | 0 | 0 | 0 |
 | M3 | Cron / heartbeat | F-023..F-027 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M4 | Headless CLI | F-028..F-031 | 4 | 4 | 0 | 0 | 0 | 0 |
-| M5 | Desktop chat shell | F-032..F-043 | 12 | 5 | 0 | 0 | 0 | 7 |
-| M6 | MCP & tools | F-044..F-050 | 7 | 0 | 0 | 0 | 0 | 7 |
-| M7 | Skills + Permissions + Automations | F-051..F-066 | 16 | 0 | 0 | 0 | 0 | 16 |
-| M8 | Settings & persistence | F-067..F-075 | 9 | 0 | 0 | 0 | 0 | 9 |
-| M9 | M365 integration | F-076..F-081 | 6 | 0 | 0 | 0 | 0 | 6 |
-| M10 | Multi-model adversarial review | F-082..F-087 | 6 | 0 | 0 | 0 | 0 | 6 |
-| M11 | Soul / introspect / replay | F-088..F-092 | 5 | 0 | 0 | 0 | 0 | 5 |
-| M12 | Visualization (NEW) | F-093..F-095 | 3 | 0 | 0 | 0 | 0 | 3 |
-| M13 | Multimodal input (NEW) | F-096..F-100 | 5 | 0 | 0 | 0 | 0 | 5 |
-| M14 | Productivity (NEW) | F-101..F-103 | 3 | 0 | 0 | 0 | 0 | 3 |
-| M15 | Build / packaging | F-104..F-109 | 6 | 0 | 0 | 0 | 0 | 6 |
-| M16 | Telemetry | F-110..F-113 | 4 | 0 | 0 | 0 | 0 | 4 |
-| M17 | Documentation | F-114..F-118 | 5 | 0 | 0 | 0 | 0 | 5 |
-| M18 | Marketplace local-v1 | F-119..F-121 | 3 | 0 | 0 | 0 | 0 | 3 |
+| M5 | Desktop chat shell | F-032..F-043 | 12 | 12 | 0 | 0 | 0 | 0 |
+| M6 | MCP & tools | F-044..F-050 | 7 | 7 | 0 | 0 | 0 | 0 |
+| M7 | Skills + Permissions + Automations | F-051..F-066 | 16 | 16 | 0 | 0 | 0 | 0 |
+| M8 | Settings & persistence | F-067..F-075 | 9 | 9 | 0 | 0 | 0 | 0 |
+| M9 | M365 integration | F-076..F-081 | 6 | 6 | 0 | 0 | 0 | 0 |
+| M10 | Multi-model adversarial review | F-082..F-087 | 6 | 6 | 0 | 0 | 0 | 0 |
+| M11 | Soul / introspect / replay | F-088..F-092 | 5 | 5 | 0 | 0 | 0 | 0 |
+| M12 | Visualization (NEW) | F-093..F-095 | 3 | 3 | 0 | 0 | 0 | 0 |
+| M13 | Multimodal input (NEW) | F-096..F-100 | 5 | 5 | 0 | 0 | 0 | 0 |
+| M14 | Productivity (NEW) | F-101..F-103 | 3 | 3 | 0 | 0 | 0 | 0 |
+| M15 | Build / packaging | F-104..F-109 | 6 | 6 | 0 | 0 | 0 | 0 |
+| M16 | Telemetry | F-110..F-113 | 4 | 4 | 0 | 0 | 0 | 0 |
+| M17 | Documentation | F-114..F-118 | 5 | 5 | 0 | 0 | 0 | 0 |
+| M18 | Marketplace local-v1 | F-119..F-121 | 3 | 3 | 0 | 0 | 0 | 0 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 0 | 0 | 0 | 0 | 5 |
 | M19 | Deferred / out-of-scope | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **25** | **10** | **1** | **18** | **90** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **109** | **12** | **0** | **18** | **5** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
+
+> Wave-10 transition note (closing summary `docs/11-loop-state/wave-history/wave-010.md`): F-008 (M0), F-019 / F-020 / F-022 (M2) flipped RED → GREEN. Wave-11 in flight: Lane A (F-007 ipc-contract-scaffold), Lane B (F-001 GREEN → LOCKED candidate via post-impl council review), Lane C (M5 desktop-shell ledger refresh + RED→GREEN candidate), Lane D (this lane — roadmap freshness).
 
 ## Per-milestone detail
 
@@ -62,13 +64,13 @@ status: living
 
 | F-ID | Slug | Status | Test files |
 |---|---|---|---|
-| F-001 | engine-bootstrap-loop | 🔒 LOCKED | `tests/unit/F-001-engine-bootstrap-loop.test.ts` (3/3 PASS); review `docs/05-design-reviews/council-reviews/F-001-engine-bootstrap-loop-review.md` (verdict: ACCEPT) |
+| F-001 | engine-bootstrap-loop | 🟢 GREEN | `tests/unit/F-001-engine-bootstrap-loop.test.ts` (3/3 PASS) — wave-11 lane-b LOCKED candidate |
 | F-002 | per-agent-identity-runid | 🟢 GREEN | `tests/unit/F-002-per-agent-identity-runid.test.ts` (3/3 PASS) |
 | F-003 | repo-scaffolding | 🔴 RED | TBD |
 | F-004 | vitest-playwright-config | 🔴 RED | TBD |
 | F-005 | deps-pinning | 🔴 RED | TBD |
 | F-006 | logging-pipeline | 🟢 GREEN | `tests/unit/F-006-logging-pipeline.test.ts` (4/4 PASS) |
-| F-007 | ipc-contract-scaffold | 🔴 RED | TBD |
+| F-007 | ipc-contract-scaffold | 🟢 GREEN | `tests/unit/F-007-ipc-contract-scaffold.test.ts` (3/3 PASS) — wave-11/lane-a flip; scaffold-shape contract; M5 integration scenarios deferred |
 | F-008 | local-storage-layout | 🟢 GREEN | `tests/node/F-008-local-storage-layout.test.ts` (6/6 PASS) |
 
 ### M1 — Pluggable backend
@@ -124,7 +126,7 @@ status: living
 
 ### M5 — Desktop chat shell
 
-📂 [`docs/03-feature-catalog/M5-desktop-shell/`](docs/03-feature-catalog/M5-desktop-shell/) (in-flight wave-3 Lane B; 5/12 ledgers landed) — window, history, info-panel, model picker, personality, system message, primitives, theming, shortcuts, menu, notifications, multi-window.
+📂 [`docs/03-feature-catalog/M5-desktop-shell/`](docs/03-feature-catalog/M5-desktop-shell/) (full ledger set landed wave-3 lane-b) — window, history, info-panel, model picker, personality, system message, primitives, theming, shortcuts, menu, notifications, multi-window.
 
 | F-ID | Slug | Status |
 |---|---|---|
@@ -133,186 +135,186 @@ status: living
 | F-034 | info-panel | 🔴 RED |
 | F-035 | model-picker | 🔴 RED |
 | F-036 | personality | 🔴 RED |
-| F-037 | system-message-editor | ⚪ PLANNED |
-| F-038 | ui-primitives | ⚪ PLANNED |
-| F-039 | theming | ⚪ PLANNED |
-| F-040 | keyboard-shortcuts | ⚪ PLANNED |
-| F-041 | menu-bar | ⚪ PLANNED |
-| F-042 | notifications | ⚪ PLANNED |
-| F-043 | multi-window | ⚪ PLANNED |
+| F-037 | system-message-editor | 🔴 RED |
+| F-038 | ui-primitives | 🔴 RED |
+| F-039 | theming | 🔴 RED |
+| F-040 | keyboard-shortcuts | 🔴 RED |
+| F-041 | menu-bar | 🔴 RED |
+| F-042 | notifications | 🔴 RED |
+| F-043 | multi-window | 🔴 RED |
 
 ### M6 — MCP & tools
 
-⚪ PLANNED — bridge, lifecycle, reconnect+health, tool-call audit, streaming, BYO-MCP, registry persist.
+🔴 RED ledgers landed wave-4 lane-a — bridge, lifecycle, reconnect+health, tool-call audit, streaming, BYO-MCP, registry persist.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-044 | mcp-bridge | ⚪ PLANNED |
-| F-045 | mcp-lifecycle | ⚪ PLANNED |
-| F-046 | mcp-reconnect-health | ⚪ PLANNED |
-| F-047 | tool-call-audit | ⚪ PLANNED |
-| F-048 | mcp-streaming | ⚪ PLANNED |
-| F-049 | byo-mcp | ⚪ PLANNED |
-| F-050 | mcp-registry-persist | ⚪ PLANNED |
+| F-044 | mcp-bridge | 🔴 RED |
+| F-045 | mcp-lifecycle | 🔴 RED |
+| F-046 | mcp-reconnect-health | 🔴 RED |
+| F-047 | tool-call-audit | 🔴 RED |
+| F-048 | mcp-streaming | 🔴 RED |
+| F-049 | byo-mcp | 🔴 RED |
+| F-050 | mcp-registry-persist | 🔴 RED |
 
 ### M7 — Skills + Permissions + Automations
 
-⚪ PLANNED — SKILL.md, bundled, toggle, custom-load, allowlist, version-pin, expiry, 3-tier perms, rules, audit, automations base + cron + condition + multistep + persist + shell-visible.
+🔴 RED ledgers landed wave-4 lane-b — SKILL.md, bundled, toggle, custom-load, allowlist, version-pin, expiry, 3-tier perms, rules, audit, automations base + cron + condition + multistep + persist + shell-visible.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-051 | skill-md-format | ⚪ PLANNED |
-| F-052 | skills-bundled | ⚪ PLANNED |
-| F-053 | skills-toggle | ⚪ PLANNED |
-| F-054 | skills-custom-load | ⚪ PLANNED |
-| F-055 | skills-allowlist | ⚪ PLANNED |
-| F-056 | skills-version-pin | ⚪ PLANNED |
-| F-057 | skills-expiry | ⚪ PLANNED |
-| F-058 | perms-3-tier | ⚪ PLANNED |
-| F-059 | perms-rules | ⚪ PLANNED |
-| F-060 | perms-audit | ⚪ PLANNED |
-| F-061 | automations-base | ⚪ PLANNED |
-| F-062 | automations-cron | ⚪ PLANNED |
-| F-063 | automations-condition | ⚪ PLANNED |
-| F-064 | automations-multistep | ⚪ PLANNED |
-| F-065 | automations-persist | ⚪ PLANNED |
-| F-066 | automations-shell-visible | ⚪ PLANNED |
+| F-051 | skill-md-format | 🔴 RED |
+| F-052 | skills-bundled | 🔴 RED |
+| F-053 | skills-toggle | 🔴 RED |
+| F-054 | skills-custom-load | 🔴 RED |
+| F-055 | skills-allowlist | 🔴 RED |
+| F-056 | skills-version-pin | 🔴 RED |
+| F-057 | skills-expiry | 🔴 RED |
+| F-058 | perms-3-tier | 🔴 RED |
+| F-059 | perms-rules | 🔴 RED |
+| F-060 | perms-audit | 🔴 RED |
+| F-061 | automations-base | 🔴 RED |
+| F-062 | automations-cron | 🔴 RED |
+| F-063 | automations-condition | 🔴 RED |
+| F-064 | automations-multistep | 🔴 RED |
+| F-065 | automations-persist | 🔴 RED |
+| F-066 | automations-shell-visible | 🔴 RED |
 
 ### M8 — Settings & persistence
 
-⚪ PLANNED — shape, UI, per-automation rules, encrypted storage, key-mgmt, encrypted import/export, project workspace, switcher UI, persistence.
+🔴 RED ledgers landed wave-4 lane-d — shape, UI, per-automation rules, encrypted storage, key-mgmt, encrypted import/export, project workspace, switcher UI, persistence.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-067 | settings-shape | ⚪ PLANNED |
-| F-068 | settings-ui | ⚪ PLANNED |
-| F-069 | per-automation-rules | ⚪ PLANNED |
-| F-070 | encrypted-storage | ⚪ PLANNED |
-| F-071 | key-management | ⚪ PLANNED |
-| F-072 | encrypted-import-export | ⚪ PLANNED |
-| F-073 | project-workspace | ⚪ PLANNED |
-| F-074 | workspace-switcher-ui | ⚪ PLANNED |
-| F-075 | settings-persistence | ⚪ PLANNED |
+| F-067 | settings-shape | 🔴 RED |
+| F-068 | settings-ui | 🔴 RED |
+| F-069 | per-automation-rules | 🔴 RED |
+| F-070 | encrypted-storage | 🔴 RED |
+| F-071 | key-management | 🔴 RED |
+| F-072 | encrypted-import-export | 🔴 RED |
+| F-073 | project-workspace | 🔴 RED |
+| F-074 | workspace-switcher-ui | 🔴 RED |
+| F-075 | settings-persistence | 🔴 RED |
 
 ### M9 — M365 integration
 
-⚪ PLANNED — MSAL, WAM, auth screen, token refresh, WorkIQ adapter, rate-limit+CB.
+🔴 RED ledgers landed wave-5 lane-a — MSAL, WAM, auth screen, token refresh, WorkIQ adapter, rate-limit+CB.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-076 | msal-auth | ⚪ PLANNED |
-| F-077 | wam-broker | ⚪ PLANNED |
-| F-078 | auth-screen | ⚪ PLANNED |
-| F-079 | token-refresh | ⚪ PLANNED |
-| F-080 | workiq-adapter | ⚪ PLANNED |
-| F-081 | rate-limit-circuit-breaker | ⚪ PLANNED |
+| F-076 | msal-auth | 🔴 RED |
+| F-077 | wam-broker | 🔴 RED |
+| F-078 | auth-screen | 🔴 RED |
+| F-079 | token-refresh | 🔴 RED |
+| F-080 | workiq-adapter | 🔴 RED |
+| F-081 | rate-limit-circuit-breaker | 🔴 RED |
 
 ### M10 — Multi-model adversarial review
 
-⚪ PLANNED — --council dispatch, agreement table, both-flag-CRITICAL block, fallback, consent gate, 5 high-blast-radius wired.
+🔴 RED ledgers landed wave-5 lane-b — --council dispatch, agreement table, both-flag-CRITICAL block, fallback, consent gate, 5 high-blast-radius wired.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-082 | council-dispatch | ⚪ PLANNED |
-| F-083 | agreement-table | ⚪ PLANNED |
-| F-084 | both-flag-critical-block | ⚪ PLANNED |
-| F-085 | council-fallback | ⚪ PLANNED |
-| F-086 | council-consent-gate | ⚪ PLANNED |
-| F-087 | high-blast-radius-wiring | ⚪ PLANNED |
+| F-082 | council-dispatch | 🔴 RED |
+| F-083 | agreement-table | 🔴 RED |
+| F-084 | both-flag-critical-block | 🔴 RED |
+| F-085 | council-fallback | 🔴 RED |
+| F-086 | council-consent-gate | 🔴 RED |
+| F-087 | high-blast-radius-wiring | 🔴 RED |
 
 ### M11 — Soul / introspect / replay
 
-⚪ PLANNED — soul boundary, schema, snapshot, signal pairs, deterministic replay.
+🔴 RED ledgers landed wave-5 lane-c — soul boundary, schema, snapshot, signal pairs, deterministic replay.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-088 | soul-boundary | ⚪ PLANNED |
-| F-089 | soul-schema | ⚪ PLANNED |
-| F-090 | soul-snapshot | ⚪ PLANNED |
-| F-091 | signal-pairs | ⚪ PLANNED |
-| F-092 | deterministic-replay | ⚪ PLANNED |
+| F-088 | soul-boundary | 🔴 RED |
+| F-089 | soul-schema | 🔴 RED |
+| F-090 | soul-snapshot | 🔴 RED |
+| F-091 | signal-pairs | 🔴 RED |
+| F-092 | deterministic-replay | 🔴 RED |
 
 ### M12 — Visualization (NEW)
 
-⚪ PLANNED — timeline UI, replay scrubber, filtering. New surface beyond clawpilot + canonical-e per `[V:11]`.
+🔴 RED ledgers landed wave-6 lane-a — timeline UI, replay scrubber, filtering. New surface beyond clawpilot + canonical-e per `[V:11]`.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-093 | timeline-ui | ⚪ PLANNED |
-| F-094 | replay-scrubber | ⚪ PLANNED |
-| F-095 | timeline-filtering | ⚪ PLANNED |
+| F-093 | timeline-ui | 🔴 RED |
+| F-094 | replay-scrubber | 🔴 RED |
+| F-095 | timeline-filtering | 🔴 RED |
 
 ### M13 — Multimodal input (NEW)
 
-⚪ PLANNED — voice STT, engine selection, activation modes, screenshot-to-prompt, image preprocessing.
+🔴 RED ledgers landed wave-6 lane-b — voice STT, engine selection, activation modes, screenshot-to-prompt, image preprocessing.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-096 | voice-stt | ⚪ PLANNED |
-| F-097 | stt-engine-selection | ⚪ PLANNED |
-| F-098 | voice-activation-modes | ⚪ PLANNED |
-| F-099 | screenshot-to-prompt | ⚪ PLANNED |
-| F-100 | image-preprocessing | ⚪ PLANNED |
+| F-096 | voice-stt | 🔴 RED |
+| F-097 | stt-engine-selection | 🔴 RED |
+| F-098 | voice-activation-modes | 🔴 RED |
+| F-099 | screenshot-to-prompt | 🔴 RED |
+| F-100 | image-preprocessing | 🔴 RED |
 
 ### M14 — Productivity (NEW)
 
-⚪ PLANNED — daily briefing, schedule, destination.
+🔴 RED ledgers landed wave-6 lane-a — daily briefing, schedule, destination.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-101 | daily-briefing | ⚪ PLANNED |
-| F-102 | briefing-schedule | ⚪ PLANNED |
-| F-103 | briefing-destination | ⚪ PLANNED |
+| F-101 | daily-briefing | 🔴 RED |
+| F-102 | briefing-schedule | 🔴 RED |
+| F-103 | briefing-destination | 🔴 RED |
 
 ### M15 — Build / packaging
 
-⚪ PLANNED — electron-builder, auto-update, branding, code signing, CI, CLI binary.
+🔴 RED ledgers landed wave-6 lane-c — electron-builder, auto-update, branding, code signing, CI, CLI binary.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-104 | electron-builder | ⚪ PLANNED |
-| F-105 | auto-update | ⚪ PLANNED |
-| F-106 | branding | ⚪ PLANNED |
-| F-107 | code-signing | ⚪ PLANNED |
-| F-108 | ci-pipeline | ⚪ PLANNED |
-| F-109 | cli-binary | ⚪ PLANNED |
+| F-104 | electron-builder | 🔴 RED |
+| F-105 | auto-update | 🔴 RED |
+| F-106 | branding | 🔴 RED |
+| F-107 | code-signing | 🔴 RED |
+| F-108 | ci-pipeline | 🔴 RED |
+| F-109 | cli-binary | 🔴 RED |
 
 ### M16 — Telemetry
 
-⚪ PLANNED — local OTel, crash reporting, perf metrics, opt-in/out.
+🔴 RED ledgers landed wave-7 lane-a — local OTel, crash reporting, perf metrics, opt-in/out.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-110 | local-otel | ⚪ PLANNED |
-| F-111 | crash-reporting | ⚪ PLANNED |
-| F-112 | perf-metrics | ⚪ PLANNED |
-| F-113 | telemetry-opt-in-out | ⚪ PLANNED |
+| F-110 | local-otel | 🔴 RED |
+| F-111 | crash-reporting | 🔴 RED |
+| F-112 | perf-metrics | 🔴 RED |
+| F-113 | telemetry-opt-in-out | 🔴 RED |
 
 ### M17 — Documentation
 
-⚪ PLANNED — README+quickstart, architecture docs, skill guide, MCP guide, automation cookbook.
+🔴 RED ledgers landed wave-7 lane-a — README+quickstart, architecture docs, skill guide, MCP guide, automation cookbook.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-114 | readme-quickstart | ⚪ PLANNED |
-| F-115 | architecture-docs | ⚪ PLANNED |
-| F-116 | skill-guide | ⚪ PLANNED |
-| F-117 | mcp-guide | ⚪ PLANNED |
-| F-118 | automation-cookbook | ⚪ PLANNED |
+| F-114 | readme-quickstart | 🔴 RED |
+| F-115 | architecture-docs | 🔴 RED |
+| F-116 | skill-guide | 🔴 RED |
+| F-117 | mcp-guide | 🔴 RED |
+| F-118 | automation-cookbook | 🔴 RED |
 
 ### M18 — Marketplace local-v1
 
-⚪ PLANNED — local marketplace, metadata, search/browse UI.
+🔴 RED ledgers landed wave-7 lane-b — local marketplace, metadata, search/browse UI.
 
 | F-ID | Slug | Status |
 |---|---|---|
-| F-119 | local-marketplace | ⚪ PLANNED |
-| F-120 | marketplace-metadata | ⚪ PLANNED |
-| F-121 | marketplace-search-ui | ⚪ PLANNED |
+| F-119 | local-marketplace | 🔴 RED |
+| F-120 | marketplace-metadata | 🔴 RED |
+| F-121 | marketplace-search-ui | 🔴 RED |
 
 ### NEW from research (foundational-plan §"Plus 5 NEW F-NNN candidates")
 
-⚪ PLANNED — added during loop iter-1..4 frontier research; allocated to existing milestones.
+⚪ PLANNED — added during loop iter-1..4 frontier research; allocated to existing milestones. Ledger files not yet authored.
 
 | F-ID | Slug | Target milestone | Status | Source |
 |---|---|---|---|---|
@@ -324,7 +326,7 @@ status: living
 
 ### M19 — Deferred / out-of-scope (tracking only)
 
-⏸ DEFERRED — explicitly out of v1 per user-acknowledged scope. Re-open trigger: see `docs/10-backlog/`.
+⏸ DEFERRED — explicitly out of v1 per user-acknowledged scope. Re-open trigger: see `docs/10-backlog/`. F-D-016/017/018 are reserved IDs without ledger files yet (15 ledgers exist on disk, 3 reserved).
 
 | F-ID | Slug | Status |
 |---|---|---|
@@ -389,7 +391,7 @@ Notes:
 
 ## Source
 
-- Generated by **wave-3 / Lane D** (this commit).
+- Refreshed by **wave-11 / Lane D** (this commit). Original draft: wave-3 / Lane D.
 - Authoritative source for per-feature behavior contracts: `docs/03-feature-catalog/Mn-*/F-NNN-*.md` ledgers.
 - Authoritative source for milestones + scope: `docs/01-requirements/foundational-plan.md` § "True Synthesis → Feature catalog".
 - Wave history: `docs/11-loop-state/wave-history/`.

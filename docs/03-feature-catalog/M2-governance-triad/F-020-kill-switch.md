@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-010 / lane-b
+    note: "RED test stub authored (11 scenarios) per wave-5 retro proposal; GREEN impl appends ~175 LOC F-020 region to packages/engine-core/src/index.ts. KillSwitch class + defaultKillFileExists helper; checkOrThrow() throws Error decorated with F-018 RunHaltedVerdict (trigger='manual'). 11/11 acceptance scenarios pass. Full unit suite 66/66 across 10 test files. Scope deviation from ledger surface (JSON schema parsing) explicitly surfaced per rules/no-silent-deferrals.md — deferred to engine-cycle integration step."
 feature-id: F-020
 short-slug: kill-switch
 milestone: M2
@@ -17,12 +21,12 @@ provenance:
     - kit:rules/non-negotiable-rules.md (manual halt)
 fr-coverage: []
 test-files:
-  unit: []
+  unit: [tests/unit/F-020-kill-switch.test.ts]
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects: [packages/engine-core]
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -32,6 +36,17 @@ out-of-scope-notes: |
   Manual operator verdict (override at `verdicts/manual-<ts>.json` per FR-OVERRIDE-001)
   is a related-but-distinct surface tracked separately in M11 (F-088..F-092). This
   feature is the read-time-propagating JSON kill switch only.
+
+  Wave-010 / lane-b GREEN flip lands the in-memory KillSwitch primitive only.
+  Deferred to engine-cycle integration step:
+    - JSON schema parsing of kill-switch.json (the brief simplifies to
+      existence-check; the ledger's full JSON schema with reason/set_at_utc/
+      set_by stays out of scope here).
+    - F-001 cycle-start hook integration (engine bootstrap calls
+      checkOrThrow() before every model + tool call).
+    - F-008 storage layout for resolving the kill-switch file path.
+    - F-014 retro consumer wiring (catch the throw, route halted_by_kill_switch).
+    - F-015 audit-log entry for each kill-switch read result.
 confidence: high
 ---
 
@@ -49,11 +64,11 @@ A single file `userData/mad-council-claw/kill-switch.json` declares the engine's
 
 ## Red→green wire-up
 
-| Test file | Project | Initial state | Verifies |
+| Test file | Project | State | Verifies |
 |---|---|---|---|
-| (TBD) `tests/integration/kill-switch/mid-run-halt.test.ts` | integration | RED | scenario 1 |
-| (TBD) `tests/integration/kill-switch/halt-at-boot.test.ts` | integration | RED | scenario 2 |
-| (TBD) `tests/unit/kill-switch/missing-file-defaults.test.ts` | unit | RED | scenario 3 |
+| `tests/unit/F-020-kill-switch.test.ts` | unit | GREEN | 9 ledger/brief acceptance scenarios + 2 robustness checks (env-truthy gate; read-time propagation across env mutation) |
+| (TBD) `tests/integration/kill-switch/mid-run-halt.test.ts` | integration | DEFERRED | scenario 1 (engine-cycle integration step) |
+| (TBD) `tests/integration/kill-switch/halt-at-boot.test.ts` | integration | DEFERRED | scenario 2 (engine-cycle integration step) |
 
 ## Dependencies
 
@@ -70,4 +85,24 @@ A single file `userData/mad-council-claw/kill-switch.json` declares the engine's
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+Wave-010 / lane-b lands the in-memory `KillSwitch` primitive (~175 LOC F-020 region in `packages/engine-core/src/index.ts`):
+
+- **`defaultKillFileExists(path)`** — lazy `node:fs.existsSync` wrapper that fail-safes to `false` on errors (read-time propagation per ledger).
+- **`KillSwitch` class** — constructor takes optional kill-file path, env-var name (default `MAD_KILL`), injectable `fileExistsFn`, injectable `env`. Methods:
+  - `isTriggered()` — returns true when env var === `'1'` OR `'true'`, OR kill-file path is configured AND `fileExistsFn(path)` returns true.
+  - `checkOrThrow()` — throws `Error` decorated with F-018 `RunHaltedVerdict` (`trigger='manual'`, non-empty `reason` describing which source tripped, ISO-8601 `timestamp`).
+
+Verdict-shape reuse: `trigger='manual'` is the F-018 sibling trigger reserved for operator/kill-switch invocations — same uniform halt-reporting surface across F-018 (failure-pattern), F-020 (kill-switch), F-021 (degradation), F-022 (tool-quota).
+
+Read-time propagation: every `isTriggered()` call re-reads env + FS sources; a kill triggered AFTER engine boot is observed on the NEXT call (per ledger acceptance scenario 1).
+
+11/11 acceptance scenarios pass. Full unit suite at GREEN time: 66/66 across 10 test files (F-001/F-002/F-006/F-008/F-014/F-015/F-016/F-018/F-019/F-020).
+
+Reproduction:
+
+```bash
+cd C:/Users/tonym/Repos/mad-council-claw
+pnpm install
+pnpm exec vitest run tests/unit/F-020-kill-switch.test.ts
+# Expected: "Test Files 1 passed (1)" + "Tests 11 passed (11)" + exit 0
+```

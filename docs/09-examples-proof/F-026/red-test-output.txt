@@ -1,0 +1,50 @@
+    [90m121| [39m
+    [90m122| [39m  [34mit[39m([32m'scenario 3: load() returns null when no checkpoint file exists'[39m[33m,[39m…
+    [90m123| [39m    [35mconst[39m mgr [33m=[39m [35mnew[39m [33mCheckpointManager[39m(cpPath)[33m;[39m
+    [90m   | [39m                [31m^[39m
+    [90m124| [39m    [34mexpect[39m(mgr[33m.[39m[34mload[39m())[33m.[39m[34mtoBeNull[39m()[33m;[39m
+    [90m125| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-026-resume-from-checkpoint.test.ts[2m > [22mF-026 resume-from-checkpoint[2m > [22mscenario 4: exists() reflects file presence
+[31m[1mTypeError[22m: CheckpointManager is not a constructor[39m
+[36m [2m❯[22m tests/node/F-026-resume-from-checkpoint.test.ts:[2m128:17[22m[39m
+    [90m126| [39m
+    [90m127| [39m  [34mit[39m([32m'scenario 4: exists() reflects file presence'[39m[33m,[39m () [33m=>[39m {
+    [90m128| [39m    [35mconst[39m mgr [33m=[39m [35mnew[39m [33mCheckpointManager[39m(cpPath)[33m;[39m
+    [90m   | [39m                [31m^[39m
+    [90m129| [39m    [34mexpect[39m(mgr[33m.[39m[34mexists[39m())[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+    [90m130| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-026-resume-from-checkpoint.test.ts[2m > [22mF-026 resume-from-checkpoint[2m > [22mscenario 5: schemaVersion is preserved through save → load round-trip
+[31m[1mTypeError[22m: CheckpointManager is not a constructor[39m
+[36m [2m❯[22m tests/node/F-026-resume-from-checkpoint.test.ts:[2m143:17[22m[39m
+    [90m141| [39m
+    [90m142| [39m  [34mit[39m([32m'scenario 5: schemaVersion is preserved through save → load round[39m…
+    [90m143| [39m    [35mconst[39m mgr [33m=[39m [35mnew[39m [33mCheckpointManager[39m(cpPath)[33m;[39m
+    [90m   | [39m                [31m^[39m
+    [90m144| [39m    [35mconst[39m saved[33m:[39m [33mCheckpoint[39m [33m=[39m mgr[33m.[39m[34msave[39m({
+    [90m145| [39m      runId[33m:[39m [32m'run-004'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-026-resume-from-checkpoint.test.ts[2m > [22mF-026 resume-from-checkpoint[2m > [22mscenario 6: savedAt is auto-injected at save time (ISO-8601)
+[31m[1mTypeError[22m: CheckpointManager is not a constructor[39m
+[36m [2m❯[22m tests/node/F-026-resume-from-checkpoint.test.ts:[2m159:17[22m[39m
+    [90m157| [39m  [34mit[39m([32m'scenario 6: savedAt is auto-injected at save time (ISO-8601)'[39m[33m,[39m (…
+    [90m158| [39m    [35mconst[39m before [33m=[39m [35mnew[39m [33mDate[39m()[33m.[39m[34mtoISOString[39m()[33m;[39m
+    [90m159| [39m    [35mconst[39m mgr [33m=[39m [35mnew[39m [33mCheckpointManager[39m(cpPath)[33m;[39m
+    [90m   | [39m                [31m^[39m
+    [90m160| [39m    [35mconst[39m saved [33m=[39m mgr[33m.[39m[34msave[39m({
+    [90m161| [39m      runId[33m:[39m [32m'run-005'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 12:46:50
+[2m   Duration [22m 1.26s[2m (transform 232ms, setup 0ms, collect 313ms, tests 18ms, environment 0ms, prepare 373ms)[22m
+

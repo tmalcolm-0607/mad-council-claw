@@ -1,0 +1,14 @@
+node_modules/
+dist/
+out/
+build/
+.turbo/
+coverage/
+playwright-report/
+.env
+.env.local
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/

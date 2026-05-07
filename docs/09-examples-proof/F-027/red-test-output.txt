@@ -1,0 +1,50 @@
+    [90m 91| [39m
+    [90m 92| [39m  [34mit[39m([32m'scenario 3: runId is stamped onto verdict.run_id verbatim'[39m[33m,[39m [35masyn[39m…
+    [90m 93| [39m    [35mconst[39m verdict [33m=[39m [35mawait[39m [34mmanualHaltOverride[39m({
+    [90m   | [39m                          [31m^[39m
+    [90m 94| [39m      runId[33m:[39m [32m'run-abc-123'[39m[33m,[39m
+    [90m 95| [39m      reason[33m:[39m [32m'operator halt'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 4: reason is carried through to verdict.reason verbatim
+[31m[1mTypeError[22m: manualHaltOverride is not a function[39m
+[36m [2m❯[22m tests/unit/F-027-manual-halt-override.test.ts:[2m105:27[22m[39m
+    [90m103| [39m    [35mconst[39m operatorReason [33m=[39m
+    [90m104| [39m      [32m'Halted manually by tonym at 2026-05-07T00:00Z; SB NSP rule reti[39m…
+    [90m105| [39m    [35mconst[39m verdict [33m=[39m [35mawait[39m [34mmanualHaltOverride[39m({
+    [90m   | [39m                          [31m^[39m
+    [90m106| [39m      runId[33m:[39m [32m'run-004'[39m[33m,[39m
+    [90m107| [39m      reason[33m:[39m operatorReason[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 5: async consentGate is awaited (Promise<true> resolves to halt)
+[31m[1mTypeError[22m: manualHaltOverride is not a function[39m
+[36m [2m❯[22m tests/unit/F-027-manual-halt-override.test.ts:[2m116:27[22m[39m
+    [90m114| [39m  [34mit[39m([32m'scenario 5: async consentGate is awaited (Promise<true> resolves[39m…
+    [90m115| [39m    [90m// Operators may inject an async consent UI; await must be honored.[39m
+    [90m116| [39m    [35mconst[39m verdict [33m=[39m [35mawait[39m [34mmanualHaltOverride[39m({
+    [90m   | [39m                          [31m^[39m
+    [90m117| [39m      runId[33m:[39m [32m'run-005'[39m[33m,[39m
+    [90m118| [39m      reason[33m:[39m [32m'async-confirmed halt'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 6: timestamp is an ISO-8601 string captured at halt time
+[31m[1mTypeError[22m: manualHaltOverride is not a function[39m
+[36m [2m❯[22m tests/unit/F-027-manual-halt-override.test.ts:[2m128:27[22m[39m
+    [90m126| [39m  [34mit[39m([32m'scenario 6: timestamp is an ISO-8601 string captured at halt tim[39m…
+    [90m127| [39m    [35mconst[39m before [33m=[39m [35mnew[39m [33mDate[39m()[33m.[39m[34mtoISOString[39m()[33m;[39m
+    [90m128| [39m    [35mconst[39m verdict [33m=[39m [35mawait[39m [34mmanualHaltOverride[39m({
+    [90m   | [39m                          [31m^[39m
+    [90m129| [39m      runId[33m:[39m [32m'run-006'[39m[33m,[39m
+    [90m130| [39m      reason[33m:[39m [32m'halt with timestamp check'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 12:52:25
+[2m   Duration [22m 1.20s[2m (transform 196ms, setup 0ms, collect 277ms, tests 11ms, environment 0ms, prepare 374ms)[22m
+

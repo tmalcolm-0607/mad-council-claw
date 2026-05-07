@@ -1173,3 +1173,498 @@ export function createLogger(
     error: (event, ctx) => emit('error', event, ctx),
   };
 }
+
+// ----------------------------------------------------------------------------
+// F-008 — Local storage layout
+// ----------------------------------------------------------------------------
+//
+// Per docs/03-feature-catalog/M0-bootstrap/F-008-local-storage-layout.md.
+// Behavior contract: the engine writes all persistent state under a single
+// `~/.mad-council-claw/` root. Subdirectories: sessions/, skills/,
+// automations/, audit/. The settings.json file lives at the root. Every
+// mutable JSON file is written atomically via the write-temp-then-rename
+// pattern from `concurrency-safety.md` §2; readers never observe a
+// half-written file.
+//
+// Surface:
+//   - StorageLayout: the 5-path + settingsFile struct.
+//   - getStorageLayout(rootOverride?): pure path computation.
+//   - ensureStorageLayout(layout): idempotent dir creation (mkdir recursive).
+//   - atomicWriteJson(path, content): write-temp + rename.
+//   - readJson<T>(path): JSON parse helper, typed.
+//
+// The atomic-write helper is the building block that future flips compose
+// against (F-006 filesystem sink writing log.ndjson — line-append, not
+// JSON-rewrite, so a different helper; F-015 audit chain writing
+// audit.ndjson; F-019 cost ledger; F-020 kill-switch.json — the
+// last-write-wins semantics from concurrency-safety §4 ride on this
+// helper's atomic rename).
+//
+// Out of scope (per ledger §out-of-scope-notes):
+//   - Encrypted-at-rest storage of secrets/keys (M8 / F-070-F-071).
+//   - Sweep of orphaned `<path>.tmp` files on startup (ledger §Edge cases).
+//   - Per-run `runs/<run_id>/` subdirectory creation — F-001/F-008
+//     integration flip; this lands the static layout primitives the
+//     run-bootstrap will compose against.
+
+import {
+  existsSync as _existsSync,
+  mkdirSync as _mkdirSync,
+  readFileSync as _readFileSync,
+  renameSync as _renameSync,
+  writeFileSync as _writeFileSync,
+} from 'node:fs';
+import { join as _join } from 'node:path';
+import { homedir as _homedir } from 'node:os';
+
+/**
+ * Snapshot of the on-disk layout. `root` anchors the tree; the four
+ * subdirectory paths are deterministic joins (`<root>/sessions`,
+ * `<root>/skills`, `<root>/automations`, `<root>/audit`); `settingsFile`
+ * is the canonical settings.json at the root.
+ *
+ * StorageLayout is a pure value — no filesystem side-effects. Pair with
+ * {@link ensureStorageLayout} to materialize the dirs and
+ * {@link atomicWriteJson} to write content.
+ */
+export interface StorageLayout {
+  root: string;
+  sessions: string;
+  skills: string;
+  automations: string;
+  audit: string;
+  settingsFile: string;
+}
+
+/**
+ * Compute the on-disk layout. With no argument, anchors to
+ * `~/.mad-council-claw/` under the operator's home directory; with
+ * `rootOverride`, anchors to the supplied path (used by tests + by
+ * non-default install scenarios).
+ *
+ * Pure function — does NOT touch the filesystem. Callers must invoke
+ * {@link ensureStorageLayout} to materialize the directory tree.
+ */
+export function getStorageLayout(rootOverride?: string): StorageLayout {
+  const root = rootOverride ?? _join(_homedir(), '.mad-council-claw');
+  return {
+    root,
+    sessions: _join(root, 'sessions'),
+    skills: _join(root, 'skills'),
+    automations: _join(root, 'automations'),
+    audit: _join(root, 'audit'),
+    settingsFile: _join(root, 'settings.json'),
+  };
+}
+
+/**
+ * Materialize the layout's directory tree. Idempotent: re-runs do not
+ * throw on existing dirs (mkdir uses `recursive: true`). Does NOT create
+ * `settingsFile` — that's a JSON file whose lifecycle is owned by
+ * {@link atomicWriteJson}.
+ */
+export function ensureStorageLayout(layout: StorageLayout): void {
+  for (const dir of [
+    layout.root,
+    layout.sessions,
+    layout.skills,
+    layout.automations,
+    layout.audit,
+  ]) {
+    if (!_existsSync(dir)) {
+      _mkdirSync(dir, { recursive: true });
+    }
+  }
+}
+
+/**
+ * Atomic JSON write per kit's `concurrency-safety.md` §2.
+ *
+ * Steps:
+ *   1. Serialize content as pretty-printed JSON (2-space indent).
+ *   2. Write to `<path>.tmp` via writeFileSync.
+ *   3. Rename `<path>.tmp` → `<path>` — atomic on POSIX + Windows NTFS.
+ *
+ * A reader that opens `<path>` either sees the pre-update file or the
+ * post-update file — never a half-written one. The `.tmp` orphan is
+ * consumed by the rename; on a successful return, no `.tmp` file remains.
+ *
+ * On a writer crash between step 2 and step 3, the `.tmp` orphans;
+ * the startup sweep (out of scope here, ledger §Edge cases) reclaims it.
+ */
+export function atomicWriteJson(path: string, content: unknown): void {
+  const tmp = `${path}.tmp`;
+  _writeFileSync(tmp, JSON.stringify(content, null, 2), 'utf8');
+  _renameSync(tmp, path);
+}
+
+/**
+ * Read + JSON-parse a file. Typed for caller convenience; on parse error
+ * the underlying SyntaxError propagates (callers handle).
+ */
+export function readJson<T = unknown>(path: string): T {
+  return JSON.parse(_readFileSync(path, 'utf8')) as T;
+}
+
+// ----------------------------------------------------------------------------
+// F-019 — Per-agent cost ledger
+// ----------------------------------------------------------------------------
+//
+// Per docs/03-feature-catalog/M2-governance-triad/F-019-cost-ledger.md.
+// Behavior contract (verbatim from ledger):
+//   Every `usage` event from a backend (per F-013) is converted to a
+//   cost-ledger row at runs/<run_id>/cost-ledger.ndjson. Each row carries
+//   {run_id, agent_id, parent_run_id, ts_utc, backend, model, input_tokens,
+//    output_tokens, cache_read_tokens, cache_write_tokens, cost_usd}. Costs
+//   are computed using a per-model price table (versioned in
+//   pricing/<backend>.json). Aggregations over the ledger (sum per agent,
+//   per run, per day) are deterministic. The ledger NEVER auto-imposes
+//   budgets — observable-only, per `rules/no-invented-constraints.md`.
+//
+// Scope: this implementation lands the IN-MEMORY ledger primitive
+// (CostLedger class + CostEntry shape). Out of scope (per ledger
+// out-of-scope-notes + soft-deps):
+//   - Cost-budget enforcement (auto-halt when run exceeds budget) is gated
+//     on the user EXPLICITLY setting a budget per
+//     `rules/no-invented-constraints.md`. F-019 records facts; it does
+//     NOT impose default budgets.
+//   - Persistence to runs/<run_id>/cost-ledger.ndjson (F-008's job —
+//     atomicWriteJson + the ndjson append helper plug in here).
+//   - Live event consumption from F-013 (event-normalization) — the
+//     ledger accepts pre-normalized rows.
+//   - Per-model price table (versioned `pricing/<backend>.json`) is supplied
+//     by the caller via `usd_estimate`; F-013's normalizer will compute it
+//     in a future flip and feed the ledger.
+//
+// Shape reconciliation (from wave-010 / lane-a brief):
+//   The brief proposed a CostEntry shape:
+//     {seq, timestamp, agent_id, run_id, tokens_in, tokens_out, usd_estimate,
+//      failure_mode?, model}
+//   The F-019 ledger names a richer shape:
+//     {run_id, agent_id, parent_run_id, ts_utc, backend, model, input_tokens,
+//      output_tokens, cache_read_tokens, cache_write_tokens, cost_usd}
+//   Per FETCH BEFORE CITE / wave-009 lane-c precedent (honor authoritative
+//   ledger over brief snippet), this impl encodes the ledger's full shape
+//   on each row WHILE exposing the brief's simpler API (tokens_in/tokens_out
+//   alias input_tokens/output_tokens; usd_estimate aliases cost_usd; seq +
+//   timestamp + failure_mode are sibling fields the brief's shape adds for
+//   ergonomics — preserved). Both names are present on every row so
+//   downstream consumers can use either alias.
+
+/**
+ * A single cost-ledger row.
+ *
+ * Aliased fields (the brief's API name + the ledger's authoritative name
+ * are both present so downstream consumers can use either):
+ *   - `tokens_in` aliases `input_tokens`
+ *   - `tokens_out` aliases `output_tokens`
+ *   - `usd_estimate` aliases `cost_usd`
+ *   - `timestamp` aliases `ts_utc`
+ *
+ * Optional fields:
+ *   - `parent_run_id` — F-002 correlation; present when the recording agent
+ *     was spawned from another session.
+ *   - `backend` — backend identifier (e.g. `anthropic`, `copilot`); F-013
+ *     event-normalization will populate this in a future flip.
+ *   - `cache_read_tokens` / `cache_write_tokens` — per ledger contract,
+ *     captured when the backend reports prompt-cache usage.
+ *   - `failure_mode` — present on rows where the call failed
+ *     (`tool_failure` | `rate_limit` | `parse_error` | etc.). Undefined on
+ *     success rows; observable-only — does NOT halt.
+ */
+export interface CostEntry {
+  /** Monotonic 0-based sequence within this ledger instance. */
+  seq: number;
+  /** ISO-8601 UTC timestamp captured at append time. Aliases `ts_utc`. */
+  timestamp: string;
+  /** Same as {@link timestamp}; ledger's authoritative name. */
+  ts_utc: string;
+  /** F-002 agent identity (UUID v7). */
+  agent_id: string;
+  /** F-002 run/session identity (UUID v7). */
+  run_id: string;
+  /** F-002 parent-run correlation; absent for root agents. */
+  parent_run_id?: string;
+  /** Backend identifier (e.g. `anthropic`, `copilot`). Populated by F-013. */
+  backend?: string;
+  /** Model identifier (e.g. `claude-opus-4-7`, `gpt-5`). */
+  model: string;
+  /** Input/prompt tokens. Aliases `input_tokens`. */
+  tokens_in: number;
+  /** Same as {@link tokens_in}; ledger's authoritative name. */
+  input_tokens: number;
+  /** Output/completion tokens. Aliases `output_tokens`. */
+  tokens_out: number;
+  /** Same as {@link tokens_out}; ledger's authoritative name. */
+  output_tokens: number;
+  /** Cache-read tokens reported by the backend. Defaults to 0 when absent. */
+  cache_read_tokens: number;
+  /** Cache-write tokens reported by the backend. Defaults to 0 when absent. */
+  cache_write_tokens: number;
+  /** USD cost estimate for this row. Aliases `cost_usd`. */
+  usd_estimate: number;
+  /** Same as {@link usd_estimate}; ledger's authoritative name. */
+  cost_usd: number;
+  /**
+   * Failure classification when the call failed; absent on success rows.
+   * Common values: `tool_failure`, `rate_limit`, `parse_error`, `timeout`,
+   * `quota_exceeded`. The taxonomy is open — F-013 normalizer + F-021
+   * degradation-fallback will refine it; the ledger preserves whatever
+   * the caller supplies verbatim.
+   */
+  failure_mode?: string;
+}
+
+/**
+ * Input shape for {@link CostLedger.append}. Same as {@link CostEntry} minus
+ * the auto-stamped fields (`seq`, `timestamp`/`ts_utc`) and minus the
+ * authoritative-name aliases (`input_tokens`, `output_tokens`, `cost_usd`)
+ * which the writer derives from the brief's API names.
+ *
+ * Optional `cache_read_tokens` / `cache_write_tokens` default to 0 if absent
+ * — most call sites won't supply them until F-013 normalizes prompt-cache
+ * usage events.
+ */
+export interface CostEntryInput {
+  agent_id: string;
+  run_id: string;
+  parent_run_id?: string;
+  backend?: string;
+  model: string;
+  tokens_in: number;
+  tokens_out: number;
+  cache_read_tokens?: number;
+  cache_write_tokens?: number;
+  usd_estimate: number;
+  failure_mode?: string;
+}
+
+/**
+ * In-memory append-only cost ledger.
+ *
+ * Acceptance scenarios from the F-019 ledger:
+ *   1. Backend emits usage:{input:1000, output:500} for claude-opus-4-7 →
+ *      a row is appended with cost_usd matching the per-token rate.
+ *   2. 50 rows / 3 agents → deterministic integer-token sums + 4-decimal
+ *      dollar sums (no floating-point drift from JSON parsing).
+ *   3. $1000 of cost logged with no budget → engine does NOT halt or warn;
+ *      observable-only, per `rules/no-invented-constraints.md`.
+ *
+ * The ledger has NO halt API by design — that is a load-bearing absence.
+ * Per the ledger's behavior contract, F-019 is observable-only: budget
+ * enforcement is a separate (future) feature that requires explicit user
+ * opt-in. The class deliberately exposes no `halt()`, `checkBudget()`, or
+ * `overBudget()` method.
+ *
+ * Persistence to runs/<run_id>/cost-ledger.ndjson is F-008's job; this
+ * primitive is the in-memory boundary the storage layer plugs into.
+ */
+export class CostLedger {
+  private readonly entries: CostEntry[] = [];
+
+  /**
+   * Append a cost entry. Auto-stamps `seq` (monotonic 0-based) and
+   * `timestamp` / `ts_utc` (ISO-8601 UTC, captured at call time). Returns
+   * the appended row (same identity as the entry stored in the ledger;
+   * future stored-entry mutations would corrupt aggregations — callers
+   * MUST treat the returned row as read-only).
+   *
+   * The writer mirrors the brief's API names (`tokens_in`, `tokens_out`,
+   * `usd_estimate`) onto the ledger's authoritative names (`input_tokens`,
+   * `output_tokens`, `cost_usd`) so consumers using either name see the
+   * same numbers.
+   *
+   * Per `rules/no-invented-constraints.md`, this method NEVER throws on
+   * "high cost" or "over budget" — there is no built-in budget. The user
+   * opts into budget enforcement via a separate (future) feature.
+   */
+  append(input: CostEntryInput): CostEntry {
+    const seq = this.entries.length;
+    const timestamp = new Date().toISOString();
+    const entry: CostEntry = {
+      seq,
+      timestamp,
+      ts_utc: timestamp,
+      agent_id: input.agent_id,
+      run_id: input.run_id,
+      model: input.model,
+      tokens_in: input.tokens_in,
+      input_tokens: input.tokens_in,
+      tokens_out: input.tokens_out,
+      output_tokens: input.tokens_out,
+      cache_read_tokens: input.cache_read_tokens ?? 0,
+      cache_write_tokens: input.cache_write_tokens ?? 0,
+      usd_estimate: input.usd_estimate,
+      cost_usd: input.usd_estimate,
+    };
+    if (input.parent_run_id !== undefined) {
+      entry.parent_run_id = input.parent_run_id;
+    }
+    if (input.backend !== undefined) {
+      entry.backend = input.backend;
+    }
+    if (input.failure_mode !== undefined) {
+      entry.failure_mode = input.failure_mode;
+    }
+    this.entries.push(entry);
+    return entry;
+  }
+
+  /**
+   * Read-only view of all entries. Returns the internal array typed as
+   * `readonly CostEntry[]`; the array reference is stable across calls
+   * but mutating it (or any entry) corrupts aggregations. Defensive-copy
+   * if the caller intends to filter/transform.
+   */
+  getEntries(): readonly CostEntry[] {
+    return this.entries;
+  }
+
+  /** Sum of `tokens_in` across all entries. Exact integer arithmetic. */
+  totalTokensIn(): number {
+    let sum = 0;
+    for (const e of this.entries) sum += e.tokens_in;
+    return sum;
+  }
+
+  /** Sum of `tokens_out` across all entries. Exact integer arithmetic. */
+  totalTokensOut(): number {
+    let sum = 0;
+    for (const e of this.entries) sum += e.tokens_out;
+    return sum;
+  }
+
+  /**
+   * Sum of `usd_estimate` across all entries. Floating-point arithmetic;
+   * callers comparing for equality should use `toBeCloseTo` / 4 decimal
+   * places per the F-019 ledger acceptance scenario 2.
+   */
+  totalUsd(): number {
+    let sum = 0;
+    for (const e of this.entries) sum += e.usd_estimate;
+    return sum;
+  }
+
+  /**
+   * Fraction of entries that recorded a `failure_mode`. Returns 0 for an
+   * empty ledger (NOT NaN — empty ledger has no failures by definition).
+   * Range: [0, 1].
+   */
+  failureRate(): number {
+    if (this.entries.length === 0) return 0;
+    let failures = 0;
+    for (const e of this.entries) {
+      if (e.failure_mode !== undefined) failures++;
+    }
+    return failures / this.entries.length;
+  }
+}
+
+// ----------------------------------------------------------------------------
+// F-022 — Per-spawn tool-call quota
+// ----------------------------------------------------------------------------
+//
+// Per docs/03-feature-catalog/M2-governance-triad/F-022-tool-quota.md.
+// Behavior contract (from ledger):
+//   Every tool invocation an agent makes is counted against per-agent quotas.
+//   When a quota is reached, further tool calls reject with
+//   `QUOTA_EXCEEDED: <quota_name>` and the rejection is logged. Quotas are
+//   per-agent (independent counters per agent_id) and run-scoped (counters
+//   reset on new run).
+//
+// Scope reconciliation with F-018 (FETCH BEFORE CITE):
+//   F-018 already added a GLOBAL `recordToolCall()` method on `HaltDetector`
+//   that emits `RUN_HALTED` with trigger `tool_calls_quota`. F-022 extends
+//   that surface with PER-AGENT tracking — separate counter keyed by
+//   agent_id. The two surfaces coexist:
+//     - F-018's global counter catches runaway aggregate usage across a run
+//     - F-022's per-agent counter catches per-spawn quota exhaustion
+//   Both reuse `RunHaltedVerdict`. F-022 emits trigger `'tool_calls'`
+//   (added to HaltTrigger union); F-018 emits `'tool_calls_quota'`. F-014's
+//   `halted_by_tool_quota` retro outcome (already in RetroOutcome enum)
+//   consumes both.
+//
+// Out of scope (per ledger §out-of-scope-notes + wave-10 brief):
+//   - max_calls_per_run (1000 default) and max_tools_active (10 default)
+//     are mentioned in the ledger Behavior contract but the wave-10 brief
+//     scopes F-022 to per-spawn (per agent_id) cap only. M7 owns
+//     skill-allowlist + version-pinning per ledger §out-of-scope-notes.
+//   - F-006 logger surfacing of QUOTA_EXCEEDED events — F-022 emits the
+//     verdict; F-006 routes it.
+//   - F-015 audit-evidence binding for `trigger_evidence_sha256` — the
+//     field is optional in the verdict shape; binding to a real audit row
+//     is F-015's integration step.
+
+/**
+ * Per-spawn (per agent_id) tool-call quota enforcer.
+ *
+ * Acceptance scenarios from the F-022 ledger + wave-10 brief:
+ *   1. Per-agent counter independence — agent A and B have separate counters
+ *      within the same run (ledger scenario 2).
+ *   2. Exceeding `maxPerAgent` returns `RunHaltedVerdict` with
+ *      `trigger: 'tool_calls'` (ledger scenario 1).
+ *   3. Verdict carries `agent_id` of the offending agent (audit anchor).
+ *   4. `reset(agentId)` clears a single agent's counter.
+ *   5. `resetAll()` clears every agent's counter.
+ *   6. `getCount` before any call returns 0.
+ *   7. Default `maxPerAgent = 50` (mid-point between ledger's 50/1000 caps;
+ *      wave-10 brief specifies 50 explicitly as the per-spawn default).
+ *
+ * The class is in-memory only — persistence (`runs/<run_id>/quota-state.json`)
+ * is F-008's job per the F-022 ledger §depends-on. The verdict shape reuses
+ * F-018's `RunHaltedVerdict` so F-014's retro consumer needs no changes.
+ *
+ * Reset semantics:
+ *   - `reset(agentId)`: clears one agent's counter (e.g. spawn lifecycle end).
+ *   - `resetAll()`: clears every agent's counter (e.g. run boundary).
+ *   - No automatic decay — counters are monotonic per-agent until reset.
+ *     (The run is the natural reset boundary; sub-run resets are F-001's
+ *     cycle-boundary call site, which will use `reset` per-agent at cycle
+ *     end if/when per-cycle quotas land — out of scope for this flip.)
+ */
+export class ToolCallQuota {
+  private readonly callsByAgent = new Map<string, number>();
+  private readonly maxPerAgent: number;
+
+  constructor(maxPerAgent = 50) {
+    this.maxPerAgent = maxPerAgent;
+  }
+
+  /**
+   * Record a tool call by `agentId`. Returns a halt verdict if this call
+   * pushed the agent's count past `maxPerAgent`; null otherwise.
+   *
+   * The counter increments BEFORE the threshold check, so the verdict's
+   * `reason` reports the actual breach value (e.g. "51 > 50"), giving
+   * operators a precise audit anchor.
+   */
+  recordCall(agentId: string): RunHaltedVerdict | null {
+    const current = (this.callsByAgent.get(agentId) ?? 0) + 1;
+    this.callsByAgent.set(agentId, current);
+    if (current > this.maxPerAgent) {
+      return {
+        type: 'RUN_HALTED',
+        trigger: 'tool_calls',
+        reason: `Agent ${agentId} exceeded per-spawn tool-call quota (${current} > ${this.maxPerAgent})`,
+        timestamp: new Date().toISOString(),
+        agent_id: agentId,
+      };
+    }
+    return null;
+  }
+
+  /** Return the current call count for `agentId`. Unseen agents return 0. */
+  getCount(agentId: string): number {
+    return this.callsByAgent.get(agentId) ?? 0;
+  }
+
+  /** Clear a single agent's counter. No-op when the agent is unseen. */
+  reset(agentId: string): void {
+    this.callsByAgent.delete(agentId);
+  }
+
+  /** Clear every agent's counter. Used at run-boundary reset. */
+  resetAll(): void {
+    this.callsByAgent.clear();
+  }
+}

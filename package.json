@@ -8,8 +8,8 @@
   "workspaces": ["packages/*"],
   "scripts": {
     "test": "vitest run",
-    "test:unit": "vitest run --project unit",
-    "test:node": "vitest run --project node",
+    "test:unit": "vitest run tests/unit",
+    "test:node": "vitest run tests/node",
     "lint": "eslint . --ext .ts,.tsx",
     "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
     "build": "echo 'no build yet — F-001 is library-only at this point' && exit 0"
@@ -19,7 +19,8 @@
     "@vitest/ui": "^2.0.0",
     "happy-dom": "^15.0.0",
     "typescript": "^5.5.0",
-    "@types/node": "^20.0.0"
+    "@types/node": "^20.0.0",
+    "@mad-council-claw/engine-core": "workspace:*"
   },
   "engines": {
     "node": ">=20"

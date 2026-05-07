@@ -1,0 +1,101 @@
+
+> mad-council-claw@0.0.0 test:node C:\Users\tonym\Repos\mad-council-claw
+> vitest run tests/node
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/node/F-008-local-storage-layout.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[90m 21[2mms[22m[39m
+[31m   [31m×[31m F-008 local-storage-layout[2m > [22mscenario 1: getStorageLayout returns 5 paths anchored under root[90m 9[2mms[22m[31m[39m
+[31m     → getStorageLayout is not a function[39m
+[31m   [31m×[31m F-008 local-storage-layout[2m > [22mscenario 2: ensureStorageLayout creates all dirs, idempotent on rerun[90m 3[2mms[22m[31m[39m
+[31m     → getStorageLayout is not a function[39m
+[31m   [31m×[31m F-008 local-storage-layout[2m > [22mscenario 3: atomicWriteJson + readJson round-trip with deeply-nested content[90m 2[2mms[22m[31m[39m
+[31m     → getStorageLayout is not a function[39m
+[31m   [31m×[31m F-008 local-storage-layout[2m > [22mscenario 4: atomicWriteJson does not leave a .tmp orphan after successful write[90m 1[2mms[22m[31m[39m
+[31m     → getStorageLayout is not a function[39m
+[31m   [31m×[31m F-008 local-storage-layout[2m > [22mscenario 5: atomic write replaces prior content without producing a half-read[90m 2[2mms[22m[31m[39m
+[31m     → getStorageLayout is not a function[39m
+[31m   [31m×[31m F-008 local-storage-layout[2m > [22mscenario 6: getStorageLayout() without override defaults to ~/.mad-council-claw[90m 1[2mms[22m[31m[39m
+[31m     → getStorageLayout is not a function[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 6 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-008-local-storage-layout.test.ts[2m > [22mF-008 local-storage-layout[2m > [22mscenario 1: getStorageLayout returns 5 paths anchored under root
+[31m[1mTypeError[22m: getStorageLayout is not a function[39m
+[36m [2m❯[22m tests/node/F-008-local-storage-layout.test.ts:[2m70:35[22m[39m
+    [90m 68| [39m
+    [90m 69| [39m  [34mit[39m([32m'scenario 1: getStorageLayout returns 5 paths anchored under root[39m…
+    [90m 70| [39m    [35mconst[39m layout[33m:[39m [33mStorageLayout[39m [33m=[39m [34mgetStorageLayout[39m(tempRoot)[33m;[39m
+    [90m   | [39m                                  [31m^[39m
+    [90m 71| [39m
+    [90m 72| [39m    [34mexpect[39m(layout[33m.[39mroot)[33m.[39m[34mtoBe[39m(tempRoot)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-008-local-storage-layout.test.ts[2m > [22mF-008 local-storage-layout[2m > [22mscenario 2: ensureStorageLayout creates all dirs, idempotent on rerun
+[31m[1mTypeError[22m: getStorageLayout is not a function[39m
+[36m [2m❯[22m tests/node/F-008-local-storage-layout.test.ts:[2m81:20[22m[39m
+    [90m 79| [39m
+    [90m 80| [39m  [34mit[39m([32m'scenario 2: ensureStorageLayout creates all dirs, idempotent on [39m…
+    [90m 81| [39m    [35mconst[39m layout [33m=[39m [34mgetStorageLayout[39m(tempRoot)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m 82| [39m
+    [90m 83| [39m    [90m// First call — root is fresh; subdirs do not yet exist.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-008-local-storage-layout.test.ts[2m > [22mF-008 local-storage-layout[2m > [22mscenario 3: atomicWriteJson + readJson round-trip with deeply-nested content
+[31m[1mTypeError[22m: getStorageLayout is not a function[39m
+[36m [2m❯[22m tests/node/F-008-local-storage-layout.test.ts:[2m100:20[22m[39m
+    [90m 98| [39m
+    [90m 99| [39m  [34mit[39m([32m'scenario 3: atomicWriteJson + readJson round-trip with deeply-ne[39m…
+    [90m100| [39m    [35mconst[39m layout [33m=[39m [34mgetStorageLayout[39m(tempRoot)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m101| [39m    [34mensureStorageLayout[39m(layout)[33m;[39m
+    [90m102| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-008-local-storage-layout.test.ts[2m > [22mF-008 local-storage-layout[2m > [22mscenario 4: atomicWriteJson does not leave a .tmp orphan after successful write
+[31m[1mTypeError[22m: getStorageLayout is not a function[39m
+[36m [2m❯[22m tests/node/F-008-local-storage-layout.test.ts:[2m123:20[22m[39m
+    [90m121| [39m
+    [90m122| [39m  [34mit[39m([32m'scenario 4: atomicWriteJson does not leave a .tmp orphan after s[39m…
+    [90m123| [39m    [35mconst[39m layout [33m=[39m [34mgetStorageLayout[39m(tempRoot)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m124| [39m    [34mensureStorageLayout[39m(layout)[33m;[39m
+    [90m125| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-008-local-storage-layout.test.ts[2m > [22mF-008 local-storage-layout[2m > [22mscenario 5: atomic write replaces prior content without producing a half-read
+[31m[1mTypeError[22m: getStorageLayout is not a function[39m
+[36m [2m❯[22m tests/node/F-008-local-storage-layout.test.ts:[2m133:20[22m[39m
+    [90m131| [39m
+    [90m132| [39m  [34mit[39m([32m'scenario 5: atomic write replaces prior content without producin[39m…
+    [90m133| [39m    [35mconst[39m layout [33m=[39m [34mgetStorageLayout[39m(tempRoot)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m134| [39m    [34mensureStorageLayout[39m(layout)[33m;[39m
+    [90m135| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-008-local-storage-layout.test.ts[2m > [22mF-008 local-storage-layout[2m > [22mscenario 6: getStorageLayout() without override defaults to ~/.mad-council-claw
+[31m[1mTypeError[22m: getStorageLayout is not a function[39m
+[36m [2m❯[22m tests/node/F-008-local-storage-layout.test.ts:[2m153:20[22m[39m
+    [90m151| [39m
+    [90m152| [39m  [34mit[39m([32m'scenario 6: getStorageLayout() without override defaults to ~/.m[39m…
+    [90m153| [39m    [35mconst[39m layout [33m=[39m [34mgetStorageLayout[39m()[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m154| [39m    [90m// Path-shape check only — never create directories in the operato[39m…
+    [90m155| [39m    [90m// home during the unit run. The path must end with the canonical[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 00:41:57
+[2m   Duration [22m 1.62s[2m (transform 146ms, setup 0ms, collect 166ms, tests 21ms, environment 0ms, prepare 518ms)[22m
+
+ ELIFECYCLE  Command failed with exit code 1.

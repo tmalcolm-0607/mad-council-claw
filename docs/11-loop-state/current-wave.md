@@ -62,3 +62,15 @@ Append below as instances claim work. Format: `| instance-type | claimed-item | 
 ## Next wave handoff
 
 Wave-12 starts when wave-11 lanes A + B + C close (Lane D self-closes on commit of this update + wave-history files).
+
+---
+
+## Out-of-band steering input (added 2026-05-07)
+
+> This file is stale (last updated wave-11). Actual wave progression has continued through wave-12, 13, 14, 15, 16, 17 per `git log` and `roadmap.md` transition notes. The executing session uses `roadmap.md` + `implementation-todo.md` as authoritative status surfaces, not this file.
+>
+> A separate audit-driven session (967a44fb) has authored backlog updates that should inform the next wave's lane allocation. **Read `orchestrator-steering-2026-05-07.md` (in this same directory) before claiming the next wave's lanes.**
+>
+> Summary of new backlog items: F-205 kit-bootstrap (M0, HIGH priority, soft-blocks F-206..F-210 + M19 reopen verdict); F-206..F-210 m-relay-main lift candidates (M9); F-D-018 activity-protocol-teams-outlook ledger authored from scratch (was RESERVED); M19 reopen-request package for F-D-008/F-D-010/F-D-018 (gated on /council-review verdict, which is itself gated on F-205 execution).
+>
+> Audit synthesis: `C:/Users/tonym/Repos/MAD - Clean/.mad/reports/mad-council-claw-audit-2026-05-07.md`

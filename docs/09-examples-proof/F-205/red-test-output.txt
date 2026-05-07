@@ -1,0 +1,139 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "tests/node/F-205-kit-bootstrap.test.ts"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/node/F-205-kit-bootstrap.test.ts [2m([22m[2m63 tests[22m[2m | [22m[31m62 failed[39m[2m)[22m[90m 41[2mms[22m[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22m.claude/rules/ directory exists at repo root[90m 9[2mms[22m[31m[39m
+[31m     → .claude/rules/ missing — expected C:\Users\tonym\Repos\mad-council-claw\.claude\rules: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/no-silent-deferrals.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → no-silent-deferrals.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-silent-deferrals.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/no-top-n-capping.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → no-top-n-capping.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-top-n-capping.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/canonical-skill-only.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → canonical-skill-only.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\canonical-skill-only.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/canonical-artifact-frontmatter.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → canonical-artifact-frontmatter.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\canonical-artifact-frontmatter.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/scope-discipline.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → scope-discipline.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\scope-discipline.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/non-negotiable-rules.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → non-negotiable-rules.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\non-negotiable-rules.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/minimum-change.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → minimum-change.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\minimum-change.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/no-invented-constraints.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → no-invented-constraints.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-invented-constraints.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/verification-protocol.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → verification-protocol.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\verification-protocol.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/autonomous-loop-discipline.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → autonomous-loop-discipline.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\autonomous-loop-discipline.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/loop-cadence-discipline.md exists and is non-empty[90m 2[2mms[22m[31m[39m
+[31m     → loop-cadence-discipline.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\loop-cadence-discipline.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/loop-stop-language-discipline.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → loop-stop-language-discipline.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\loop-stop-language-discipline.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/orchestration.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → orchestration.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\orchestration.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/orchestrator-identity.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → orchestrator-identity.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\orchestrator-identity.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/agent-teams.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → agent-teams.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\agent-teams.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/anomaly-thresholds.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → anomaly-thresholds.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\anomaly-thresholds.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/context-guardian.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → context-guardian.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\context-guardian.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/prompt-injection-policy.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → prompt-injection-policy.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\prompt-injection-policy.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/dangerous-operations-policy.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → dangerous-operations-policy.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\dangerous-operations-policy.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/degradation-fallback-policy.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → degradation-fallback-policy.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\degradation-fallback-policy.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/concurrency-safety.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → concurrency-safety.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\concurrency-safety.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/mad-workflow.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → mad-workflow.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\mad-workflow.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/quality-gates.md exists and is non-empty[90m 1[2mms[22m[31m[39m
+[31m     → quality-gates.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\quality-gates.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/skill-standards.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → skill-standards.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\skill-standards.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/_status-convention.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → _status-convention.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\_status-convention.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mall 26 batch-1 rule files exist and are non-empty[2m > [22m.claude/rules/artifact-placement.md exists and is non-empty[90m 0[2mms[22m[31m[39m
+[31m     → artifact-placement.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\artifact-placement.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/no-silent-deferrals.md opens with frontmatter or top-level heading[90m 1[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-silent-deferrals.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/no-top-n-capping.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-top-n-capping.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/canonical-skill-only.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\canonical-skill-only.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/canonical-artifact-frontmatter.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\canonical-artifact-frontmatter.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/scope-discipline.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\scope-discipline.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/non-negotiable-rules.md opens with frontmatter or top-level heading[90m 1[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\non-negotiable-rules.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/minimum-change.md opens with frontmatter or top-level heading[90m 1[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\minimum-change.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/no-invented-constraints.md opens with frontmatter or top-level heading[90m 1[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-invented-constraints.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/verification-protocol.md opens with frontmatter or top-level heading[90m 1[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\verification-protocol.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/autonomous-loop-discipline.md opens with frontmatter or top-level heading[90m 1[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\autonomous-loop-discipline.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/loop-cadence-discipline.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\loop-cadence-discipline.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/loop-stop-language-discipline.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\loop-stop-language-discipline.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/orchestration.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\orchestration.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/orchestrator-identity.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\orchestrator-identity.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/agent-teams.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\agent-teams.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/anomaly-thresholds.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\anomaly-thresholds.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/context-guardian.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\context-guardian.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/prompt-injection-policy.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\prompt-injection-policy.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/dangerous-operations-policy.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\dangerous-operations-policy.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/degradation-fallback-policy.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\degradation-fallback-policy.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/concurrency-safety.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\concurrency-safety.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/mad-workflow.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\mad-workflow.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/quality-gates.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\quality-gates.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/skill-standards.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\skill-standards.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/_status-convention.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\_status-convention.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22meach rule file has a recognizable rule-shape opener[2m > [22m.claude/rules/artifact-placement.md opens with frontmatter or top-level heading[90m 0[2mms[22m[31m[39m
+[31m     → ENOENT: no such file or directory, open 'C:\Users\tonym\Repos\mad-council-claw\.claude\rules\artifact-placement.md'[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mno-silent-deferrals must contain core directive[90m 1[2mms[22m[31m[39m
+[31m     → no-silent-deferrals.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-silent-deferrals.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mno-top-n-capping must contain core directive[90m 0[2mms[22m[31m[39m
+[31m     → no-top-n-capping.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\no-top-n-capping.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mcanonical-skill-only must mention inline-authoring antipattern[90m 0[2mms[22m[31m[39m
+[31m     → canonical-skill-only.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\canonical-skill-only.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mcanonical-artifact-frontmatter must reference the contract[90m 0[2mms[22m[31m[39m
+[31m     → canonical-artifact-frontmatter.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\canonical-artifact-frontmatter.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mscope-discipline must contain "every item" directive[90m 0[2mms[22m[31m[39m
+[31m     → scope-discipline.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\scope-discipline.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mverification-protocol must contain Rule 1 invariant[90m 0[2mms[22m[31m[39m
+[31m     → verification-protocol.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\verification-protocol.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mminimum-change must contain core principle[90m 0[2mms[22m[31m[39m
+[31m     → minimum-change.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\minimum-change.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22mnon-negotiable-rules must contain verb-bound permission fences[90m 0[2mms[22m[31m[39m
+[31m     → non-negotiable-rules.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\non-negotiable-rules.md: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-205 kit-bootstrap (batch 1 — kit-generic rules)[2m > [22mload-bearing rules contain core semantic markers (body landed, not just frontmatter)[2m > [22morchestrator-identity must contain core principle[90m 0[2mms[22m[31m[39m
+[31m     → orchestrator-identity.md missing at C:\Users\tonym\Repos\mad-council-claw\.claude\rules\orchestrator-identity.md: expected false to be true // Object.is equality[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m62 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (63)[39m
+[2m   Start at [22m 16:37:53
+[2m   Duration [22m 883ms[2m (transform 52ms, setup 0ms, collect 56ms, tests 41ms, environment 0ms, prepare 270ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

@@ -31,7 +31,7 @@ status: living
 |---|---|---|---:|---:|---:|---:|---:|---:|
 | M0 | Project bootstrap | F-001..F-008 | 8 | 2 | 1 | 5 | 0 | 0 |
 | M1 | Pluggable backend | F-009..F-013 | 5 | 5 | 0 | 0 | 0 | 0 |
-| M2 | Governance triad | F-014..F-022 | 9 | 0 | 9 | 0 | 0 | 0 |
+| M2 | Governance triad | F-014..F-022 | 9 | 0 | 1 | 8 | 0 | 0 |
 | M3 | Cron / heartbeat | F-023..F-027 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M4 | Headless CLI | F-028..F-031 | 4 | 4 | 0 | 0 | 0 | 0 |
 | M5 | Desktop chat shell | F-032..F-043 | 12 | 12 | 0 | 0 | 0 | 0 |
@@ -50,7 +50,7 @@ status: living
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 3 | 0 | 0 | 0 | 0 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M19 | Deferred (user-acknowledged tracking row) | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **111** | **10** | **5** | **18** | **0** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **111** | **2** | **13** | **18** | **0** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
 
@@ -61,6 +61,8 @@ status: living
 > Wave-12 / Lane D transition note: F-002 + F-006 + F-008 flipped GREEN → LOCKED via post-impl council reviews. Three new review files under `docs/05-design-reviews/council-reviews/` (F-002 median confidence 90; F-006 median 86; F-008 median 88; all verdict ACCEPT, 0 CRITICAL / 0 MAJOR each). M0 now reads 3R + 1G + 4L (F-001/F-002/F-006/F-008 LOCKED; F-007 GREEN; F-003/F-004/F-005 RED). Total project state: 114 RED / 8 GREEN / 4 LOCKED across 144 features (126 active + 18 deferred).
 
 > Wave-12 / Lane A transition note: F-021 (degradation-fallback) flipped RED → GREEN. New `packages/engine-core/src/degradation.ts` (~208 LOC) lands the in-memory `DegradationLadder` primitive — a 5-rung escalation ladder (`normal → skill-fallback → model-fallback → reduced-tool-set → headless → halt`) with `escalate(trigger)` advancing one rung at a time and `recover(reason)` dropping one rung; reaching 'halt' returns a `RunHaltedVerdict` (trigger=`degrade_escalate`, the 14th value in the F-018 `HaltTrigger` union). Per-resource circuit-breaker, Context-Gaps emission, required-vs-optional classification, and F-018 hand-off for required-dependency failures deferred to engine-cycle integration per `rules/no-silent-deferrals.md`. M2 row updated 2R + 7G → 1R + 8G; TOTAL 114R / 8G → 113R / 9G.
+
+> Wave-13 / Lane D transition note: F-018 + F-019 + F-020 + F-022 flipped GREEN → LOCKED via post-impl council reviews. Four new review files under `docs/05-design-reviews/council-reviews/` (F-018 median 89; F-019 median 89; F-020 median 88; F-022 median 88; all verdict ACCEPT, 0 CRITICAL / 0 MAJOR each). M2 row aggregate-count update is owned by whichever lane lands last (Lane C is flipping F-014/15/16/17 in parallel; the row-state count refresh is intentionally deferred to a post-wave-13 refresh lane to avoid the cross-lane stale-input race documented in `confidence-ledger.md` Lane-D-w12-roadmap-F-001-LOCKED-restored). Per-feature row state above is owned by the lane that flipped each feature.
 
 > Wave-12 / Lane B transition note: F-017 (pii-redaction-egress) flipped RED → GREEN. New `packages/engine-core/src/redaction.ts` (~104 LOC) lands the `redact()` + `redactObject()` helper primitives — pattern-based PII redactor for engine egress paths (audit-log writes, telemetry exports, outbound LLM-call prompts) with 4 built-in categories (emails, phones, GUIDs, home paths) + `customPatterns` for project-specific tokens. Order-of-operations (emails → GUIDs → phones → home paths → custom) prevents GUID-vs-phone false-match. Reject-on-detect orchestration (ledger's stricter `PII_DETECTED: <category>` semantics), F-015 audit-log emission tie-in, M16 telemetry-export integration, M1 LLM-call integration, and adversarial-eval lane deferred per `rules/no-silent-deferrals.md`. M2 row 1R + 8G → 0R + 9G; TOTAL 113R / 9G → 112R / 10G. **M2 governance triad now fully RED-cleared.**
 
@@ -103,15 +105,15 @@ status: living
 
 | F-ID | Slug | Status | Test files |
 |---|---|---|---|
-| F-014 | pre-close-retro-signal | 🟢 GREEN | `tests/unit/F-014-pre-close-retro-signal.test.ts` (8/8 PASS) |
-| F-015 | hash-chained-audit-log | 🟢 GREEN | `tests/unit/F-015-hash-chained-audit-log.test.ts` (4/4 PASS) |
-| F-016 | query-audit-log | 🟢 GREEN | `tests/unit/F-016-query-audit-log.test.ts` (8/8 PASS) |
-| F-017 | pii-redaction-egress | 🟢 GREEN | `tests/unit/F-017-audit-pii-redaction.test.ts` (8/8 PASS) — wave-12/lane-b flip; redact() + redactObject() helper primitives (~104 LOC, 4 built-in categories: emails / phones / GUIDs / home paths + customPatterns); reject-on-detect orchestration + audit-log emission tie-in + telemetry/LLM-call integration deferred to engine-cycle integration |
-| F-018 | failure-pattern-halt | 🟢 GREEN | `tests/unit/F-018-failure-pattern-halt.test.ts` (9/9 PASS) |
-| F-019 | cost-ledger | 🟢 GREEN | `tests/unit/F-019-cost-ledger.test.ts` (8/8 PASS) |
-| F-020 | kill-switch | 🟢 GREEN | `tests/unit/F-020-kill-switch.test.ts` (11/11 PASS) |
+| F-014 | pre-close-retro-signal | 🔒 LOCKED | `tests/unit/F-014-pre-close-retro-signal.test.ts` (8/8 PASS); council review verdict ACCEPT (median 88) — wave-13 / lane-c |
+| F-015 | hash-chained-audit-log | 🔒 LOCKED | `tests/unit/F-015-hash-chained-audit-log.test.ts` (4/4 PASS); council review verdict ACCEPT (median 89) — wave-13 / lane-c |
+| F-016 | query-audit-log | 🔒 LOCKED | `tests/unit/F-016-query-audit-log.test.ts` (8/8 PASS); council review verdict ACCEPT (median 87) — wave-13 / lane-c |
+| F-017 | pii-redaction-egress | 🔒 LOCKED | `tests/unit/F-017-audit-pii-redaction.test.ts` (8/8 PASS); council review verdict ACCEPT (median 86) — wave-13 / lane-c; redact() + redactObject() helper primitives (~104 LOC); reject-on-detect orchestration deferred (composable atop primitive ~5 LOC wrapper) |
+| F-018 | failure-pattern-halt | 🔒 LOCKED | `tests/unit/F-018-failure-pattern-halt.test.ts` (9/9 PASS); council review verdict ACCEPT (median 89) — wave-13 / lane-d |
+| F-019 | cost-ledger | 🔒 LOCKED | `tests/unit/F-019-cost-ledger.test.ts` (8/8 PASS); council review verdict ACCEPT (median 89) — wave-13 / lane-d |
+| F-020 | kill-switch | 🔒 LOCKED | `tests/unit/F-020-kill-switch.test.ts` (11/11 PASS); council review verdict ACCEPT (median 88) — wave-13 / lane-d |
 | F-021 | degradation-fallback | 🟢 GREEN | `tests/unit/F-021-degradation-ladder.test.ts` (11/11 PASS) — wave-12/lane-a flip; in-memory escalation-ladder primitive (5 rungs + halt); per-resource circuit-breaker + Context-Gaps + required-vs-optional classification deferred to engine-cycle integration |
-| F-022 | tool-quota | 🟢 GREEN | `tests/unit/F-022-tool-call-quota.test.ts` (8/8 PASS) |
+| F-022 | tool-quota | 🔒 LOCKED | `tests/unit/F-022-tool-call-quota.test.ts` (8/8 PASS); council review verdict ACCEPT (median 88) — wave-13 / lane-d |
 
 ### M3 — Cron / heartbeat
 

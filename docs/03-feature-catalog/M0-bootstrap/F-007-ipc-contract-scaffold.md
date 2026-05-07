@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-011 / lane-a
     note: "Scaffold flip: common/ipc-contract.ts created with empty IpcInvokeMap + IpcInvokeChannel/Request/Response helper types; tests/unit/F-007-ipc-contract-scaffold.test.ts authored RED→GREEN (3/3 PASS); full suite 75/75 PASS. Build-time + runtime helpers for M5+ to fill in. Same wave that refactored packages/engine-core/src/index.ts into per-feature files."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-b
+    note: "GREEN → LOCKED. Post-impl council review at docs/05-design-reviews/council-reviews/F-007-ipc-contract-scaffold-review.md verdict ACCEPT (median confidence 88; Advocate APPROVE 90, Skeptic APPROVE-WITH-SUGGESTIONS 76, Architect APPROVE 88; 0 CRITICAL / 0 MAJOR / 3 MINOR / 3 PRAISE). MINOR findings: scenarios 2+3 (renderer-can't-bypass + missing-handler-build-fail) require M5 runtime; type-vs-interface IpcInvokeMap choice deferred to M5's first channel; empty-state cryptic errors retired by M5. Fifth LOCKED transition in the repo (after F-001 wave-11, F-002 + F-006 + F-008 wave-12)."
 feature-id: F-007
 short-slug: ipc-contract-scaffold
 milestone: M0

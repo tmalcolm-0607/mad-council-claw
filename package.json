@@ -4,11 +4,22 @@
   "private": true,
   "description": "MAD Council Claw — hybrid Electron+headless AI agent platform combining clawpilot UX with canonical-e governance discipline",
   "license": "MIT",
+  "type": "module",
+  "workspaces": ["packages/*"],
   "scripts": {
-    "test": "echo 'no tests yet — Lane Zero is docs-only; M0 wave will add Vitest 4-project layout per docs/01-requirements/foundational-plan.md' && exit 0",
-    "build": "echo 'no build yet — Lane Zero is docs-only; M0 wave will add Vite + electron-builder per docs/01-requirements/foundational-plan.md' && exit 0",
-    "lint": "echo 'no lint yet — Lane Zero is docs-only; M0 wave will add ESLint + Prettier' && exit 0",
-    "format": "echo 'no formatter yet — Lane Zero is docs-only' && exit 0"
+    "test": "vitest run",
+    "test:unit": "vitest run --project unit",
+    "test:node": "vitest run --project node",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.{ts,tsx,md,json}\"",
+    "build": "echo 'no build yet — F-001 is library-only at this point' && exit 0"
+  },
+  "devDependencies": {
+    "vitest": "^2.0.0",
+    "@vitest/ui": "^2.0.0",
+    "happy-dom": "^15.0.0",
+    "typescript": "^5.5.0",
+    "@types/node": "^20.0.0"
   },
   "engines": {
     "node": ">=20"

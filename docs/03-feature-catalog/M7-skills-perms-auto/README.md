@@ -4,7 +4,7 @@ generated-by: hand-authored (wave-004 / lane-b)
 status: red
 milestone: M7
 short-slug: skills-perms-auto
-features: F-051..F-066
+features: F-051..F-066, F-125
 authored: 2026-05-06
 ---
 
@@ -32,6 +32,7 @@ The extensibility plane (`foundational-plan.md` § Architecture, V:8 + § Tool p
 | F-064 | automations-multistep | Sequential steps; output-interpolation; halt-vs-continue; per-step checkpoint |
 | F-065 | automations-persistence | Validate-on-load; quarantine invalid; resume-from-checkpoint; 100-run history rotation |
 | F-066 | automations-results-in-shell | RUN_COMPLETED IPC; inline render; per-automation perm decisions auditable |
+| F-125 | mcp-tool-cap-per-workspace | Per-workspace cap on MCP-surfaced tools (default 10 per foundational-plan; D-3 OPEN); user picks subset when over cap; no silent truncation (NEW from frontier research) |
 
 ## Dependency DAG
 
@@ -97,7 +98,7 @@ F-051 (skills)  ──→ F-061 step type "skill-invoke"
 - Evals-first scaffold (`/skill-create` shape) → NEW F-NNN candidate; not authored
 - Skill-conciseness audit (token-cost-vs-information-value scan) → NEW F-NNN candidate; not authored
 - MCP tool-name validation (`ServerName:tool_name` format) → NEW F-NNN candidate; not authored
-- F-125 mcp-tool-cap-per-workspace (M7 NEW from frontier research) — explicitly listed in foundational-plan as one of the 5 NEW F-NNN candidates, deferred until its own ledger drop in a later wave
+- F-125 mcp-tool-cap-per-workspace (M7 NEW from frontier research) — ledger authored wave-012/lane-c (RED); D-3 closure (default cap value of 10) pending before flip to GREEN
 - Calendar-aware permissions (time-window-bounded grants) → v1.5
 - Quad-state permission expansion (ALLOW_BOUNDED, etc.) → v1.5
 - Encrypted-at-rest skill / automation storage → M8 (F-070)

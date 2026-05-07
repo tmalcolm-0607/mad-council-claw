@@ -1,0 +1,7 @@
+{
+  "name": "@mad-council-claw/cli",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Headless CLI surface for MAD Council Claw - exposes engine-core lifecycle, council commands, and audit log readers as command-line entrypoints. Empty scaffold at v1; M3+ features bind concrete subcommands.",
+  "type": "module"
+}

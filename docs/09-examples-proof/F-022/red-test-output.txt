@@ -1,0 +1,124 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-022-tool-call-quota.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[90m 16[2mms[22m[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mscenario 1: per-agent counter increments independently — agent A and B do not interfere[90m 9[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mscenario 2: exceeding maxPerAgent returns RUN_HALTED with trigger="tool_calls"[90m 1[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mscenario 3: verdict carries agent_id of the offending agent[90m 1[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mscenario 4: reset(agentId) clears a single agent's counter[90m 1[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mscenario 5: resetAll() clears every agent's counter[90m 1[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mscenario 6: getCount before any call returns 0[90m 1[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mscenario 7: default maxPerAgent is 50 — 50 calls succeed, 51st halts[90m 1[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+[31m   [31m×[31m F-022 tool-call-quota[2m > [22mper-agent quota: agent-B can keep calling after agent-A is over quota[90m 0[2mms[22m[31m[39m
+[31m     → ToolCallQuota is not a constructor[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 8 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mscenario 1: per-agent counter increments independently — agent A and B do not interfere
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m72:19[22m[39m
+    [90m 70| [39m[34mdescribe[39m([32m'F-022 tool-call-quota'[39m[33m,[39m () [33m=>[39m {
+    [90m 71| [39m  [34mit[39m([32m'scenario 1: per-agent counter increments independently — agent A[39m…
+    [90m 72| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m([34m5[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m 73| [39m
+    [90m 74| [39m    [90m// Agent A makes 3 calls — no halt.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mscenario 2: exceeding maxPerAgent returns RUN_HALTED with trigger="tool_calls"
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m90:19[22m[39m
+    [90m 88| [39m
+    [90m 89| [39m  [34mit[39m([32m'scenario 2: exceeding maxPerAgent returns RUN_HALTED with trigge[39m…
+    [90m 90| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m([34m3[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m 91| [39m
+    [90m 92| [39m    [90m// First three calls within budget.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mscenario 3: verdict carries agent_id of the offending agent
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m114:19[22m[39m
+    [90m112| [39m
+    [90m113| [39m  [34mit[39m([32m'scenario 3: verdict carries agent_id of the offending agent'[39m[33m,[39m ()…
+    [90m114| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m([34m2[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m115| [39m
+    [90m116| [39m    quota[33m.[39m[34mrecordCall[39m([32m'agent-X'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mscenario 4: reset(agentId) clears a single agent's counter
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m127:19[22m[39m
+    [90m125| [39m
+    [90m126| [39m  [34mit[39m([32m'scenario 4: reset(agentId) clears a single agent\'s counter'[39m[33m,[39m ()…
+    [90m127| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m([34m3[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m128| [39m
+    [90m129| [39m    quota[33m.[39m[34mrecordCall[39m([32m'agent-A'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mscenario 5: resetAll() clears every agent's counter
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m149:19[22m[39m
+    [90m147| [39m
+    [90m148| [39m  [34mit[39m([32m'scenario 5: resetAll() clears every agent\'s counter'[39m[33m,[39m () [33m=>[39m {
+    [90m149| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m([34m10[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m150| [39m
+    [90m151| [39m    quota[33m.[39m[34mrecordCall[39m([32m'agent-A'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mscenario 6: getCount before any call returns 0
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m166:19[22m[39m
+    [90m164| [39m
+    [90m165| [39m  [34mit[39m([32m'scenario 6: getCount before any call returns 0'[39m[33m,[39m () [33m=>[39m {
+    [90m166| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m()[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m167| [39m    [34mexpect[39m(quota[33m.[39m[34mgetCount[39m([32m'never-seen-agent'[39m))[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+    [90m168| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mscenario 7: default maxPerAgent is 50 — 50 calls succeed, 51st halts
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m171:19[22m[39m
+    [90m169| [39m
+    [90m170| [39m  [34mit[39m([32m'scenario 7: default maxPerAgent is 50 — 50 calls succeed, 51st h[39m…
+    [90m171| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m()[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m172| [39m
+    [90m173| [39m    [90m// 50 calls within the default budget.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-022-tool-call-quota.test.ts[2m > [22mF-022 tool-call-quota[2m > [22mper-agent quota: agent-B can keep calling after agent-A is over quota
+[31m[1mTypeError[22m: ToolCallQuota is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-022-tool-call-quota.test.ts:[2m189:19[22m[39m
+    [90m187| [39m
+    [90m188| [39m  [34mit[39m([32m'per-agent quota: agent-B can keep calling after agent-A is over [39m…
+    [90m189| [39m    [35mconst[39m quota [33m=[39m [35mnew[39m [33mToolCallQuota[39m([34m2[39m)[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m190| [39m
+    [90m191| [39m    [90m// Agent A exhausts.[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m8 failed[39m[22m[90m (8)[39m
+[2m   Start at [22m 00:42:56
+[2m   Duration [22m 1.75s[2m (transform 153ms, setup 0ms, collect 169ms, tests 16ms, environment 0ms, prepare 577ms)[22m
+

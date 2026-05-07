@@ -1,0 +1,166 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-020-kill-switch.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m11 failed[39m[2m)[22m[90m 16[2mms[22m[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 1: env var MAD_KILL=1 triggers isTriggered()[90m 8[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 2: env var MAD_KILL=true triggers isTriggered()[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 3: env unset, kill-file exists triggers isTriggered()[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 4: env unset and no kill-file path → isTriggered() false[90m 0[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 5: env unset, kill-file path set but fileExistsFn returns false → isTriggered() false[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 6: checkOrThrow() throws with attached RunHaltedVerdict (trigger=manual) when triggered[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 7: checkOrThrow() is a no-op when not triggered[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 8: multiple isTriggered() calls are idempotent (no internal state mutation)[90m 0[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mscenario 9: custom envVarName override — default MAD_KILL is not consulted[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22menv value other than "1"/"true" does NOT trigger (e.g., "0", "false", "")[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+[31m   [31m×[31m F-020 kill-switch[2m > [22mread-time propagation: env mutation between checks is observed[90m 1[2mms[22m[31m[39m
+[31m     → KillSwitch is not a constructor[39m
+
+[31m⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 11 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 1: env var MAD_KILL=1 triggers isTriggered()
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m70:16[22m[39m
+    [90m 68| [39m[34mdescribe[39m([32m'F-020 kill-switch'[39m[33m,[39m () [33m=>[39m {
+    [90m 69| [39m  [34mit[39m([32m'scenario 1: env var MAD_KILL=1 triggers isTriggered()'[39m[33m,[39m () [33m=>[39m {
+    [90m 70| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m 71| [39m      [35mnull[39m[33m,[39m
+    [90m 72| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 2: env var MAD_KILL=true triggers isTriggered()
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m80:16[22m[39m
+    [90m 78| [39m
+    [90m 79| [39m  [34mit[39m([32m'scenario 2: env var MAD_KILL=true triggers isTriggered()'[39m[33m,[39m () [33m=>[39m…
+    [90m 80| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m 81| [39m      [35mnull[39m[33m,[39m
+    [90m 82| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 3: env unset, kill-file exists triggers isTriggered()
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m90:16[22m[39m
+    [90m 88| [39m
+    [90m 89| [39m  [34mit[39m([32m'scenario 3: env unset, kill-file exists triggers isTriggered()'[39m[33m,[39m…
+    [90m 90| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m 91| [39m      [32m'/tmp/mad-kill'[39m[33m,[39m
+    [90m 92| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 4: env unset and no kill-file path → isTriggered() false
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m100:16[22m[39m
+    [90m 98| [39m
+    [90m 99| [39m  [34mit[39m([32m'scenario 4: env unset and no kill-file path → isTriggered() fals[39m…
+    [90m100| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m101| [39m      [35mnull[39m[33m,[39m
+    [90m102| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 5: env unset, kill-file path set but fileExistsFn returns false → isTriggered() false
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m110:16[22m[39m
+    [90m108| [39m
+    [90m109| [39m  [34mit[39m([32m'scenario 5: env unset, kill-file path set but fileExistsFn retur[39m…
+    [90m110| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m111| [39m      [32m'/tmp/mad-kill'[39m[33m,[39m
+    [90m112| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 6: checkOrThrow() throws with attached RunHaltedVerdict (trigger=manual) when triggered
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m120:16[22m[39m
+    [90m118| [39m
+    [90m119| [39m  [34mit[39m([32m'scenario 6: checkOrThrow() throws with attached RunHaltedVerdict[39m…
+    [90m120| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m121| [39m      [35mnull[39m[33m,[39m
+    [90m122| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 7: checkOrThrow() is a no-op when not triggered
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m149:16[22m[39m
+    [90m147| [39m
+    [90m148| [39m  [34mit[39m([32m'scenario 7: checkOrThrow() is a no-op when not triggered'[39m[33m,[39m () [33m=>[39m…
+    [90m149| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m150| [39m      [35mnull[39m[33m,[39m
+    [90m151| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 8: multiple isTriggered() calls are idempotent (no internal state mutation)
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m162:16[22m[39m
+    [90m160| [39m  [34mit[39m([32m'scenario 8: multiple isTriggered() calls are idempotent (no inte[39m…
+    [90m161| [39m    [35mlet[39m fileChecks [33m=[39m [34m0[39m[33m;[39m
+    [90m162| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m163| [39m      [32m'/tmp/mad-kill'[39m[33m,[39m
+    [90m164| [39m      [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mscenario 9: custom envVarName override — default MAD_KILL is not consulted
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m180:16[22m[39m
+    [90m178| [39m
+    [90m179| [39m  [34mit[39m([32m'scenario 9: custom envVarName override — default MAD_KILL is not[39m…
+    [90m180| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m               [31m^[39m
+    [90m181| [39m      [35mnull[39m[33m,[39m
+    [90m182| [39m      [32m'CUSTOM_HALT_VAR'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22menv value other than "1"/"true" does NOT trigger (e.g., "0", "false", "")
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m200:18[22m[39m
+    [90m198| [39m  [34mit[39m([32m'env value other than "1"/"true" does NOT trigger (e.g., "0", "fa[39m…
+    [90m199| [39m    [35mfor[39m ([35mconst[39m v [35mof[39m [[32m'0'[39m[33m,[39m [32m'false'[39m[33m,[39m [32m''[39m[33m,[39m [32m'no'[39m[33m,[39m [32m'off'[39m]) {
+    [90m200| [39m      [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m(
+    [90m   | [39m                 [31m^[39m
+    [90m201| [39m        [35mnull[39m[33m,[39m
+    [90m202| [39m        [32m'MAD_KILL'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/11]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-020-kill-switch.test.ts[2m > [22mF-020 kill-switch[2m > [22mread-time propagation: env mutation between checks is observed
+[31m[1mTypeError[22m: KillSwitch is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-020-kill-switch.test.ts:[2m212:16[22m[39m
+    [90m210| [39m  [34mit[39m([32m'read-time propagation: env mutation between checks is observed'[39m[33m,[39m…
+    [90m211| [39m    [35mconst[39m env[33m:[39m [33mRecord[39m[33m<[39mstring[33m,[39m string [33m|[39m undefined[33m>[39m [33m=[39m { [33mMAD_KILL[39m[33m:[39m undefi…
+    [90m212| [39m    [35mconst[39m ks [33m=[39m [35mnew[39m [33mKillSwitch[39m([35mnull[39m[33m,[39m [32m'MAD_KILL'[39m[33m,[39m () [33m=>[39m [35mfalse[39m[33m,[39m env)[33m;[39m
+    [90m   | [39m               [31m^[39m
+    [90m213| [39m
+    [90m214| [39m    [34mexpect[39m(ks[33m.[39m[34misTriggered[39m())[33m.[39m[34mtoBe[39m([35mfalse[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/11]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m11 failed[39m[22m[90m (11)[39m
+[2m   Start at [22m 00:42:02
+[2m   Duration [22m 1.46s[2m (transform 109ms, setup 0ms, collect 129ms, tests 16ms, environment 1ms, prepare 410ms)[22m
+

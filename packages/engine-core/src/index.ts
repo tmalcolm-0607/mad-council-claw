@@ -22,6 +22,8 @@
  *   - backend.ts     — F-009 (ibackend-provider) — imports Agent/Session from identity.ts + RunHaltedVerdict from halt.ts
  *   - backend-anthropic.ts — F-010 (anthropic-sdk-provider) — implements IBackendProvider; origin='anthropic'
  *   - backend-copilot.ts   — F-011 (copilot-sdk-provider) — implements IBackendProvider; origin='copilot'
+ *   - backend-factory.ts   — F-012 (backend-factory) — `createBackend({kind, model})` → IBackendProvider
+ *   - backend-events.ts    — F-013 (event-normalization) — type guards + `eventTextContent` for BackendEvent
  *   - heartbeat.ts         — F-023 (cron-heartbeat) — HeartbeatScheduler + cadence-zone validation per loop-cadence-discipline.md
  *
  * Cross-feature type sharing rule: shared types live with their FIRST owner;
@@ -44,4 +46,6 @@ export * from './degradation.js';
 export * from './backend.js';
 export * from './backend-anthropic.js';
 export * from './backend-copilot.js';
+export * from './backend-factory.js';
+export * from './backend-events.js';
 export * from './heartbeat.js';

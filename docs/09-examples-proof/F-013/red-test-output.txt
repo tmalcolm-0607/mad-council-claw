@@ -1,0 +1,230 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-013-backend-event-normalization.test.ts [2m([22m[2m9 tests[22m[2m | [22m[31m9 failed[39m[2m)[22m[90m 17[2mms[22m[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 1a: isTokenEvent narrows correctly[90m 9[2mms[22m[31m[39m
+[31m     → isTokenEvent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 1b: isToolCallEvent narrows correctly[90m 1[2mms[22m[31m[39m
+[31m     → isToolCallEvent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 1c: isToolResultEvent narrows correctly[90m 1[2mms[22m[31m[39m
+[31m     → isToolResultEvent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 1d: isFinishEvent narrows correctly[90m 1[2mms[22m[31m[39m
+[31m     → isFinishEvent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 2: eventTextContent returns text verbatim for token events[90m 1[2mms[22m[31m[39m
+[31m     → eventTextContent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 3: eventTextContent returns a deterministic descriptor for tool_call events[90m 1[2mms[22m[31m[39m
+[31m     → eventTextContent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 4: eventTextContent returns a deterministic descriptor for tool_result events[90m 1[2mms[22m[31m[39m
+[31m     → eventTextContent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 5: eventTextContent returns a descriptor including reason + details for finish events[90m 1[2mms[22m[31m[39m
+[31m     → eventTextContent is not a function[39m
+[31m   [31m×[31m F-013 backend-event-normalization[2m > [22mscenario 6: cross-provider events all match the same BackendEvent shape and pass type guards[90m 1[2mms[22m[31m[39m
+[31m     → AnthropicBackend is not a constructor[39m
+ [31m❯[39m tests/unit/F-012-backend-factory.test.ts [2m([22m[2m6 tests[22m[2m | [22m[31m6 failed[39m[2m)[22m[90m 20[2mms[22m[39m
+[31m   [31m×[31m F-012 backend-factory[2m > [22mscenario 1: createBackend({kind:"anthropic"}) returns AnthropicBackend with origin="anthropic"[90m 8[2mms[22m[31m[39m
+[31m     → createBackend is not a function[39m
+[31m   [31m×[31m F-012 backend-factory[2m > [22mscenario 2: createBackend({kind:"copilot"}) returns CopilotBackend with origin="copilot"[90m 1[2mms[22m[31m[39m
+[31m     → createBackend is not a function[39m
+[31m   [31m×[31m F-012 backend-factory[2m > [22mscenario 3: createBackend({kind:"stub"}) returns StubBackend with origin="stub"[90m 1[2mms[22m[31m[39m
+[31m     → createBackend is not a function[39m
+[31m   [31m×[31m F-012 backend-factory[2m > [22mscenario 4: createBackend on an unknown kind throws at runtime[90m 8[2mms[22m[31m[39m
+[31m     → expected [Function] to throw error matching /Unknown backend kind/i but got 'createBackend i…'[39m
+[31m   [31m×[31m F-012 backend-factory[2m > [22mscenario 5: createBackend forwards the model parameter to anthropic and copilot constructors[90m 1[2mms[22m[31m[39m
+[31m     → createBackend is not a function[39m
+[31m   [31m×[31m F-012 backend-factory[2m > [22mscenario 6: factory return type is IBackendProvider (interface contract preserved)[90m 1[2mms[22m[31m[39m
+[31m     → createBackend is not a function[39m
+
+[31m⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 15 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-012-backend-factory.test.ts[2m > [22mF-012 backend-factory[2m > [22mscenario 1: createBackend({kind:"anthropic"}) returns AnthropicBackend with origin="anthropic"
+[31m[1mTypeError[22m: createBackend is not a function[39m
+[36m [2m❯[22m tests/unit/F-012-backend-factory.test.ts:[2m61:40[22m[39m
+    [90m 59| [39m[34mdescribe[39m([32m'F-012 backend-factory'[39m[33m,[39m () [33m=>[39m {
+    [90m 60| [39m  [34mit[39m([32m'scenario 1: createBackend({kind:"anthropic"}) returns AnthropicB[39m…
+    [90m 61| [39m    [35mconst[39m provider[33m:[39m [33mIBackendProvider[39m [33m=[39m [34mcreateBackend[39m({ kind[33m:[39m [32m'anthropi[39m…
+    [90m   | [39m                                       [31m^[39m
+    [90m 62| [39m    [34mexpect[39m(provider)[33m.[39m[34mtoBeInstanceOf[39m([33mAnthropicBackend[39m)[33m;[39m
+    [90m 63| [39m    [34mexpect[39m(provider[33m.[39morigin)[33m.[39m[34mtoBe[39m([32m'anthropic'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-012-backend-factory.test.ts[2m > [22mF-012 backend-factory[2m > [22mscenario 2: createBackend({kind:"copilot"}) returns CopilotBackend with origin="copilot"
+[31m[1mTypeError[22m: createBackend is not a function[39m
+[36m [2m❯[22m tests/unit/F-012-backend-factory.test.ts:[2m67:40[22m[39m
+    [90m 65| [39m
+    [90m 66| [39m  [34mit[39m([32m'scenario 2: createBackend({kind:"copilot"}) returns CopilotBacke[39m…
+    [90m 67| [39m    [35mconst[39m provider[33m:[39m [33mIBackendProvider[39m [33m=[39m [34mcreateBackend[39m({ kind[33m:[39m [32m'copilot'[39m…
+    [90m   | [39m                                       [31m^[39m
+    [90m 68| [39m    [34mexpect[39m(provider)[33m.[39m[34mtoBeInstanceOf[39m([33mCopilotBackend[39m)[33m;[39m
+    [90m 69| [39m    [34mexpect[39m(provider[33m.[39morigin)[33m.[39m[34mtoBe[39m([32m'copilot'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-012-backend-factory.test.ts[2m > [22mF-012 backend-factory[2m > [22mscenario 3: createBackend({kind:"stub"}) returns StubBackend with origin="stub"
+[31m[1mTypeError[22m: createBackend is not a function[39m
+[36m [2m❯[22m tests/unit/F-012-backend-factory.test.ts:[2m73:40[22m[39m
+    [90m 71| [39m
+    [90m 72| [39m  [34mit[39m([32m'scenario 3: createBackend({kind:"stub"}) returns StubBackend wit[39m…
+    [90m 73| [39m    [35mconst[39m provider[33m:[39m [33mIBackendProvider[39m [33m=[39m [34mcreateBackend[39m({ kind[33m:[39m [32m'stub'[39m })[33m;[39m
+    [90m   | [39m                                       [31m^[39m
+    [90m 74| [39m    [34mexpect[39m(provider)[33m.[39m[34mtoBeInstanceOf[39m([33mStubBackend[39m)[33m;[39m
+    [90m 75| [39m    [34mexpect[39m(provider[33m.[39morigin)[33m.[39m[34mtoBe[39m([32m'stub'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-012-backend-factory.test.ts[2m > [22mF-012 backend-factory[2m > [22mscenario 4: createBackend on an unknown kind throws at runtime
+[31m[1mAssertionError[22m: expected [Function] to throw error matching /Unknown backend kind/i but got 'createBackend i…'[39m
+
+[32m- Expected:[39m 
+/Unknown backend kind/i
+
+[31m+ Received:[39m 
+"__vite_ssr_import_1__.createBackend is not a function"
+
+[36m [2m❯[22m tests/unit/F-012-backend-factory.test.ts:[2m84:54[22m[39m
+    [90m 82| [39m    [90m// statically validate.[39m
+    [90m 83| [39m    [35mconst[39m bogusKind [33m=[39m [32m'ollama'[39m [35mas[39m unknown [35mas[39m [33mBackendKind[39m[33m;[39m
+    [90m 84| [39m    [34mexpect[39m(() [33m=>[39m [34mcreateBackend[39m({ kind[33m:[39m bogusKind }))[33m.[39m[34mtoThrow[39m([36m/Unknown [39m…
+    [90m   | [39m                                                     [31m^[39m
+    [90m 85| [39m  })[33m;[39m
+    [90m 86| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-012-backend-factory.test.ts[2m > [22mF-012 backend-factory[2m > [22mscenario 5: createBackend forwards the model parameter to anthropic and copilot constructors
+[31m[1mTypeError[22m: createBackend is not a function[39m
+[36m [2m❯[22m tests/unit/F-012-backend-factory.test.ts:[2m92:15[22m[39m
+    [90m 90| [39m    [90m// F-010 + F-011). This is the cross-cutting traceability check for[39m
+    [90m 91| [39m    [90m// F-012's parameter-forwarding contract.[39m
+    [90m 92| [39m    [35mconst[39m a [33m=[39m [34mcreateBackend[39m({ kind[33m:[39m [32m'anthropic'[39m[33m,[39m model[33m:[39m [32m'claude-sonnet[39m…
+    [90m   | [39m              [31m^[39m
+    [90m 93| [39m    [34mexpect[39m(a)[33m.[39m[34mtoBeInstanceOf[39m([33mAnthropicBackend[39m)[33m;[39m
+    [90m 94| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-012-backend-factory.test.ts[2m > [22mF-012 backend-factory[2m > [22mscenario 6: factory return type is IBackendProvider (interface contract preserved)
+[31m[1mTypeError[22m: createBackend is not a function[39m
+[36m [2m❯[22m tests/unit/F-012-backend-factory.test.ts:[2m113:42[22m[39m
+    [90m111| [39m    [90m// four required methods are present on every kind.[39m
+    [90m112| [39m    [35mfor[39m ([35mconst[39m kind [35mof[39m [[32m'anthropic'[39m[33m,[39m [32m'copilot'[39m[33m,[39m [32m'stub'[39m] [35mas[39m [35mconst[39m) {
+    [90m113| [39m      [35mconst[39m provider[33m:[39m [33mIBackendProvider[39m [33m=[39m [34mcreateBackend[39m({ kind })[33m;[39m
+    [90m   | [39m                                         [31m^[39m
+    [90m114| [39m      [34mexpect[39m([35mtypeof[39m provider[33m.[39mstartSession)[33m.[39m[34mtoBe[39m([32m'function'[39m)[33m;[39m
+    [90m115| [39m      [34mexpect[39m([35mtypeof[39m provider[33m.[39msendPrompt)[33m.[39m[34mtoBe[39m([32m'function'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 1a: isTokenEvent narrows correctly
+[31m[1mTypeError[22m: isTokenEvent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m75:12[22m[39m
+    [90m 73| [39m  [34mit[39m([32m'scenario 1a: isTokenEvent narrows correctly'[39m[33m,[39m () [33m=>[39m {
+    [90m 74| [39m    [35mconst[39m ev[33m:[39m [33mBackendEvent[39m [33m=[39m { type[33m:[39m [32m'token'[39m[33m,[39m text[33m:[39m [32m'hello'[39m }[33m;[39m
+    [90m 75| [39m    [34mexpect[39m([34misTokenEvent[39m(ev))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m 76| [39m    [35mif[39m ([34misTokenEvent[39m(ev)) {
+    [90m 77| [39m      [90m// TypeScript narrowing witness: ev.text is accessible without a[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 1b: isToolCallEvent narrows correctly
+[31m[1mTypeError[22m: isToolCallEvent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m87:12[22m[39m
+    [90m 85| [39m  [34mit[39m([32m'scenario 1b: isToolCallEvent narrows correctly'[39m[33m,[39m () [33m=>[39m {
+    [90m 86| [39m    [35mconst[39m ev[33m:[39m [33mBackendEvent[39m [33m=[39m { type[33m:[39m [32m'tool_call'[39m[33m,[39m name[33m:[39m [32m'read'[39m[33m,[39m argume…
+    [90m 87| [39m    [34mexpect[39m([34misToolCallEvent[39m(ev))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m 88| [39m    [35mif[39m ([34misToolCallEvent[39m(ev)) {
+    [90m 89| [39m      [34mexpect[39m(ev[33m.[39mname)[33m.[39m[34mtoBe[39m([32m'read'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 1c: isToolResultEvent narrows correctly
+[31m[1mTypeError[22m: isToolResultEvent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m97:12[22m[39m
+    [90m 95| [39m  [34mit[39m([32m'scenario 1c: isToolResultEvent narrows correctly'[39m[33m,[39m () [33m=>[39m {
+    [90m 96| [39m    [35mconst[39m ev[33m:[39m [33mBackendEvent[39m [33m=[39m { type[33m:[39m [32m'tool_result'[39m[33m,[39m name[33m:[39m [32m'read'[39m[33m,[39m resu…
+    [90m 97| [39m    [34mexpect[39m([34misToolResultEvent[39m(ev))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m 98| [39m    [35mif[39m ([34misToolResultEvent[39m(ev)) {
+    [90m 99| [39m      [34mexpect[39m(ev[33m.[39mname)[33m.[39m[34mtoBe[39m([32m'read'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 1d: isFinishEvent narrows correctly
+[31m[1mTypeError[22m: isFinishEvent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m107:12[22m[39m
+    [90m105| [39m  [34mit[39m([32m'scenario 1d: isFinishEvent narrows correctly'[39m[33m,[39m () [33m=>[39m {
+    [90m106| [39m    [35mconst[39m ev[33m:[39m [33mBackendEvent[39m [33m=[39m { type[33m:[39m [32m'finish'[39m[33m,[39m reason[33m:[39m [32m'error'[39m[33m,[39m detail…
+    [90m107| [39m    [34mexpect[39m([34misFinishEvent[39m(ev))[33m.[39m[34mtoBe[39m([35mtrue[39m)[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m108| [39m    [35mif[39m ([34misFinishEvent[39m(ev)) {
+    [90m109| [39m      [34mexpect[39m(ev[33m.[39mreason)[33m.[39m[34mtoBe[39m([32m'error'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 2: eventTextContent returns text verbatim for token events
+[31m[1mTypeError[22m: eventTextContent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m117:12[22m[39m
+    [90m115| [39m  [34mit[39m([32m'scenario 2: eventTextContent returns text verbatim for token eve[39m…
+    [90m116| [39m    [35mconst[39m ev[33m:[39m [33mBackendEvent[39m [33m=[39m { type[33m:[39m [32m'token'[39m[33m,[39m text[33m:[39m [32m'streamed-chunk'[39m }[33m;[39m
+    [90m117| [39m    [34mexpect[39m([34meventTextContent[39m(ev))[33m.[39m[34mtoBe[39m([32m'streamed-chunk'[39m)[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m118| [39m  })[33m;[39m
+    [90m119| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 3: eventTextContent returns a deterministic descriptor for tool_call events
+[31m[1mTypeError[22m: eventTextContent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m126:12[22m[39m
+    [90m124| [39m    [90m// aren't designed for it. Arguments are still on the event itself[39m
+    [90m125| [39m    [90m// for consumers that DO need them (audit log, cost ledger).[39m
+    [90m126| [39m    [34mexpect[39m([34meventTextContent[39m(ev))[33m.[39m[34mtoBe[39m([32m'[tool_call: read_file]'[39m)[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m127| [39m  })[33m;[39m
+    [90m128| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 4: eventTextContent returns a deterministic descriptor for tool_result events
+[31m[1mTypeError[22m: eventTextContent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m131:12[22m[39m
+    [90m129| [39m  [34mit[39m([32m'scenario 4: eventTextContent returns a deterministic descriptor [39m…
+    [90m130| [39m    [35mconst[39m ev[33m:[39m [33mBackendEvent[39m [33m=[39m { type[33m:[39m [32m'tool_result'[39m[33m,[39m name[33m:[39m [32m'read_file'[39m[33m,[39m…
+    [90m131| [39m    [34mexpect[39m([34meventTextContent[39m(ev))[33m.[39m[34mtoBe[39m([32m'[tool_result: read_file]'[39m)[33m;[39m
+    [90m   | [39m           [31m^[39m
+    [90m132| [39m  })[33m;[39m
+    [90m133| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 5: eventTextContent returns a descriptor including reason + details for finish events
+[31m[1mTypeError[22m: eventTextContent is not a function[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m135:12[22m[39m
+    [90m133| [39m
+    [90m134| [39m  [34mit[39m([32m'scenario 5: eventTextContent returns a descriptor including reas[39m…
+    [90m135| [39m    [34mexpect[39m([34meventTextContent[39m({ type[33m:[39m [32m'finish'[39m[33m,[39m reason[33m:[39m [32m'stop'[39m }))[33m.[39m[34mtoBe[39m(…
+    [90m   | [39m           [31m^[39m
+    [90m136| [39m    [34mexpect[39m([34meventTextContent[39m({ type[33m:[39m [32m'finish'[39m[33m,[39m reason[33m:[39m [32m'error'[39m[33m,[39m details…
+    [90m137| [39m      [32m'[finish: error halted]'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/15]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-013-backend-event-normalization.test.ts[2m > [22mF-013 backend-event-normalization[2m > [22mscenario 6: cross-provider events all match the same BackendEvent shape and pass type guards
+[31m[1mTypeError[22m: AnthropicBackend is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-013-backend-event-normalization.test.ts:[2m144:43[22m[39m
+    [90m142| [39m    [35mconst[39m agent [33m=[39m [34mcreateAgent[39m()[33m;[39m
+    [90m143| [39m    [35mconst[39m session [33m=[39m [34mcreateSession[39m()[33m;[39m
+    [90m144| [39m    [35mconst[39m providers [33m=[39m [[35mnew[39m [33mStubBackend[39m()[33m,[39m [35mnew[39m [33mAnthropicBackend[39m()[33m,[39m [35mnew[39m …
+    [90m   | [39m                                          [31m^[39m
+    [90m145| [39m
+    [90m146| [39m    [35mfor[39m ([35mconst[39m backend [35mof[39m providers) {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/15]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m2 failed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m15 failed[39m[22m[90m (15)[39m
+[2m   Start at [22m 09:14:26
+[2m   Duration [22m 2.64s[2m (transform 312ms, setup 0ms, collect 680ms, tests 37ms, environment 1ms, prepare 2.00s)[22m
+

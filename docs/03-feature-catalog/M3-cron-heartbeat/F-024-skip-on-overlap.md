@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-003 / lane-a
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-017 / lane-b
+    note: "RED → GREEN. tests/unit/F-024-skip-on-overlap.test.ts (8 scenarios across 4 describe blocks) + heartbeat.ts extended with tickInFlight guard + skippedTicks counter + TickResult return shape + isInFlight on getStatus. Same-class extension per F-022/F-018/F-023 pure-class pattern. cron-fires.jsonl outcome:'overlap_skipped' write deferred to F-006/F-008 callers per no-silent-deferrals.md. Cross-lane staging-race sighting #17 observed (commits e466b52 + 2463d90 used this lane's subject but committed F-029/F-026/F-030 sibling-lane files); fix-forward commit b957489 landed actual RED files. 16/16 isolated PASS; 21/21 F-023 isolated PASS (no regression)."
 feature-id: F-024
 short-slug: skip-on-overlap
 milestone: M3
@@ -18,12 +22,12 @@ provenance:
     - ce:CronFireRecord
 fr-coverage: []
 test-files:
-  unit: []
+  unit: ["tests/unit/F-024-skip-on-overlap.test.ts"]
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects: ["unit"]
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -72,4 +76,25 @@ When a cron heartbeat (per F-023) is about to fire and a prior fire of the SAME 
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+**Wave-017 / Lane B (2026-05-07).** F-024 implemented as same-class extension of `HeartbeatScheduler` (F-023, wave-016 / lane-b GREEN), per the F-022 ToolCallQuota / F-018 HaltDetector pure-class + composition-by-callers pattern.
+
+**Surface added to `packages/engine-core/src/heartbeat.ts`:**
+
+- `tickInFlight: boolean` private field set true when handler invocation begins, cleared in `finally` (handles throw-path so a single failed tick does NOT permanently block subsequent ticks — important for the F-018 RUN_HALTED + F-021 degradation orchestration story).
+- `skippedTicks: number` private counter incremented on each suppressed re-entry.
+- `tick(): Promise<TickResult>` return-shape change. `TickResult { ran: boolean; skipped?: boolean }`. Backward-compatible: F-023 callers that did `await sch.tick()` and discarded the return value continue to work; F-024 callers that need the SKIP signal inspect `skipped`. Skipped ticks do NOT increment `tickCount` and do NOT invoke the handler.
+- `getStatus(): HeartbeatStatus` extended with `skippedTicks: number` and `isInFlight: boolean` for observability.
+
+**Scope reconciliation per `no-silent-deferrals.md`:**
+
+- `cron-fires.jsonl` `outcome: "overlap_skipped"` + `prior_fire_id` write → F-006 (logging-pipeline) + F-008 (storage-layout) callers consume the SKIP signal from `tick()` return value and append the entry. F-024 contributes the in-process trigger only; the on-disk audit record is the consumer's responsibility.
+- Cross-schedule independence (ledger scenario 3) → mirrored on F-022's one-quota-per-resource shape: separate `HeartbeatScheduler` instances per schedule. The class itself does not maintain cross-schedule state — that's by-design. The cross-schedule scenario test would exercise two scheduler instances and verify both run; not added in this RED set because the assertion ("they don't interfere") is structurally guaranteed by the per-instance state.
+- Run-lifecycle "still active" detection → caller-side. F-024's same-schedule guard is based on whether the handler PROMISE has resolved, not on whether the spawned RUN has reached `closed`. The two are equivalent for in-process orchestration but diverge for out-of-process runs (F-031 daemon-mode); when that lands, the orchestrator's tick handler will await the run closure before resolving its promise — preserving the F-024 contract without changes here.
+
+**Cross-lane staging-race sighting #17.** Two commits before the actual GREEN landing used this lane's subject line but committed sibling lanes' files:
+
+- `e466b52 test(F-024,F-025): RED ...` actually committed `tests/node/F-029-cli-subcommands.test.ts` (sibling F-029 lane).
+- `2463d90 test(F-024,F-025): RED actual ...` actually committed `docs/09-examples-proof/F-026/green-test-output.txt`, `packages/engine-core/src/checkpoint.ts`, `packages/engine-core/src/index.ts`, `tests/node/F-030-cli-json-output.test.ts` (sibling F-026 + F-030 lanes).
+- `b957489 test(F-024,F-025): RED actual files (sighting #17 third attempt)` finally landed the four F-024/F-025 RED files using a chained `git restore --staged + git add + git commit` invocation to minimize the race window between staging and commit.
+
+Per `non-negotiable-rules.md` (NO destructive git ops, NO `git reset` per user directive 2026-05-07), no rebase/reset to fix history. The pattern is now confirmed CHRONIC across waves 9-17 (sightings #14, #15, #16, #17). The wave-17+ recurrence-mitigation candidates (per-lane branches when concurrent lane count ≥3, OR per-commit `git diff --cached --name-only` assert) are pending council deliberation.

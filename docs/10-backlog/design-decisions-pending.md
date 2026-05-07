@@ -1,6 +1,6 @@
 # Design decisions pending
 
-Per `foundational-plan.md` — the prior session enumerated D-1..D-8 design decisions awaiting closure. Each requires deliberate review (likely council-review) before implementation work depends on it.
+Per `foundational-plan.md` — the prior session enumerated D-1..D-8 design decisions awaiting closure. Each requires deliberate review (likely council-review) before implementation work depends on it. Wave-1 surfaced D-9..D-16 (this file extends).
 
 ## Schema
 
@@ -8,9 +8,7 @@ Per `foundational-plan.md` — the prior session enumerated D-1..D-8 design deci
 | ID | Decision | Options under consideration | Source | Date opened | Confidence (HIGH if well-scoped; MEDIUM if depends on research) | Suggested closure path |
 ```
 
-## Entries (seed from foundational-plan.md)
-
-> NOTE: D-1..D-8 are placeholder slots — the actual decisions to be filled by reviewing the prior session's per-item-review.md and architecture artifacts. Wave 2 / Lane D will surface and refine these.
+## Entries
 
 | ID | Decision | Options | Source | Date opened | Confidence | Suggested closure path |
 |---|---|---|---|---|---|---|
@@ -22,9 +20,28 @@ Per `foundational-plan.md` — the prior session enumerated D-1..D-8 design deci
 | D-6 | Headless CLI subcommand surface | which subcommands are v1 vs deferred? | foundational-plan.md M4 | 2026-05-06 | MEDIUM | catalog wave + user input |
 | D-7 | Replay scrubber UI shape | timeline-only vs timeline + diff overlay vs timeline + intervention markers | foundational-plan.md M12 | 2026-05-06 | LOW | UX design wave |
 | D-8 | Daily briefing destination(s) | email, Teams DM, OneNote, all three? per-user preference? | foundational-plan.md F-103 | 2026-05-06 | LOW | research wave + user input |
+| D-9 | Microsoft Agent Framework: TypeScript bridge vs Python/C# reimplement vs hand-rolled TS | (a) wrapper over Python/C# AF via IPC, (b) reimplement AF workflows in TS, (c) hand-roll orchestration patterns from scratch (Sequential/Concurrent/Handoff/Group/Magentic) | wave-001 / lane-b topic 1 + topic 11 + RG-2 | 2026-05-07 | MEDIUM | wave-N research lane (close RG-2 first) + council-review |
+| D-10 | Activity Protocol adoption priority | (a) Phase 0 v1 must-have (M9 lane priority), (b) Phase 4 alongside other M365 adapters, (c) v1.5 deferral | wave-001 / lane-b topic 6 (3-Microsoft-surface convergence) | 2026-05-07 | MEDIUM | council-review: ROI of single endpoint shape covering 4 Microsoft surfaces |
+| D-11 | OTel GenAI semantic conventions adoption depth | (a) full convention compliance from M0 day 1 (every span follows), (b) opt-in via config (default off; turn on per-feature), (c) Microsoft OTel distro bundle only (Geneva-compatible) | wave-001 / lane-b topic 8 + F-145 + F-182..F-184 | 2026-05-07 | MEDIUM | M16 telemetry wave council-review |
+| D-12 | Engine packaging (which delivery shape) | (a) npm package, (b) electron-builder bundle, (c) standalone .NET tool, (d) PowerShell module wrapper | Lane D summary Q3 | 2026-05-07 | MEDIUM | M15 build/packaging wave |
+| D-13 | Phase staging in v1 | (a) Phase 0-3 first then 4-6 in v1.x, (b) all 7 phases in v1, (c) Phase 0-6 with Phase 4 (M365 adapters) deferred | Lane D summary Q4 + canonical-e phases | 2026-05-07 | MEDIUM | user input + council-review |
+| D-14 | Re-import 7 missing predecessor skills (canonical-e OoS #12) | (a) re-import from origin source, (b) rewrite per current standards, (c) leave dropped per canonical-e OoS | Lane D summary Q5 | 2026-05-07 | MEDIUM | user input |
+| D-15 | Schema directory location | (a) `.mad/schemas/` (kit-aligned), (b) `schemas/` at engine root (engine-distinct), (c) inline JSON Schemas embedded in entity .md files (kit pattern today) | Lane D summary Q1 + cross-source-disposition-matrix.md | 2026-05-07 | MEDIUM | M0 bootstrap wave (before any entity ledger needs a schema) |
+| D-16 | mad-teams skill: drop or keep? | (a) drop (predates council-* skills; redundant), (b) keep as legacy alias, (c) refactor into council-* | Lane D summary Q2 | 2026-05-07 | MEDIUM | M0 bootstrap wave + council-review |
+| D-17 | Handoff primitive shape: typed-tool vs separate API | F-129 handoff-as-tool (4-way Anthropic+OpenAI+MCP+Cursor convergence) vs distinct-API approach | wave-001 / lane-a F-002 + F-021 + F-058 | 2026-05-07 | MEDIUM | M2 governance triad wave council-review |
+| D-18 | Task-clarity-gate (F-130) confidence threshold | what % confidence triggers escalation? (Anthropic data: 67% well-defined success; 85% ambiguous failure) | wave-001 / lane-a F-018 + F-044 + F-049 | 2026-05-07 | MEDIUM | M2 governance triad wave council-review (close after RG-12 corroborates) |
+| D-19 | Memory plane PREVIEW risk: build on Foundry preview or local-only first? | (a) Foundry Agent Service memory (PREVIEW), (b) local IMemoryProvider only in v1; Foundry in v1.5, (c) hybrid (local primary; Foundry sync optional) | wave-001 / lane-b topic 9 + RG-6 | 2026-05-07 | MEDIUM | M11 wave council-review (close after RG-6 confirms Foundry GA status) |
+| D-20 | Per-agent vs per-user identity scoping | (a) one MSAL refresh-token per logged-in-user (clawpilot today), (b) one MSAL cache per agent role (Lane C L2 recommendation), (c) hybrid | wave-001 / lane-c L2 | 2026-05-07 | HIGH | F-002 ledger council-review (high-confidence: openclaw issue #43367 F3 + Lane C L2 both point to per-role) |
+| D-21 | Worktree-per-feature vs branch-per-feature for engine work | (a) git worktree per F-NNN, (b) branch-only, (c) hybrid by milestone | foundational-plan.md § Branch + PR strategy | 2026-05-07 | MEDIUM | wave-N before F-001 enters implementation |
+| D-22 | Cost-ledger observability-only enforcement: how to prevent halt-on-cost regression | per Lane D's "Cost is observability-ONLY — repeating in 4 different files because iter-41 refactor was the load-bearing change" | Lane D summary §critical-engine-design-implication 3 | 2026-05-07 | HIGH | M2 wave council-review + hook discipline (block any code that conditions execution on cost-threshold) |
+| D-23 | Halt-precedence ladder: codify as runtime check or rule-only | precedence: KILL > SOUL > OVERRIDE > GOV > QUOTA > DEGRADE > COST | Lane D summary §critical-engine-design-implication 4 | 2026-05-07 | HIGH | M2 wave council-review |
 
 ## Confidence rationale
 
-- HIGH would mean the option set is well-defined AND we have evidence enough to pick. None of D-1..D-8 are at HIGH yet.
+- HIGH would mean the option set is well-defined AND we have evidence enough to pick. D-20, D-22, D-23 are at HIGH (multi-source convergence on the "right" answer).
 - MEDIUM = option set is well-defined but evidence is incomplete. Can be promoted to HIGH after a research wave.
 - LOW = option set itself isn't yet enumerated. Needs a research wave first.
+
+## Wave-2 / Lane D update
+
+D-9..D-23 added from wave-1 lane synthesis. Of the new entries, D-20 / D-22 / D-23 promoted directly to HIGH because the wave-1 evidence is unambiguous (Lane C L2 + canonical-e iter-41 lessons). Others remain MEDIUM pending closure waves.

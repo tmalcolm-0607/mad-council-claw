@@ -87,7 +87,7 @@ docs(lane-output): wave-002 lane-d summary
 
 - **Lane numbering collision (Lane A's F-001..F-063 vs canonical F-001..F-126).** Lane A's worksheet used local F-001..F-063 numbering that COLLIDED with the canonical F-NNN ledger. Wave-2 / Lane D had to renumber Lane A's worksheet output. Codified as a methodology rule for wave-3 (lanes use slug-only `F-NEW <slug>` until consolidation step allocates F-IDs).
 - **Cross-lane dependency wasted wall-clock.** Lane D wave-1 was MEDIUM-confidence because Lane C hadn't committed. This consolidation step IS the resolution. Future waves: lanes either fully independent OR cross-lane reconciliation at end-of-wave consolidation only.
-- **Briefing miscount.** Lane D wave-1 found the lane briefing's CE counts undercounted by significant margin (errors 24→72; OoS 8→24). Already documented in lane-d wave-1 summary; nothing to do this lane.
+- **Briefing miscount.** Lane D wave-1 found the lane briefing's CE counts undercounted by significant margin (errors 24→72; scope-excluded items 8→24). Already documented in lane-d wave-1 summary; nothing to do this lane.
 - **No push to remote.** Per non-negotiable rules + Q-1 still open (gh auth blocker).
 
 ## Reporting

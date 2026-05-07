@@ -26,8 +26,8 @@ Per `no-silent-deferrals.md`: removing user-tracked items requires explicit ackn
 | RC-10 | `mad-teams` skill (predates council-* skills) | ACTIVE | OBS (per D-16) | wave-001 lane-d Q2 | 2026-05-07 | MEDIUM | redundant with council-* skill family; closure pending D-16 council-review |
 | RC-11 | LENS-specific wiki docs (~5 of 80) | ACTIVE | OBS | wave-001 lane-d kit-inventory | 2026-05-07 | HIGH | engine kit imports ~75 of 80 wiki docs; ~5 LENS-CMS deploy / Geneva / etc. drop |
 | RC-12 | LENS-specific hooks (count TBD; subset of 49) | ACTIVE | DEFERRED | wave-001 lane-d kit-inventory | 2026-05-07 | MEDIUM | most 49 hooks transfer; LENS-specific subset (deploy-related, ADO-specific) drops; need per-hook audit in M0 wave |
-| RC-13 | Canonical-e OoS items (24 explicit `[v1 MUST NOT]` markers) | per CE | DEFERRED (respect verbatim) | wave-001 lane-d canonical-e-inventory | 2026-05-07 | HIGH | enforced via canonical-e's FR-MUST-NOT-001 grep gate; engine inherits the OoS list |
-| RC-14 | Canonical-e v1.5 sanctioned deferrals (11 items) | per CE | DEFERRED | wave-001 lane-d canonical-e-inventory | 2026-05-07 | HIGH | all 11 have v1 substitute documented; engine respects the deferral list |
+| RC-13 | Canonical-e scope-exclusion items (24 explicit `[v1 MUST NOT]` markers) | per CE | DEFERRED (respect verbatim) | wave-001 lane-d canonical-e-inventory | 2026-05-07 | HIGH | enforced via canonical-e's FR-MUST-NOT-001 grep gate; engine inherits the scope-exclusion list |
+| RC-14 | Canonical-e v-next-release sanctioned deferral list (11 items) | per CE | DEFERRED | wave-001 lane-d canonical-e-inventory | 2026-05-07 | HIGH | all 11 have v1 substitute documented; engine respects the postponement list |
 | RC-15 | OpenClaw v3.x plugin SDK (predates v4.0 typed SDK) | OBS | RETIRED (do NOT lift; v4.0 reference is canonical) | wave-001 lane-c openclaw-v4-roadmap | 2026-05-07 | MEDIUM | openclaw v4.0 plugin SDK v2 is the forward-looking reference; engine should follow v4.0 conceptual guidance, not v3.x patterns |
 
 ## Wave-2 task — superseded
@@ -36,6 +36,6 @@ The original "Wave 2 task" instruction here said: "Read `C:\Users\tonym\Repos\MA
 
 ## Confidence rationale
 
-- HIGH = item is unambiguously LENS-specific or canonical-e OoS; no engine-side debate
+- HIGH = item is unambiguously LENS-specific or canonical-e scope-excluded; no engine-side debate
 - MEDIUM = item is partially relevant; needs per-feature audit (e.g., subset of hooks, demo skill)
 - The 12 placeholder rows in the prior session's audit are now superseded by RC-1..RC-15 (15 actual entries from wave-1 lane-d evidence).

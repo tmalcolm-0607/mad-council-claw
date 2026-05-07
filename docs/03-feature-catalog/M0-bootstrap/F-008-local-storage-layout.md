@@ -1,13 +1,21 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: red
+    at: 2026-05-07
+    by: wave-010 / lane-d
+    note: "RED test landed at tests/node/F-008-local-storage-layout.test.ts — 6 acceptance scenarios fail with TypeError: getStorageLayout is not a function. Baseline at docs/09-examples-proof/F-008/red-test-output.txt."
+  - status: green
+    at: 2026-05-07
+    by: wave-010 / lane-d
+    note: "Impl landed at packages/engine-core/src/index.ts (F-008 region ~150 LOC): StorageLayout interface + getStorageLayout / ensureStorageLayout / atomicWriteJson / readJson. 6/6 acceptance scenarios pass; full unit suite 39/39 GREEN-feature tests still passing (F-001/F-002/F-006/F-014/F-015/F-016/F-018). GREEN proof at docs/09-examples-proof/F-008/green-test-output.txt."
 feature-id: F-008
 short-slug: local-storage-layout
 milestone: M0
@@ -19,11 +27,13 @@ provenance:
 fr-coverage: []
 test-files:
   unit: []
-  node: []
+  node:
+    - tests/node/F-008-local-storage-layout.test.ts
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - node
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -52,8 +62,7 @@ The engine writes all persistent state under a single `userData/mad-council-claw
 
 | Test file | Project | Initial state | Verifies |
 |---|---|---|---|
-| (TBD) `tests/unit/storage/layout.test.ts` | unit | RED | scenario 1 |
-| (TBD) `tests/integration/storage/atomic-write.test.ts` | integration | RED | scenarios 2, 3 |
+| `tests/node/F-008-local-storage-layout.test.ts` | node | GREEN (wave-010 / lane-d) | All 6 acceptance scenarios — layout-shape, idempotent dir creation, JSON round-trip, .tmp orphan suppression, prior-content replacement, default-root path-shape |
 
 ## Dependencies
 
@@ -71,4 +80,18 @@ The engine writes all persistent state under a single `userData/mad-council-claw
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+Wave-010 / Lane D landed the GREEN flip. Surface delivered:
+
+- `StorageLayout` interface — `{root, sessions, skills, automations, audit, settingsFile}`.
+- `getStorageLayout(rootOverride?)` — pure path computation; defaults to `~/.mad-council-claw`.
+- `ensureStorageLayout(layout)` — idempotent `mkdirSync(..., { recursive: true })` over the four subdirs + root.
+- `atomicWriteJson(path, content)` — write-temp-then-rename per kit's `concurrency-safety.md` §2.
+- `readJson<T>(path)` — typed JSON read helper.
+
+Brief-vs-ledger scope reconciliation: the wave-002 / lane-b ledger contract describes a richer subdirectory tree (`runs/<run_id>/`, `verdicts/`, `kill-switch.json`). Lane D's wave-010 brief scoped the flip to the static layout primitives (`sessions / skills / automations / audit + settingsFile`) — the per-run subdirectory creation lands in F-001 / F-008 integration; the kill-switch and verdicts directories land alongside their feature flips (F-020 kill-switch, F-022 + governance triad). Per `rules/no-silent-deferrals.md`: surfaced explicitly in this notes block + the wave-010 lane-d summary's confidence ledger entry rather than silently expanding the brief.
+
+Out-of-scope (carried forward from §out-of-scope-notes; tracked for follow-on flips):
+- Encrypted-at-rest storage of secrets/keys (M8 / F-070-F-071).
+- Sweep of orphaned `<path>.tmp` files on startup (`concurrency-safety.md` §Edge cases).
+- Concurrent writer race testing harness (last-write-wins is the §4 guarantee for digest.json-class files; the atomic helper itself is the building block, not the harness).
+- Per-run `runs/<run_id>/` subdirectory creation — F-001/F-008 integration flip.

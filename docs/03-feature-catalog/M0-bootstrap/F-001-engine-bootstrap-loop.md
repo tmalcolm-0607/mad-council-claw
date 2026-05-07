@@ -20,12 +20,14 @@ provenance:
     - cp:src/main/index.ts
 fr-coverage: []
 test-files:
-  unit: []
+  unit:
+    - tests/unit/F-001-engine-bootstrap-loop.test.ts
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - unit
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -54,8 +56,8 @@ The engine kernel boots a single CoClaw run with a deterministic lifecycle (`ope
 
 | Test file | Project | Initial state | Verifies |
 |---|---|---|---|
-| (TBD) `tests/unit/engine-core/bootstrap-loop.test.ts` | unit | RED — asserts lifecycle order; no impl | scenarios 1, 2 |
-| (TBD) `tests/integration/engine-core/halt-path.test.ts` | integration | RED | scenario 3 |
+| `tests/unit/F-001-engine-bootstrap-loop.test.ts` | unit | RED — bootstrap() throws not-yet-implemented; assertions on lifecycle order + cycle cap fail by design | scenarios 1, 2, 3 (shape) |
+| (TBD) `tests/integration/engine-core/halt-path.test.ts` | integration | RED — to be authored when exception-injection seam exists in impl | scenario 3 (concrete) |
 
 ## Dependencies
 

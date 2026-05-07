@@ -24,6 +24,7 @@ The foundation milestone. Every feature here is a substrate other milestones plu
 | F-006 | logging-pipeline | Single structured-event facade: NDJSON text log + hash-chained audit sink, identity-stamped, no-console lint rule |
 | F-007 | ipc-contract-scaffold | Typed IPC channels via contextBridge; `nodeIntegration: false`, `contextIsolation: true`; contract is single-source-of-truth |
 | F-008 | local-storage-layout | `userData/mad-council-claw/` directory tree; atomic write-temp-then-rename; runs/ skills/ verdicts/ kill-switch.json/ automations/ |
+| F-138 | engine-cycle-orchestrator | NEW (wave-017 / lane-a). Composes F-001/F-002/F-009/F-014/F-015/F-018/F-019 into single MAD-pipeline iteration. Resolves wave-016 HARD-BLOCK F1. |
 
 ## Dependency DAG
 

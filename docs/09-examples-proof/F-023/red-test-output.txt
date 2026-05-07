@@ -1,0 +1,50 @@
+    [90m182| [39m
+    [90m183| [39m    [34mit[39m([32m'stop() is idempotent'[39m[33m,[39m () [33m=>[39m {
+    [90m184| [39m      [35mconst[39m sch [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'mad-iteration'[39m })[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m185| [39m      sch[33m.[39m[34mstop[39m()[33m;[39m [90m// no-op when not started[39m
+    [90m186| [39m      sch[33m.[39m[34mstart[39m(() [33m=>[39m {})[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/20]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-023-cron-heartbeat.test.ts[2m > [22mF-023 cron-heartbeat — HeartbeatScheduler[2m > [22mstart/stop lifecycle[2m > [22msetInterval-driven tick fires after the cadence elapses (fake timers)
+[31m[1mTypeError[22m: HeartbeatScheduler is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-023-cron-heartbeat.test.ts:[2m194:19[22m[39m
+    [90m192| [39m    [34mit[39m([32m'setInterval-driven tick fires after the cadence elapses (fake [39m…
+    [90m193| [39m      vi[33m.[39m[34museFakeTimers[39m()[33m;[39m
+    [90m194| [39m      [35mconst[39m sch [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'mad-iteration'[39m })…
+    [90m   | [39m                  [31m^[39m
+    [90m195| [39m      [35mconst[39m handler [33m=[39m vi[33m.[39m[34mfn[39m()[33m;[39m
+    [90m196| [39m      sch[33m.[39m[34mstart[39m(handler)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/20]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-023-cron-heartbeat.test.ts[2m > [22mF-023 cron-heartbeat — HeartbeatScheduler[2m > [22mgetStatus observability[2m > [22mreports the configured intervalSeconds
+[31m[1mTypeError[22m: HeartbeatScheduler is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-023-cron-heartbeat.test.ts:[2m215:17[22m[39m
+    [90m213| [39m  [34mdescribe[39m([32m'getStatus observability'[39m[33m,[39m () [33m=>[39m {
+    [90m214| [39m    [34mit[39m([32m'reports the configured intervalSeconds'[39m[33m,[39m () [33m=>[39m {
+    [90m215| [39m      [35mconst[39m a [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'mad-iteration'[39m })[33m;[39m
+    [90m   | [39m                [31m^[39m
+    [90m216| [39m      [35mconst[39m b [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'deployment-watch'[39m }…
+    [90m217| [39m      [35mconst[39m c [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'custom'[39m[33m,[39m intervalSe…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/20]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-023-cron-heartbeat.test.ts[2m > [22mF-023 cron-heartbeat — HeartbeatScheduler[2m > [22mgetStatus observability[2m > [22minitial state: tickCount=0, lastTickAt=null, isRunning=false
+[31m[1mTypeError[22m: HeartbeatScheduler is not a constructor[39m
+[36m [2m❯[22m tests/unit/F-023-cron-heartbeat.test.ts:[2m224:19[22m[39m
+    [90m222| [39m
+    [90m223| [39m    [34mit[39m([32m'initial state: tickCount=0, lastTickAt=null, isRunning=false'[39m[33m,[39m…
+    [90m224| [39m      [35mconst[39m sch [33m=[39m [35mnew[39m [33mHeartbeatScheduler[39m({ profile[33m:[39m [32m'mad-iteration'[39m })[33m;[39m
+    [90m   | [39m                  [31m^[39m
+    [90m225| [39m      [35mconst[39m s [33m=[39m sch[33m.[39m[34mgetStatus[39m()[33m;[39m
+    [90m226| [39m      [34mexpect[39m(s[33m.[39mtickCount)[33m.[39m[34mtoBe[39m([34m0[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/20]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m20 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (21)[39m
+[2m   Start at [22m 10:28:43
+[2m   Duration [22m 1.65s[2m (transform 222ms, setup 0ms, collect 308ms, tests 26ms, environment 0ms, prepare 453ms)[22m
+

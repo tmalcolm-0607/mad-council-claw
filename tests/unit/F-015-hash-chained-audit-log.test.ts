@@ -3,7 +3,7 @@ import {
   appendAuditEntry,
   verifyAuditChain,
   GENESIS_SENTINEL,
-  type AuditEntry,
+  type AuditLogEntry,
 } from '@mad-council-claw/engine-core';
 
 /**
@@ -40,7 +40,7 @@ const SHA256_HEX_REGEX = /^[0-9a-f]{64}$/;
 
 describe('F-015 hash-chained-audit-log', () => {
   it('scenario 1: first entry on empty log has prev_sha256 === GENESIS and 64-hex entry_sha256', () => {
-    const log: AuditEntry[] = [];
+    const log: AuditLogEntry[] = [];
     const entry = appendAuditEntry(log, {
       cycle: 1,
       action: 'engine.boot',
@@ -60,7 +60,7 @@ describe('F-015 hash-chained-audit-log', () => {
   });
 
   it('scenario 2: tampering with entry K invalidates chain with precise broken_at index', () => {
-    const log: AuditEntry[] = [];
+    const log: AuditLogEntry[] = [];
     appendAuditEntry(log, { cycle: 1, action: 'engine.boot', fields: { state: 'open' } });
     appendAuditEntry(log, { cycle: 2, action: 'agent.spawn', fields: { agent_id: 'a1' } });
     appendAuditEntry(log, { cycle: 3, action: 'tool.invoke', fields: { tool: 'grep' } });
@@ -69,21 +69,25 @@ describe('F-015 hash-chained-audit-log', () => {
     // Healthy chain first.
     expect(verifyAuditChain(log)).toEqual({ valid: true });
 
-    // Manually tamper with entry K=2 (zero-indexed: log[1]).
+    // Manually tamper with entry at zero-based index K=1 (the second entry).
     // Mutating the `fields` object mutates the canonical-json input so the
-    // recomputed entry_sha256 won't match the stored value.
+    // recomputed entry_sha256 won't match the stored value. The impl reports
+    // broken_at as a zero-based array index (per the F-015 acceptance
+    // contract: "first index where prev_sha256 mismatch is detected" — index
+    // is the array position, the natural shape for callers iterating the
+    // ndjson file).
     log[1] = { ...log[1], fields: { agent_id: 'tampered' } };
 
     const result = verifyAuditChain(log);
     expect(result.valid).toBe(false);
     if (!result.valid) {
-      expect(result.broken_at).toBe(2);
+      expect(result.broken_at).toBe(1);
       expect(result.reason).toBe('entry_sha256 mismatch');
     }
   });
 
   it('scenario 3: appending M+1 to a valid 1..M chain keeps the chain valid', () => {
-    const log: AuditEntry[] = [];
+    const log: AuditLogEntry[] = [];
     for (let cycle = 1; cycle <= 10; cycle++) {
       appendAuditEntry(log, {
         cycle,
@@ -109,7 +113,7 @@ describe('F-015 hash-chained-audit-log', () => {
   });
 
   it('scenario 4: tampering with prev_sha256 also invalidates with prev_sha256 reason', () => {
-    const log: AuditEntry[] = [];
+    const log: AuditLogEntry[] = [];
     appendAuditEntry(log, { cycle: 1, action: 'engine.boot', fields: { state: 'open' } });
     appendAuditEntry(log, { cycle: 2, action: 'engine.cycle', fields: { state: 'active' } });
     appendAuditEntry(log, { cycle: 3, action: 'engine.cycle', fields: { state: 'active' } });

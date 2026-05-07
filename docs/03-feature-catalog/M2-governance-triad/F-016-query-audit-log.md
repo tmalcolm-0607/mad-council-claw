@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-002 / lane-b)
-status: green
+generated-by: hand-authored (wave-002 / lane-b); LOCKED flip wave-013 / lane-c
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-009 / lane-b
     note: "RED test landed in commit eacc651 (8/8 fail captured); GREEN impl (queryAuditLog + findChainBreak + AuditQueryOptions) landed in commit da48f2a (~109 LOC); 8/8 PASS across 3 stable runs; physical-proof.md authored. NOTE: cross-lane race during wave-009 caused both commits to be filed under other lanes' commit messages (eacc651 = F-018; da48f2a = F-006); see lane-b summary § Anomalies B1+B2 for the writeup."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-c
+    note: "Council review verdict ACCEPT (Verdict consensus: APPROVE; median confidence 87; 0 CRITICAL / 0 MAJOR / 5 MINOR / 3 PRAISE) at docs/05-design-reviews/council-reviews/F-016-query-audit-log-review.md. red-green-rule predicate satisfied: GREEN AND review file with verdict ACCEPT. MINOR findings are honest scope-narrowing notes per no-silent-deferrals.md (streaming async-iterator shape deferred to v1.5 / M11; persistence-layer reads deferred to F-008; agent_id/run_id filters deferred — 2-LOC follow-on; until_utc upper bound deferred — symmetric extension; inline chain-validity warn-then-yield deferred — separated into findChainBreak per brief). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/audit.ts (F-016 region ~109 LOC; co-hosted with F-015 write API). 8/8 acceptance scenarios continue to PASS unchanged. Co-locked with F-014 + F-015 + F-017 in wave-013 / lane-c."
 feature-id: F-016
 short-slug: query-audit-log
 milestone: M2

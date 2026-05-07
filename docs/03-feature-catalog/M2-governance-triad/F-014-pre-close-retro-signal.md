@@ -1,8 +1,8 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-002 / lane-b)
-status: green
-status-since: 2026-05-06
+generated-by: hand-authored (wave-002 / lane-b); LOCKED flip wave-013 / lane-c
+status: locked
+status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-06
     by: wave-008 / lane-a
     note: "RED test stub committed (d896ecb); GREEN impl committed (ba54036). 8/8 acceptance scenarios pass via vitest. closeSession + RetroSignal interface + RetroMissingError landed in packages/engine-core/src/index.ts. Filesystem write to runs/<run_id>/retro.json deferred to F-008 per ledger out-of-scope-notes."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-c
+    note: "Council review verdict ACCEPT (Verdict consensus: APPROVE; median confidence 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE) at docs/05-design-reviews/council-reviews/F-014-pre-close-retro-signal-review.md. red-green-rule predicate satisfied: GREEN AND review file with verdict ACCEPT. MINOR findings are honest scope-narrowing notes per no-silent-deferrals.md (filesystem persistence to runs/<run_id>/retro.json deferred to F-008; audit-pipeline integration deferred to F-015 wiring; halt-source wiring deferred to engine-cycle integration with F-018/F-020/F-022; ALAS learning-hub posting deferred to M11). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/retro.ts (189 LOC). 8/8 acceptance scenarios continue to PASS unchanged. First M2 (governance triad) LOCKED transition; co-locked with F-015 + F-016 + F-017 in wave-013 / lane-c."
 feature-id: F-014
 short-slug: pre-close-retro-signal
 milestone: M2

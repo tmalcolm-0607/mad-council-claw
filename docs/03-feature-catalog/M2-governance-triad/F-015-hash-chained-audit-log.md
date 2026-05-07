@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-002 / lane-b)
-status: green
+generated-by: hand-authored (wave-002 / lane-b); LOCKED flip wave-013 / lane-c
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-008 / lane-b
     note: "RED test landed in commit 3d91a72 (4/4 fail captured); GREEN impl + AuditLogEntry rename to avoid collision with F-001's AuditEntry; 4/4 PASS across 3 stable runs; physical-proof.md authored"
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-c
+    note: "Council review verdict ACCEPT (Verdict consensus: APPROVE; median confidence 89; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE) at docs/05-design-reviews/council-reviews/F-015-hash-chained-audit-log-review.md. red-green-rule predicate satisfied: GREEN AND review file with verdict ACCEPT. MINOR findings are honest scope-narrowing notes per no-silent-deferrals.md (cryptographic signing deferred to v1.5 / F-D-005; persistence to runs/<run_id>/audit.ndjson deferred to F-008; logging-pipeline wiring deferred to engine-cycle integration with F-006; canonical-JSON serializer is lightweight, RFC 8785 deferred to v1.5). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/audit.ts (263 LOC; co-hosts F-016 read API). 4/4 acceptance scenarios continue to PASS unchanged. Co-locked with F-014 + F-016 + F-017 in wave-013 / lane-c."
 feature-id: F-015
 short-slug: hash-chained-audit-log
 milestone: M2

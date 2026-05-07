@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-002 / lane-b)
-status: green
+generated-by: hand-authored (wave-002 / lane-b); LOCKED flip wave-013 / lane-c
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-012 / lane-b
     note: "RED → GREEN. tests/unit/F-017-audit-pii-redaction.test.ts (8/8 PASS) + packages/engine-core/src/redaction.ts (~104 LOC) lands redact() + redactObject() helper primitives; ledger's stricter reject-on-detect orchestration is composable atop this primitive in a future wave."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-c
+    note: "Council review verdict ACCEPT (Verdict consensus: APPROVE; median confidence 86; 0 CRITICAL / 0 MAJOR / 5 MINOR / 3 PRAISE) at docs/05-design-reviews/council-reviews/F-017-pii-redaction-egress-review.md. red-green-rule predicate satisfied: GREEN AND review file with verdict ACCEPT. MINOR findings are honest scope-narrowing notes per no-silent-deferrals.md (reject-on-detect orchestration deferred — composable atop primitive ~5 LOC wrapper; F-015 audit-log emission tie-in deferred; M16 telemetry-export integration deferred; M1 LLM-call integration deferred; counter-bypass adversarial-eval lane deferred). Source lives at packages/engine-core/src/redaction.ts (104 LOC; new file in wave-012/lane-b — not a split). 8/8 acceptance scenarios continue to PASS unchanged. Closes the wave-013 / lane-c M2 LOCKED batch (F-014 + F-015 + F-016 + F-017)."
 feature-id: F-017
 short-slug: pii-redaction-egress
 milestone: M2

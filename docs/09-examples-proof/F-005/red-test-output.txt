@@ -1,0 +1,72 @@
+
+> mad-council-claw@0.0.0 test:node C:\Users\tonym\Repos\mad-council-claw
+> vitest run tests/node "--" "F-005-deps-pinning"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/node/F-005-deps-pinning.test.ts [2m([22m[2m4 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[90m 35[2mms[22m[39m
+[31m   [31m×[31m F-005 deps-pinning[2m > [22mroot package.json devDependencies are exact-pinned (no ^, ~, or range operators)[90m 26[2mms[22m[31m[39m
+[31m     → Found range-pinned devDependencies (must be exact): vitest@^2.0.0, @vitest/ui@^2.0.0, happy-dom@^15.0.0, typescript@^5.5.0, @types/node@^20.0.0: expected [ 'vitest@^2.0.0', …(4) ] to deeply equal [][39m
+[31m   [31m×[31m F-005 deps-pinning[2m > [22mevery workspace package.json (root + packages/*) has exact-pinned deps[90m 5[2mms[22m[31m[39m
+[31m     → Found range-pinned deps in workspace package.json files: C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.vitest@^2.0.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.@vitest/ui@^2.0.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.happy-dom@^15.0.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.typescript@^5.5.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.@types/node@^20.0.0: expected [ …(5) ] to deeply equal [][39m
+ [32m✓[39m tests/node/F-008-local-storage-layout.test.ts [2m([22m[2m6 tests[22m[2m)[22m[90m 73[2mms[22m[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 2 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-005-deps-pinning.test.ts[2m > [22mF-005 deps-pinning[2m > [22mroot package.json devDependencies are exact-pinned (no ^, ~, or range operators)
+[31m[1mAssertionError[22m: Found range-pinned devDependencies (must be exact): vitest@^2.0.0, @vitest/ui@^2.0.0, happy-dom@^15.0.0, typescript@^5.5.0, @types/node@^20.0.0: expected [ 'vitest@^2.0.0', …(4) ] to deeply equal [][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Array [][39m
+[31m+ Array [[39m
+[31m+   "vitest@^2.0.0",[39m
+[31m+   "@vitest/ui@^2.0.0",[39m
+[31m+   "happy-dom@^15.0.0",[39m
+[31m+   "typescript@^5.5.0",[39m
+[31m+   "@types/node@^20.0.0",[39m
+[31m+ ][39m
+
+[36m [2m❯[22m tests/node/F-005-deps-pinning.test.ts:[2m82:7[22m[39m
+    [90m 80| [39m      violations[33m,[39m
+    [90m 81| [39m      [32m`Found range-pinned devDependencies (must be exact): [39m[36m${[39mviolation…
+    [90m 82| [39m    )[33m.[39m[34mtoEqual[39m([])[33m;[39m
+    [90m   | [39m      [31m^[39m
+    [90m 83| [39m  })[33m;[39m
+    [90m 84| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-005-deps-pinning.test.ts[2m > [22mF-005 deps-pinning[2m > [22mevery workspace package.json (root + packages/*) has exact-pinned deps
+[31m[1mAssertionError[22m: Found range-pinned deps in workspace package.json files: C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.vitest@^2.0.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.@vitest/ui@^2.0.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.happy-dom@^15.0.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.typescript@^5.5.0; C:\Users\tonym\Repos\mad-council-claw\package.json → devDependencies.@types/node@^20.0.0: expected [ …(5) ] to deeply equal [][39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- Array [][39m
+[31m+ Array [[39m
+[31m+   "C:\\Users\\tonym\\Repos\\mad-council-claw\\package.json → devDependencies.vitest@^2.0.0",[39m
+[31m+   "C:\\Users\\tonym\\Repos\\mad-council-claw\\package.json → devDependencies.@vitest/ui@^2.0.0",[39m
+[31m+   "C:\\Users\\tonym\\Repos\\mad-council-claw\\package.json → devDependencies.happy-dom@^15.0.0",[39m
+[31m+   "C:\\Users\\tonym\\Repos\\mad-council-claw\\package.json → devDependencies.typescript@^5.5.0",[39m
+[31m+   "C:\\Users\\tonym\\Repos\\mad-council-claw\\package.json → devDependencies.@types/node@^20.0.0",[39m
+[31m+ ][39m
+
+[36m [2m❯[22m tests/node/F-005-deps-pinning.test.ts:[2m112:7[22m[39m
+    [90m110| [39m      violations[33m,[39m
+    [90m111| [39m      [32m`Found range-pinned deps in workspace package.json files: [39m[36m${[39mviol…
+    [90m112| [39m    )[33m.[39m[34mtoEqual[39m([])[33m;[39m
+    [90m   | [39m      [31m^[39m
+    [90m113| [39m  })[33m;[39m
+    [90m114| [39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[90m (2)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m8 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 07:40:49
+[2m   Duration [22m 3.12s[2m (transform 560ms, setup 0ms, collect 723ms, tests 107ms, environment 1ms, prepare 1.51s)[22m
+
+ ELIFECYCLE  Command failed with exit code 1.

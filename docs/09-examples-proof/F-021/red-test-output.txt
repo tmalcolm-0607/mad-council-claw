@@ -1,0 +1,32 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-021-degradation-ladder.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m11 failed[39m[2m)[22m[90m 19[2mms[22m[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 1: new ladder starts at rung "normal"[90m 9[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 2: escalate from "normal" → moves to "skill-fallback" and returns null[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 3: escalate sequence advances exactly one rung at a time[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 4: escalate from "headless" → reaches "halt" AND returns RunHaltedVerdict (trigger=degrade_escalate)[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 5a: recover from non-normal rung moves DOWN one rung[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 5b: recover from "normal" is a no-op[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 6a: "halt" is terminal — recover from halt is a no-op[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 6b: further escalate from "halt" remains at halt and returns a halt verdict (idempotent)[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mscenario 7: state.history records every transition with rung, timestamp, trigger[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mrobustness: escalate trigger reason is preserved verbatim in halt verdict reason[90m 2[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+[31m   [31m×[31m F-021 degradation ladder[2m > [22mrobustness: getState() returns a current snapshot with all 3 fields[90m 1[2mms[22m[31m[39m
+[31m     → DegradationLadder is not a constructor[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m11 failed[39m[22m[90m (11)[39m
+[2m   Start at [22m 06:57:53
+[2m   Duration [22m 964ms[2m (transform 166ms, setup 0ms, collect 221ms, tests 19ms, environment 0ms, prepare 302ms)[22m
+

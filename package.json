@@ -1,0 +1,16 @@
+{
+  "name": "mad-council-claw",
+  "version": "0.0.0",
+  "private": true,
+  "description": "MAD Council Claw — hybrid Electron+headless AI agent platform combining clawpilot UX with canonical-e governance discipline",
+  "license": "MIT",
+  "scripts": {
+    "test": "echo 'no tests yet — Lane Zero is docs-only; M0 wave will add Vitest 4-project layout per docs/01-requirements/foundational-plan.md' && exit 0",
+    "build": "echo 'no build yet — Lane Zero is docs-only; M0 wave will add Vite + electron-builder per docs/01-requirements/foundational-plan.md' && exit 0",
+    "lint": "echo 'no lint yet — Lane Zero is docs-only; M0 wave will add ESLint + Prettier' && exit 0",
+    "format": "echo 'no formatter yet — Lane Zero is docs-only' && exit 0"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

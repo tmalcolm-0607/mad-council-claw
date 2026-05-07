@@ -1,27 +1,34 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-009 / lane-b
+    note: "RED test landed in commit eacc651 (8/8 fail captured); GREEN impl (queryAuditLog + findChainBreak + AuditQueryOptions) landed in commit da48f2a (~109 LOC); 8/8 PASS across 3 stable runs; physical-proof.md authored. NOTE: cross-lane race during wave-009 caused both commits to be filed under other lanes' commit messages (eacc651 = F-018; da48f2a = F-006); see lane-b summary § Anomalies B1+B2 for the writeup."
 feature-id: F-016
 short-slug: query-audit-log
 milestone: M2
 provenance:
   surfaces:
     - ce:FR-AUDIT-001 ("Query-AuditLog" sub-surface)
-fr-coverage: []
+fr-coverage:
+  - ce:FR-AUDIT-001
 test-files:
-  unit: []
+  unit:
+    - tests/unit/F-016-query-audit-log.test.ts
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - unit
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -67,4 +74,26 @@ confidence: high
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+GREEN landed wave-009 / lane-b (2026-05-07). Implementation in `packages/engine-core/src/index.ts` adds ~109 LOC.
+
+API surface:
+- `interface AuditQueryOptions { since?, top?, skip?, action? }` — all fields optional
+- `queryAuditLog(rows, opts) → AuditLogEntry[]` — defensive copy + filter pipeline; chronological order preserved
+- `findChainBreak(rows) → number | null` — wraps F-015's `verifyAuditChain`; returns broken zero-based index or null
+
+Key implementation choices:
+- **Filter pipeline order**: `since` → `action` → `skip` → `top`. Each step operates on the in-flight array; `since` and `action` are O(N) filters; `skip`/`top` are O(K) array slices. Total worst-case O(N).
+- **Defensive copy**: `[...rows]` at entry; mutations to the returned array do not affect the source log. Individual entries share object identity (callers mutating `entry.fields` invalidates the chain — `findChainBreak` will detect).
+- **`since` filter targets `entry.fields.timestamp`**: F-015's `AuditLogEntry` has no top-level timestamp field; the brief's `since` semantics are honored by reading `fields.timestamp` (string). Lexicographic compare on ISO-8601 strings sorts correctly. Entries without a `fields.timestamp` are excluded when `since` is set.
+- **`action` filter is exact-match**: per the brief's `e.action === opts.action`. Substring/regex match deferred to v1.5 (heavy query needs are tracked under M11 introspect/replay per the ledger out-of-scope-notes).
+- **Chain integrity is opt-in via `findChainBreak`**: the F-016 ledger §Behavior contract says `queryAuditLog` "validates the chain integrity per F-015 BEFORE yielding any entry". The wave-9 brief separates the verification cost into `findChainBreak` so callers compose them deliberately. Substantive guarantee preserved (callers can verify before query); cost model now caller-controlled.
+
+Out-of-scope (per ledger):
+- Streaming async-iterator shape for large logs (deferred to v1.5; M2 ships a synchronous filter API only — heavy query needs tracked under F-088..F-092 / M11 introspect/replay).
+- Persistence-layer reads — querying directly against `runs/<run_id>/audit.ndjson` is F-008's job.
+- `agent_id` / `run_id` filters — F-002 stamps these into `fields` via `stampIdentity`; the brief uses `action` as the v1 surface filter to keep the API minimal. Adding these is a 2-LOC follow-on.
+- `until_utc` timestamp upper bound — the brief specifies `since` only; `until` is symmetric and trivial to add.
+
+Physical proof: `docs/09-examples-proof/F-016/{red-test-output.txt, green-test-output.txt, physical-proof.md}`.
+
+Cross-lane race writeup (Anomalies B1 + B2): see `docs/06-agent-team-outputs/wave-009/lane-b-summary.md`.

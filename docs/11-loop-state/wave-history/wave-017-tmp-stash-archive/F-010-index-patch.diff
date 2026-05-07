@@ -1,0 +1,14 @@
+diff --git a/packages/engine-core/src/index.ts b/packages/engine-core/src/index.ts
+--- a/packages/engine-core/src/index.ts
++++ b/packages/engine-core/src/index.ts
+@@ -22,6 +22,7 @@
+  *   - degradation.ts — F-021 (degradation-fallback) — imports RunHaltedVerdict from halt.ts
+  *   - backend.ts     — F-009 (ibackend-provider) — imports Agent/Session from identity.ts + RunHaltedVerdict from halt.ts
++ *   - backend-anthropic.ts — F-010 (anthropic-sdk-provider) — implements IBackendProvider; origin='anthropic'
+  *
+  * Cross-feature type sharing rule: shared types live with their FIRST owner;
+@@ -41,3 +42,4 @@ export * from './killswitch.js';
+ export * from './quota.js';
+ export * from './degradation.js';
+ export * from './backend.js';
++export * from './backend-anthropic.js';

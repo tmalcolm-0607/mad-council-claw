@@ -12,3 +12,7 @@ Thumbs.db
 *.log
 .vscode/
 .idea/
+
+# Cross-lane staging-race recovery scratch (per foundational-plan.md § "No git reset").
+# Subagents may stash debris here during multi-lane recovery; never commit.
+.tmp-stash/

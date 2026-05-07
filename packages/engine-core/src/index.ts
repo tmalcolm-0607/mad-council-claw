@@ -13,6 +13,7 @@
  *   - storage.ts     — F-008 (local-storage-layout)
  *   - retro.ts       — F-014 (pre-close-retro-signal)
  *   - audit.ts       — F-015 (hash-chained-audit-log) + F-016 (query-audit-log)
+ *   - redaction.ts   — F-017 (audit-pii-redaction)
  *   - halt.ts        — F-018 (failure-pattern-halt) — owns RunHaltedVerdict + HaltTrigger
  *   - cost.ts        — F-019 (cost-ledger)
  *   - killswitch.ts  — F-020 (kill-switch) — imports RunHaltedVerdict from halt.ts
@@ -30,6 +31,7 @@ export * from './logger.js';
 export * from './storage.js';
 export * from './retro.js';
 export * from './audit.js';
+export * from './redaction.js';
 export * from './halt.js';
 export * from './cost.js';
 export * from './killswitch.js';

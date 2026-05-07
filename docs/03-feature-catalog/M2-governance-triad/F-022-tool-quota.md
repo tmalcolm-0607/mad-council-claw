@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-010 / lane-c
     note: "RED test landed at tests/unit/F-022-tool-call-quota.test.ts (8/8 fail captured); GREEN impl ToolCallQuota class + 'tool_calls' HaltTrigger value landed in packages/engine-core/src/index.ts (~135 LOC F-022 region + 1-line union edit). 8/8 PASS. Verdict shape reuses F-018 RunHaltedVerdict; trigger='tool_calls' distinguishes per-spawn quota from F-018's global 'tool_calls_quota'. Both feed F-014's halted_by_tool_quota retro outcome. NOTE: cross-lane staging race during wave-010 — F-022 RED files were absorbed into commit f142eb1 (test(F-020)) and F-022 GREEN impl into commit 9163d95 (feat(F-008)); same Anomaly A1 pattern documented in wave-009/lane-c. Substance preserved (HEAD has the work; tests pass); audit-trail names scrambled. See lane-c-summary §A1 for writeup. Out of scope per ledger: max_calls_per_run + max_tools_active (M7), F-006 logger surfacing, F-015 audit-evidence binding."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-d
+    note: "Post-impl council review at docs/05-design-reviews/council-reviews/F-022-tool-quota-review.md verdict ACCEPT (Verdict consensus: APPROVE; median confidence 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/quota.ts (101 LOC). 8/8 acceptance scenarios continue to PASS unchanged at review time. Per the red-green-rule predicate: LOCKED requires both GREEN AND review file with verdict: ACCEPT. Both conditions verified."
 feature-id: F-022
 short-slug: tool-quota
 milestone: M2

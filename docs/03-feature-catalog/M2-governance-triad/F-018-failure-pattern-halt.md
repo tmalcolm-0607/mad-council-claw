@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-009 / lane-c
     note: "RED test stub committed (eacc651); GREEN impl landed in HEAD's packages/engine-core/src/index.ts (~290 LOC F-018 region) per anomaly A1 below — the GREEN file blob was captured by sibling-lane commit da48f2a per the wave-008 lane-coexistence pattern. 9/9 acceptance scenarios pass via vitest. HaltDetector class + RunHaltedVerdict + HaltTrigger 12-value union (9 ledger + 3 sibling) + HaltContext + HaltDetectorConfig landed. Out-of-scope per ledger: F-006 logger surfacing, F-015 audit-evidence binding, F-020 kill-switch JSON watcher, F-021 degradation source signal, F-022 per-tool quota source."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-d
+    note: "Post-impl council review at docs/05-design-reviews/council-reviews/F-018-failure-pattern-halt-review.md verdict ACCEPT (Verdict consensus: APPROVE; median confidence 89; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/halt.ts (269 LOC). 9/9 acceptance scenarios continue to PASS unchanged at review time. Per the red-green-rule predicate: LOCKED requires both GREEN AND review file with verdict: ACCEPT. Both conditions verified."
 feature-id: F-018
 short-slug: failure-pattern-halt
 milestone: M2

@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-010 / lane-b
     note: "RED test stub authored (11 scenarios) per wave-5 retro proposal; GREEN impl appends ~175 LOC F-020 region to packages/engine-core/src/index.ts. KillSwitch class + defaultKillFileExists helper; checkOrThrow() throws Error decorated with F-018 RunHaltedVerdict (trigger='manual'). 11/11 acceptance scenarios pass. Full unit suite 66/66 across 10 test files. Scope deviation from ledger surface (JSON schema parsing) explicitly surfaced per rules/no-silent-deferrals.md — deferred to engine-cycle integration step."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-d
+    note: "Post-impl council review at docs/05-design-reviews/council-reviews/F-020-kill-switch-review.md verdict ACCEPT (Verdict consensus: APPROVE; median confidence 88; 0 CRITICAL / 0 MAJOR / 5 MINOR / 2 PRAISE). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/killswitch.ts (151 LOC). 11/11 acceptance scenarios continue to PASS unchanged at review time. Per the red-green-rule predicate: LOCKED requires both GREEN AND review file with verdict: ACCEPT. Both conditions verified."
 feature-id: F-020
 short-slug: kill-switch
 milestone: M2

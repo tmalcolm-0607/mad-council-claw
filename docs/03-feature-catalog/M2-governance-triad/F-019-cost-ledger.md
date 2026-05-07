@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-010 / lane-a
     note: "RED test stub committed (03e3353); GREEN impl appended to packages/engine-core/src/index.ts (~270 LOC F-019 region after F-008's region — wave-008 multi-lane append convention). 8/8 acceptance scenarios pass via vitest. CostLedger class + CostEntry/CostEntryInput interfaces landed. Ledger ships without halt/checkBudget/overBudget API by design — observable-only per rules/no-invented-constraints.md. Out-of-scope per ledger: cost-budget enforcement (gated on explicit user opt-in), persistence to runs/<run_id>/cost-ledger.ndjson (F-008's job), live F-013 event consumption, per-model pricing/<backend>.json table (caller-supplied usd_estimate)."
+  - status: locked
+    at: 2026-05-07
+    by: wave-013 / lane-d
+    note: "Post-impl council review at docs/05-design-reviews/council-reviews/F-019-cost-ledger-review.md verdict ACCEPT (Verdict consensus: APPROVE; median confidence 89; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/cost.ts (216 LOC). 8/8 acceptance scenarios continue to PASS unchanged at review time. Per the red-green-rule predicate: LOCKED requires both GREEN AND review file with verdict: ACCEPT. Both conditions verified."
 feature-id: F-019
 short-slug: cost-ledger
 milestone: M2

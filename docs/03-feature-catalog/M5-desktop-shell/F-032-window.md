@@ -8,6 +8,10 @@ status-history:
     at: 2026-05-07
     by: wave-003 / lane-a
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: red
+    at: 2026-05-07
+    by: wave-018 / lane-c
+    note: "RED test authored at tests/unit/F-032-window.test.ts (6 structural scenarios per the wave-018 / lane-c brief that simplifies the ledger's 3 launch-Electron scenarios to a structural / interface-based shape contract). Test fails with module-resolution error: @mad-council-claw/desktop-shell exports map missing. Implementation will land createMainWindow() + resolveWindowState() + DEFAULT_WINDOW_STATE in packages/desktop-shell/src/window.ts."
 feature-id: F-032
 short-slug: window
 milestone: M5
@@ -18,12 +22,14 @@ provenance:
     - cp:electron/
 fr-coverage: []
 test-files:
-  unit: []
+  unit:
+    - tests/unit/F-032-window.test.ts
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - unit
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.

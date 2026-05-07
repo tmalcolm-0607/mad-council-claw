@@ -884,3 +884,24 @@ Every backlog entry tags confidence:
 ## Next step (after plan approval)
 
 Run iteration 1 per the plan above: 4 parallel Task subagents on lanes A–D, each writing findings to `specs/15-nested-quilt/iter-1/`. Synthesize back into this plan file's iteration log. Decide iter 2's lanes based on findings. Repeat until E1–E9 are all true, then surface end-of-loop interview.
+
+---
+
+## User directives — wave 12+ (added 2026-05-07)
+
+### Push pre-authorized for this loop session
+
+Per user directive 2026-05-07: `git push origin main` to https://github.com/tmalcolm-0607/mad-council-claw is **PRE-AUTHORIZED** for the entire wave-12+ loop session — subagents may push at end of each lane without re-asking; orchestrator may push aggregated wave commits without re-asking. The repo is the user's personal-account scratch surface for this engine spike, not a production branch.
+
+Every subagent prompt for mad-council-claw waves should include verbatim: **"Push at end is AUTHORIZED for this loop session per user directive 2026-05-07."**
+
+### No git reset — use git restore --staged or selective add
+
+Per user directive 2026-05-07: subagents must **NOT** use `git reset` (any flavor — `--hard`, `--soft`, `--mixed`, `HEAD~N`) for cross-lane staging-race recovery. Recovery alternatives:
+- `git restore --staged <path>` to unstage without losing work-tree changes
+- `git add <specific-file>` (selective add) instead of `git add -A`
+- Sequential per-file commits (one `git add X && git commit` block per file) instead of bulk staging
+- `git stash push -- <path>` for narrowly-scoped temporary moves
+
+Every subagent prompt should include verbatim: **"DO NOT use git reset (any flavor) for staging-race recovery — use git restore --staged or selective add instead."**
+

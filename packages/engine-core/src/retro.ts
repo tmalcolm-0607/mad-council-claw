@@ -7,7 +7,7 @@
  * and closeSession() — the boundary contract that fails the close transition
  * with RETRO_MISSING when the retro is absent / partial / out-of-range. The
  * filesystem write to runs/<run_id>/retro.json is F-008's job (storage layout)
- * per the F-014 ledger out-of-scope-notes; this flip lands the in-memory
+ * per the F-014 ledger non-scope notes; this flip lands the in-memory
  * boundary that F-008 will plug into.
  *
  * Split from index.ts in wave-011/lane-a (cross-lane staging race elimination).

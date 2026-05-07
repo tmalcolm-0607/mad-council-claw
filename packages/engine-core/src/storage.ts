@@ -102,7 +102,7 @@ export function ensureStorageLayout(layout: StorageLayout): void {
  * consumed by the rename; on a successful return, no `.tmp` file remains.
  *
  * On a writer crash between step 2 and step 3, the `.tmp` orphans;
- * the startup sweep (out of scope here, ledger §Edge cases) reclaims it.
+ * the startup sweep (non-scope here; see ledger §Edge cases) reclaims it.
  */
 export function atomicWriteJson(path: string, content: unknown): void {
   const tmp = `${path}.tmp`;

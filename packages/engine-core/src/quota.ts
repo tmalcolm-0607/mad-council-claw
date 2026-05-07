@@ -51,7 +51,7 @@ import type { RunHaltedVerdict } from './halt.js';
  *   - No automatic decay — counters are monotonic per-agent until reset.
  *     (The run is the natural reset boundary; sub-run resets are F-001's
  *     cycle-boundary call site, which will use `reset` per-agent at cycle
- *     end if/when per-cycle quotas land — out of scope for this flip.)
+ *     end if/when per-cycle quotas land — not in scope for this flip.)
  */
 export class ToolCallQuota {
   private readonly callsByAgent = new Map<string, number>();

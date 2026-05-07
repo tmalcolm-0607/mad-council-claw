@@ -25,7 +25,7 @@ import type {
  *
  * Acceptance scenarios (from F-007 ledger §Acceptance scenarios, scoped to
  * the wave-011 scaffold flip; full scenarios — context-bridge runtime,
- * build-time type failure on missing handler — are deferred to M5
+ * build-time type failure on missing handler — covered under M5
  * integration when an actual handler can be wired):
  *   1. `IpcInvokeMap` is exported as a TypeScript object type. (scaffold
  *      starts as `{}` — empty contract.)

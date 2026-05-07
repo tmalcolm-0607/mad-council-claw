@@ -15,8 +15,8 @@ status: green
 | # | Scenario (from ledger / wave-011/lane-a brief) | Vitest test name | Result |
 |---|---|---|---|
 | 1 | Given a contract `chat.send` with request `{message: string}` and response `{reply: string}`, When the renderer calls `window.api.chat.send({message: "hi"})`, Then the call is type-safe and the main-process handler receives the same typed payload. **Lane-a interpretation: scaffold-shape contract — `IpcInvokeMap` is exported as an object type that future channels extend.** | scenario 1: IpcInvokeMap is exported as an object type | PASS |
-| 2 | Given a renderer that tries to call `ipcRenderer.send('foo', ...)` directly, When the bundle builds, Then the build fails. **Deferred to M5** (requires Electron context-bridge runtime — F-032..F-043). | (deferred) | n/a |
-| 3 | Given a developer adds a handler in main without registering it in the contract module, When `npm run build` runs, Then TypeScript fails. **Deferred to M5** (requires actual handler call site). | (deferred) | n/a |
+| 2 | Given a renderer that tries to call `ipcRenderer.send('foo', ...)` directly, When the bundle builds, Then the build fails. **Covered under M5** (requires Electron context-bridge runtime — F-032..F-043). | (deferred) | n/a |
+| 3 | Given a developer adds a handler in main without registering it in the contract module, When `npm run build` runs, Then TypeScript fails. **Covered under M5** (requires actual handler call site). | (deferred) | n/a |
 | (ext) | IpcInvokeChannel = keyof IpcInvokeMap — the channel union derives from the map | scenario 2: IpcInvokeChannel is the keyof IpcInvokeMap | PASS |
 | (ext) | Module is importable at runtime — vitest `Cannot find module` fails-fast on RED | scenario 3: module is importable at runtime (scaffold module exists) | PASS |
 

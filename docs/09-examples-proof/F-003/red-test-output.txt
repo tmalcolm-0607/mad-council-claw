@@ -1,0 +1,54 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/node/F-003-repo-scaffolding.test.ts [2m([22m[2m11 tests[22m[2m | [22m[31m2 failed[39m[2m)[22m[90m 30[2mms[22m[39m
+[31m   [31m×[31m F-003 repo-scaffolding[2m > [22mpackages/desktop-shell/package.json exists with name @mad-council-claw/desktop-shell[90m 13[2mms[22m[31m[39m
+[31m     → packages/desktop-shell/package.json missing: expected false to be true // Object.is equality[39m
+[31m   [31m×[31m F-003 repo-scaffolding[2m > [22mpackages/cli/package.json exists with name @mad-council-claw/cli[90m 1[2mms[22m[31m[39m
+[31m     → packages/cli/package.json missing: expected false to be true // Object.is equality[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 2 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-003-repo-scaffolding.test.ts[2m > [22mF-003 repo-scaffolding[2m > [22mpackages/desktop-shell/package.json exists with name @mad-council-claw/desktop-shell
+[31m[1mAssertionError[22m: packages/desktop-shell/package.json missing: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m tests/node/F-003-repo-scaffolding.test.ts:[2m115:77[22m[39m
+    [90m113| [39m  [34mit[39m([32m'packages/desktop-shell/package.json exists with name @mad-counci[39m…
+    [90m114| [39m    [35mconst[39m path [33m=[39m [34mjoin[39m(repoRoot[33m,[39m [32m'packages'[39m[33m,[39m [32m'desktop-shell'[39m[33m,[39m [32m'package.[39m…
+    [90m115| [39m    [34mexpect[39m([34mexistsSync[39m(path)[33m,[39m [32m'packages/desktop-shell/package.json miss[39m…
+    [90m   | [39m                                                                            [31m^[39m
+    [90m116| [39m    [35mconst[39m pkg [33m=[39m loadJson[33m<[39m[33mPackageJson[39m[33m>[39m(path)[33m;[39m
+    [90m117| [39m    [34mexpect[39m(pkg[33m.[39mname)[33m.[39m[34mtoBe[39m([32m'@mad-council-claw/desktop-shell'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/node/F-003-repo-scaffolding.test.ts[2m > [22mF-003 repo-scaffolding[2m > [22mpackages/cli/package.json exists with name @mad-council-claw/cli
+[31m[1mAssertionError[22m: packages/cli/package.json missing: expected false to be true // Object.is equality[39m
+
+[32m- Expected[39m
+[31m+ Received[39m
+
+[32m- true[39m
+[31m+ false[39m
+
+[36m [2m❯[22m tests/node/F-003-repo-scaffolding.test.ts:[2m122:67[22m[39m
+    [90m120| [39m  [34mit[39m([32m'packages/cli/package.json exists with name @mad-council-claw/cli[39m…
+    [90m121| [39m    [35mconst[39m path [33m=[39m [34mjoin[39m(repoRoot[33m,[39m [32m'packages'[39m[33m,[39m [32m'cli'[39m[33m,[39m [32m'package.json'[39m)[33m;[39m
+    [90m122| [39m    [34mexpect[39m([34mexistsSync[39m(path)[33m,[39m [32m'packages/cli/package.json missing'[39m)[33m.[39m[34mtoBe[39m…
+    [90m   | [39m                                                                  [31m^[39m
+    [90m123| [39m    [35mconst[39m pkg [33m=[39m loadJson[33m<[39m[33mPackageJson[39m[33m>[39m(path)[33m;[39m
+    [90m124| [39m    [34mexpect[39m(pkg[33m.[39mname)[33m.[39m[34mtoBe[39m([32m'@mad-council-claw/cli'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m2 failed[39m[22m[2m | [22m[1m[32m9 passed[39m[22m[90m (11)[39m
+[2m   Start at [22m 08:30:18
+[2m   Duration [22m 2.03s[2m (transform 56ms, setup 0ms, collect 56ms, tests 30ms, environment 0ms, prepare 701ms)[22m
+

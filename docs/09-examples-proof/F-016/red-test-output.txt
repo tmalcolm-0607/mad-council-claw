@@ -1,0 +1,124 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [31m❯[39m tests/unit/F-016-query-audit-log.test.ts [2m([22m[2m8 tests[22m[2m | [22m[31m8 failed[39m[2m)[22m[90m 17[2mms[22m[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 1: filter by action yields only matching entries in chronological order[90m 9[2mms[22m[31m[39m
+[31m     → queryAuditLog is not a function[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 2a: findChainBreak returns null on intact chain[90m 1[2mms[22m[31m[39m
+[31m     → findChainBreak is not a function[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 2b: findChainBreak returns broken index on tampered chain[90m 1[2mms[22m[31m[39m
+[31m     → findChainBreak is not a function[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 3: top caps the result set to at most N entries[90m 1[2mms[22m[31m[39m
+[31m     → queryAuditLog is not a function[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 4: since filter yields only entries at or after the given timestamp[90m 1[2mms[22m[31m[39m
+[31m     → queryAuditLog is not a function[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 5: top + skip pagination skips first then takes top[90m 1[2mms[22m[31m[39m
+[31m     → queryAuditLog is not a function[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 6: combined filters compose (since + action + top)[90m 1[2mms[22m[31m[39m
+[31m     → queryAuditLog is not a function[39m
+[31m   [31m×[31m F-016 query-audit-log[2m > [22mscenario 7: empty options returns all entries (defensive copy, read-only)[90m 1[2mms[22m[31m[39m
+[31m     → queryAuditLog is not a function[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 8 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 1: filter by action yields only matching entries in chronological order
+[31m[1mTypeError[22m: queryAuditLog is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m79:20[22m[39m
+    [90m 77| [39m    [35mconst[39m log [33m=[39m [34mbuildSampleLog[39m()[33m;[39m
+    [90m 78| [39m
+    [90m 79| [39m    [35mconst[39m result [33m=[39m [34mqueryAuditLog[39m(log[33m,[39m { action[33m:[39m [32m'agent.spawn'[39m })[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m 80| [39m
+    [90m 81| [39m    [34mexpect[39m(result)[33m.[39m[34mtoHaveLength[39m([34m2[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 2a: findChainBreak returns null on intact chain
+[31m[1mTypeError[22m: findChainBreak is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m93:20[22m[39m
+    [90m 91| [39m    [35mconst[39m log [33m=[39m [34mbuildSampleLog[39m()[33m;[39m
+    [90m 92| [39m
+    [90m 93| [39m    [35mconst[39m result [33m=[39m [34mfindChainBreak[39m(log)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m 94| [39m
+    [90m 95| [39m    [34mexpect[39m(result)[33m.[39m[34mtoBeNull[39m()[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 2b: findChainBreak returns broken index on tampered chain
+[31m[1mTypeError[22m: findChainBreak is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m105:20[22m[39m
+    [90m103| [39m    log[[34m2[39m] [33m=[39m { [33m...[39mlog[[34m2[39m][33m,[39m fields[33m:[39m { tool[33m:[39m [32m'tampered'[39m[33m,[39m timestamp[33m:[39m [32m'2026[39m…
+    [90m104| [39m
+    [90m105| [39m    [35mconst[39m result [33m=[39m [34mfindChainBreak[39m(log)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m106| [39m
+    [90m107| [39m    [34mexpect[39m(result)[33m.[39m[34mtoBe[39m([34m2[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 3: top caps the result set to at most N entries
+[31m[1mTypeError[22m: queryAuditLog is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m120:20[22m[39m
+    [90m118| [39m    }
+    [90m119| [39m
+    [90m120| [39m    [35mconst[39m result [33m=[39m [34mqueryAuditLog[39m(log[33m,[39m { top[33m:[39m [34m5[39m })[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m121| [39m
+    [90m122| [39m    [34mexpect[39m(result)[33m.[39m[34mtoHaveLength[39m([34m5[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 4: since filter yields only entries at or after the given timestamp
+[31m[1mTypeError[22m: queryAuditLog is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m133:20[22m[39m
+    [90m131| [39m    [35mconst[39m log [33m=[39m [34mbuildSampleLog[39m()[33m;[39m
+    [90m132| [39m
+    [90m133| [39m    [35mconst[39m result [33m=[39m [34mqueryAuditLog[39m(log[33m,[39m { since[33m:[39m [32m'2026-05-07T00:02:00Z'[39m …
+    [90m   | [39m                   [31m^[39m
+    [90m134| [39m
+    [90m135| [39m    [90m// cycles 3, 4, 5 — timestamps >= 00:02:00[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 5: top + skip pagination skips first then takes top
+[31m[1mTypeError[22m: queryAuditLog is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m151:20[22m[39m
+    [90m149| [39m
+    [90m150| [39m    [90m// Skip first 3, then take 4 → entries with cycles 4, 5, 6, 7[39m
+    [90m151| [39m    [35mconst[39m result [33m=[39m [34mqueryAuditLog[39m(log[33m,[39m { skip[33m:[39m [34m3[39m[33m,[39m top[33m:[39m [34m4[39m })[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m152| [39m
+    [90m153| [39m    [34mexpect[39m(result)[33m.[39m[34mtoHaveLength[39m([34m4[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 6: combined filters compose (since + action + top)
+[31m[1mTypeError[22m: queryAuditLog is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m162:20[22m[39m
+    [90m160| [39m    [90m// since=00:01:00 → drops cycle 1; action=agent.spawn → keeps 2 + [39m…
+    [90m161| [39m    [90m// top=1 → keeps the first one (cycle 2).[39m
+    [90m162| [39m    [35mconst[39m result [33m=[39m [34mqueryAuditLog[39m(log[33m,[39m {
+    [90m   | [39m                   [31m^[39m
+    [90m163| [39m      since[33m:[39m [32m'2026-05-07T00:01:00Z'[39m[33m,[39m
+    [90m164| [39m      action[33m:[39m [32m'agent.spawn'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-016-query-audit-log.test.ts[2m > [22mF-016 query-audit-log[2m > [22mscenario 7: empty options returns all entries (defensive copy, read-only)
+[31m[1mTypeError[22m: queryAuditLog is not a function[39m
+[36m [2m❯[22m tests/unit/F-016-query-audit-log.test.ts:[2m175:20[22m[39m
+    [90m173| [39m    [35mconst[39m log [33m=[39m [34mbuildSampleLog[39m()[33m;[39m
+    [90m174| [39m
+    [90m175| [39m    [35mconst[39m result [33m=[39m [34mqueryAuditLog[39m(log)[33m;[39m
+    [90m   | [39m                   [31m^[39m
+    [90m176| [39m
+    [90m177| [39m    [34mexpect[39m(result)[33m.[39m[34mtoHaveLength[39m([34m5[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m8 failed[39m[22m[90m (8)[39m
+[2m   Start at [22m 00:06:09
+[2m   Duration [22m 1.99s[2m (transform 122ms, setup 0ms, collect 142ms, tests 17ms, environment 0ms, prepare 514ms)[22m
+

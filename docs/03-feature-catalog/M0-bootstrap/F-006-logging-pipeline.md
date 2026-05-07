@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-002 / lane-b); GREEN flip wave-009 / lane-a
-status: green
+generated-by: hand-authored (wave-002 / lane-b); GREEN flip wave-009 / lane-a; LOCKED flip wave-012 / lane-d
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-009 / lane-a
     note: "RED test authored first per wave-5 retro proposal (4 scenarios: structured emit + level-gating + ctx merge + sink injection); GREEN impl appended to packages/engine-core/src/index.ts (~165 LOC F-006 region) with createLogger / LogEvent / Logger / LogLevel surface. 4/4 PASS; full GREEN feature suite 22/22 PASS (F-001+F-002+F-014+F-015+F-006). Out-of-scope per `rules/no-silent-deferrals.md`: F-008 filesystem sink, F-015 audit-chain integration, ESLint no-console rule, trace+fatal levels — all surfaced in commit body."
+  - status: locked
+    at: 2026-05-07
+    by: wave-012 / lane-d
+    note: "Council review verdict ACCEPT (Verdict consensus: APPROVE; median confidence 86; 0 CRITICAL / 0 MAJOR / 4 MINOR / 2 PRAISE) at docs/05-design-reviews/council-reviews/F-006-logging-pipeline-review.md. red-green-rule predicate satisfied: GREEN AND review file with verdict ACCEPT. MINOR findings are honest scope-narrowing notes per no-silent-deferrals.md (F-008 filesystem sink integration; F-015 audit-chain integration; six-level extension; identity-stamping enforcement). Source post-wave-011/lane-a engine-core split lives at packages/engine-core/src/logger.ts (134 LOC). 4/4 acceptance scenarios continue to PASS unchanged. Third LOCKED transition in the repo (sibling with F-002 + F-008 in wave-012 / lane-d)."
 feature-id: F-006
 short-slug: logging-pipeline
 milestone: M0

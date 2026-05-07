@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: red
-status-since: 2026-05-07
+status: green
+status-since: 2026-05-06
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-06
+    by: wave-008 / lane-a
+    note: "RED test stub committed (d896ecb); GREEN impl committed (ba54036). 8/8 acceptance scenarios pass via vitest. closeSession + RetroSignal interface + RetroMissingError landed in packages/engine-core/src/index.ts. Filesystem write to runs/<run_id>/retro.json deferred to F-008 per ledger out-of-scope-notes."
 feature-id: F-014
 short-slug: pre-close-retro-signal
 milestone: M2
@@ -18,12 +22,14 @@ provenance:
     - kit:council-retro-skill
 fr-coverage: []
 test-files:
-  unit: []
+  unit:
+    - tests/unit/F-014-pre-close-retro-signal.test.ts
   node: []
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - unit
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -50,11 +56,13 @@ Every run lifecycle MUST pass through `closing` before reaching `closed` (per F-
 
 ## Red→green wire-up
 
-| Test file | Project | Initial state | Verifies |
+| Test file | Project | State | Verifies |
 |---|---|---|---|
-| (TBD) `tests/integration/governance/retro-natural-close.test.ts` | integration | RED | scenario 1 |
-| (TBD) `tests/integration/governance/retro-halted-trigger.test.ts` | integration | RED | scenario 2 |
-| (TBD) `tests/unit/governance/retro-missing-rejection.test.ts` | unit | RED | scenario 3 |
+| `tests/unit/F-014-pre-close-retro-signal.test.ts` | unit | GREEN (8/8 PASS) | scenarios 1, 2, 3 + halted-by carve-out |
+| (deferred) `tests/integration/governance/retro-natural-close.test.ts` | integration | F-008 dep — filesystem write to runs/<run_id>/retro.json | scenario 1 (filesystem-bound) |
+| (deferred) `tests/integration/governance/retro-halted-trigger.test.ts` | integration | F-008 + F-018/F-020 deps | scenario 2 (filesystem-bound + halt source) |
+
+**Scope note**: ledger originally named per-scenario test files under `tests/{integration,unit}/governance/`. Wave-008 / lane-a flipped F-014 GREEN as a single unit-level test (`tests/unit/F-014-pre-close-retro-signal.test.ts`, 8 scenarios) covering all three acceptance scenarios + the halted-by carve-out, mirroring the F-001 / F-002 wave-005/006 convention (`tests/unit/F-NNN-<slug>.test.ts`). Integration-level filesystem tests stay TBD against F-008 (storage layout). Per `rules/no-silent-deferrals.md`: deferred files explicitly named here, not silently dropped.
 
 ## Dependencies
 
@@ -72,4 +80,31 @@ Every run lifecycle MUST pass through `closing` before reaching `closed` (per F-
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+**Wave-008 / lane-a GREEN flip** (2026-05-06):
+
+- **Surface added** to `packages/engine-core/src/index.ts` (~180 LOC):
+  - `RetroOutcome` type — `'completed' | 'halted_by_kill_switch' | 'halted_by_failure_pattern' | 'halted_by_tool_quota'`
+  - `RetroSignal` interface — 5-axis Likert (1-5) + 7 pattern-prose fields + `outcome` + optional `trigger_evidence_sha256`
+  - `RetroMissingError` class extending `Error`, `.missingFields: string[]` carries the per-field diagnostic
+  - `closeSession(retro): {ok: true}` — full validation: presence, integer-1..5 Likert, non-empty string pattern fields, recognized outcome, halted-by SHA-256 carve-out (64-hex)
+- **5-axis Likert**: `accuracy`, `completeness`, `tsg_alignment`, `dx`, `confidence` (each int 1..5)
+- **7 pattern fields**: `what_worked`, `what_was_hard`, `surprises`, `blockers`, `next_steps`, `notes`, `meta_observations` (each non-empty string)
+- **Halted-by carve-out**: when `outcome` ∈ `halted_by_*`, a 64-char lowercase hex `trigger_evidence_sha256` MUST be present
+- **Out-of-scope (per ledger out-of-scope-notes)**:
+  - Filesystem persistence to `runs/<run_id>/retro.json` → F-008 (storage layout)
+  - Audit-pipeline integration (write retro entry into hash-chained audit log) → F-015
+  - Halt-source wiring (kill-switch / failure-pattern / tool-quota that supplies the trigger_evidence) → F-020 / F-018 / F-022
+  - ALAS-compatible learning-hub posting → M11 deferred catalog
+
+**RED→GREEN evidence**:
+  - RED commit: `d896ecb` (test only, 7/8 fail with TypeError; 1 spurious pass on no-throw scenario)
+  - GREEN commit: `ba54036` (closeSession + types + error class; 8/8 PASS)
+  - Output captured: `docs/09-examples-proof/F-014/{red,green}-test-output.txt`
+
+**Reproduction**:
+```bash
+cd C:/Users/tonym/Repos/mad-council-claw
+pnpm install
+pnpm exec vitest run tests/unit/F-014-pre-close-retro-signal.test.ts
+# Expected: "Test Files 1 passed (1)" + "Tests 8 passed (8)"
+```

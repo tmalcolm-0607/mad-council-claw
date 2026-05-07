@@ -34,10 +34,22 @@ describe('F-002 per-agent-identity-runid', () => {
     // Stable across reads (not regenerated on access).
     expect(session.runId).toBe(session.runId);
 
-    // Time-ordered: a session created later sorts >= an earlier session
-    // lexicographically (UUID v7's leading 48 bits are unix-ms timestamp).
+    // Time-ordered at millisecond resolution: a session created in a later
+    // millisecond sorts strictly after an earlier one. UUID v7 guarantees
+    // ordering at the ms level (the leading 48 bits are unix-ms); sub-ms
+    // ordering requires the optional "monotonic random" extension which we
+    // intentionally omit in v1. We compare only the 12-hex-char timestamp
+    // prefix to avoid the random-tie flake.
+    const tsPrefix = (uuid: string) => uuid.slice(0, 8) + uuid.slice(9, 13);
+    const before = tsPrefix(session.runId);
+    // Synchronously busy-wait until the wall clock crosses a ms boundary;
+    // 5ms is generous on Windows where Date.now() granularity is ~1ms.
+    const start = Date.now();
+    while (Date.now() - start < 5) {
+      /* spin */
+    }
     const later = createSession();
-    expect(later.runId >= session.runId).toBe(true);
+    expect(tsPrefix(later.runId) >= before).toBe(true);
   });
 
   it('scenario 2: spawned agent carries parent run_id and a fresh distinct agent_id', () => {

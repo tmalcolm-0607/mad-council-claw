@@ -1,0 +1,51 @@
+# F-002 GREEN test output — captured 2026-05-07 by wave-006 / lane-d
+#
+# Command: pnpm test:unit  (wraps `vitest run tests/unit`)
+# Repo:    C:/Users/tonym/Repos/mad-council-claw
+# Tests:   tests/unit/F-002-per-agent-identity-runid.test.ts (NEW this lane)
+#          tests/unit/F-001-engine-bootstrap-loop.test.ts    (no-regression)
+# Impl:    packages/engine-core/src/index.ts
+# Vitest:  2.1.9
+# Node:    v24.13.1
+#
+# Stability: ran 5x consecutively, 6/6 PASS each run, no flake. The earlier
+# "later.runId >= session.runId" assertion was loosened to compare only the
+# 12-hex-char timestamp prefix after a 5ms busy-wait, since UUID v7 only
+# guarantees ms-resolution ordering (sub-ms ordering needs the optional
+# "monotonic random" extension we intentionally omit in v1).
+#
+# === Compact form (default reporter) ===
+
+> mad-council-claw@0.0.0 test:unit C:\Users\tonym\Repos\mad-council-claw
+> vitest run tests/unit
+
+
+ RUN  v2.1.9 C:/Users/tonym/Repos/mad-council-claw
+
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts (3 tests) 8ms
+ ✓ tests/unit/F-002-per-agent-identity-runid.test.ts (3 tests) 14ms
+
+ Test Files  2 passed (2)
+      Tests  6 passed (6)
+   Start at  21:07:42
+   Duration  2.06s (transform 209ms, setup 0ms, collect 255ms, tests 22ms, environment 1ms, prepare 1.29s)
+
+
+# === Verbose form (per-scenario detail) ===
+# Command: pnpm exec vitest run tests/unit --reporter=verbose
+
+ RUN  v2.1.9 C:/Users/tonym/Repos/mad-council-claw
+
+ ✓ tests/unit/F-002-per-agent-identity-runid.test.ts > F-002 per-agent-identity-runid > scenario 1: createSession returns a Session whose runId is UUID v7 (time-ordered)
+ ✓ tests/unit/F-002-per-agent-identity-runid.test.ts > F-002 per-agent-identity-runid > scenario 2: spawned agent carries parent run_id and a fresh distinct agent_id
+ ✓ tests/unit/F-002-per-agent-identity-runid.test.ts > F-002 per-agent-identity-runid > scenario 3: stampIdentity without an agent rejects with IDENTITY_MISSING
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts > F-001 engine-bootstrap-loop > scenario 1: fresh run emits lifecycle in order with one audit entry per cycle
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts > F-001 engine-bootstrap-loop > scenario 2: cycle cap (max_cycles=50) refuses cycle 51 and terminates with cycle_cap
+ ✓ tests/unit/F-001-engine-bootstrap-loop.test.ts > F-001 engine-bootstrap-loop > scenario 3: unhandled exception still transitions through closing (pre-close retro signal fires)
+
+ Test Files  2 passed (2)
+      Tests  6 passed (6)
+   Start at  21:07:47
+   Duration  2.18s (transform 116ms, setup 0ms, collect 153ms, tests 19ms, environment 1ms, prepare 1.46s)
+
+# Exit code: 0

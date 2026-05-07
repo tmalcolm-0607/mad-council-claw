@@ -1,0 +1,25 @@
+    [90m177| [39m    [35mconst[39m input[33m:[39m [33mCostEntryInput[39m [33m=[39m [34musageEventToCostEntry[39m(usage[33m,[39m ctx)[33m;[39m
+    [90m   | [39m                                  [31m^[39m
+    [90m178| [39m    [34mexpect[39m(input[33m.[39mparent_run_id)[33m.[39m[34mtoBe[39m([32m'parent-run'[39m)[33m;[39m
+    [90m179| [39m    [34mexpect[39m(input[33m.[39mrun_id)[33m.[39m[34mtoBe[39m([32m'child-run'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-139-backend-event-usage-variant.test.ts[2m > [22mF-139 backend-event-usage-variant[2m > [22mscenario 6: eventTextContent exhaustive-switch witness compiles for the 5-variant union
+[31m[1mAssertionError[22m: expected 0 to be greater than 0[39m
+[36m [2m❯[22m tests/unit/F-139-backend-event-usage-variant.test.ts:[2m203:42[22m[39m
+    [90m201| [39m    [35mfor[39m ([35mconst[39m v [35mof[39m variants) {
+    [90m202| [39m      [34mexpect[39m([35mtypeof[39m [34meventTextContent[39m(v))[33m.[39m[34mtoBe[39m([32m'string'[39m)[33m;[39m
+    [90m203| [39m      [34mexpect[39m([34meventTextContent[39m(v)[33m.[39mlength)[33m.[39m[34mtoBeGreaterThan[39m([34m0[39m)[33m;[39m
+    [90m   | [39m                                         [31m^[39m
+    [90m204| [39m    }
+    [90m205| [39m  })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 16:40:28
+[2m   Duration [22m 2.21s[2m (transform 551ms, setup 0ms, collect 701ms, tests 21ms, environment 0ms, prepare 705ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

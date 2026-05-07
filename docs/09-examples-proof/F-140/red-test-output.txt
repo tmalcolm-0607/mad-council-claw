@@ -1,0 +1,25 @@
+    [90m152| [39m    [35mconst[39m retro[33m:[39m [33mRetroSignal[39m [33m=[39m [34mbuildDegradationRetro[39m(
+    [90m   | [39m                               [31m^[39m
+    [90m153| [39m      [33mDEGRADE_VERDICT[39m[33m,[39m
+    [90m154| [39m      [33mVALID_FIELDS[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-140-retro-outcome-degradation.test.ts[2m > [22mF-140 retro-outcome-degradation[2m > [22mscenario 6: RetroOutcome union extends to 5 values; closeSession accepts halted_by_degradation
+[31m[1mTypeError[22m: buildDegradationRetro is not a function[39m
+[36m [2m❯[22m tests/unit/F-140-retro-outcome-degradation.test.ts:[2m175:32[22m[39m
+    [90m173| [39m    [90m// Round-trip: build a halted_by_degradation retro and verify clos[39m…
+    [90m174| [39m    [90m// accepts it without a thrown RetroMissingError.[39m
+    [90m175| [39m    [35mconst[39m retro[33m:[39m [33mRetroSignal[39m [33m=[39m [34mbuildDegradationRetro[39m(
+    [90m   | [39m                               [31m^[39m
+    [90m176| [39m      [33mDEGRADE_VERDICT[39m[33m,[39m
+    [90m177| [39m      [33mVALID_FIELDS[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m6 failed[39m[22m[90m (6)[39m
+[2m   Start at [22m 16:40:34
+[2m   Duration [22m 1.32s[2m (transform 197ms, setup 0ms, collect 283ms, tests 16ms, environment 0ms, prepare 303ms)[22m
+
+ ELIFECYCLE  Test failed. See above for more details.

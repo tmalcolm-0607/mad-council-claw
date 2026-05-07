@@ -19,6 +19,7 @@
  *   - killswitch.ts  — F-020 (kill-switch) — imports RunHaltedVerdict from halt.ts
  *   - quota.ts       — F-022 (tool-call-quota) — imports RunHaltedVerdict from halt.ts
  *   - degradation.ts — F-021 (degradation-fallback) — imports RunHaltedVerdict from halt.ts
+ *   - backend.ts     — F-009 (ibackend-provider) — imports Agent/Session from identity.ts + RunHaltedVerdict from halt.ts
  *
  * Cross-feature type sharing rule: shared types live with their FIRST owner;
  * later features import via `./<owner>.js` (ESM extension required even for
@@ -37,3 +38,4 @@ export * from './cost.js';
 export * from './killswitch.js';
 export * from './quota.js';
 export * from './degradation.js';
+export * from './backend.js';

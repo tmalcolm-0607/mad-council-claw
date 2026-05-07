@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-014 / lane-c
     note: "RED → GREEN flip: added `browser` project to vitest.config.ts (4th project, env happy-dom + tests/browser/** glob, runtime wiring deferred to first DOM-rendering spec); created playwright.config.ts at repo root mirroring clawpilot baseline (defineConfig + testDir/testMatch/timeout/reporter/projects[]); authored tests/node/F-004-vitest-playwright-config.test.ts (7 tests — vitest-config structural × 5 + playwright-config structural × 2); all 7/7 PASS; 28/28 across tests/node. Browser-mode runtime, sharedTest/test fixtures, and Playwright project matrix deferred per `rules/no-silent-deferrals.md` to first consumer wave (M5 desktop-shell / e2e suites)."
+  - status: locked
+    at: 2026-05-07
+    by: wave-015 / lane-a
+    note: "Post-impl council review verdict ACCEPT (median confidence 87; advocate 89 / skeptic 73 / architect 87; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). MINOR findings: Scenarios 2+3 require M5 runtime; browser project runtime wiring deferred; @playwright/test devDep + pnpm e2e script deferred; regex-against-config trade-off accepted. Review at docs/05-design-reviews/council-reviews/F-004-vitest-playwright-config-review.md."
 feature-id: F-004
 short-slug: vitest-playwright-config
 milestone: M0

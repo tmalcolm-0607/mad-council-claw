@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-013 / lane-b
     note: "RED → GREEN flip. Root package.json devDependencies stripped of ^/~ range operators (vitest 2.1.9, @vitest/ui 2.1.9, happy-dom 15.11.7, typescript 5.9.3, @types/node 20.19.39); packageManager: pnpm@9.0.0 declared; pnpm-lock.yaml regenerated with exact-pin specifiers; tests/node/F-005-deps-pinning.test.ts authored 4 tests RED → GREEN (4/4 PASS); full suite 98/98 across 15 test files. Package-manager choice (npm → pnpm) recorded in §Implementation notes; cross-OS byte-identity + lockfile-drift CI enforcement deferred to M16 per no-silent-deferrals.md (already disclosed in §Out-of-scope-notes)."
+  - status: locked
+    at: 2026-05-07
+    by: wave-015 / lane-a
+    note: "Post-impl council review verdict ACCEPT (median confidence 88; advocate 90 / skeptic 74 / architect 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). MINOR findings: Scenarios 2+3 deferred to M16; npm → pnpm package-manager swap recorded openly in §Implementation notes; vulnerability scanning deferred to M16; engines.node floor-pin design choice. Review at docs/05-design-reviews/council-reviews/F-005-deps-pinning-review.md."
 feature-id: F-005
 short-slug: deps-pinning
 milestone: M0

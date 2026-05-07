@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-012 / lane-a
     note: "RED → GREEN: in-memory DegradationLadder primitive (5-rung escalation: normal → skill-fallback → model-fallback → reduced-tool-set → headless → halt). 11/11 vitest scenarios PASS. RunHaltedVerdict reused with new sibling trigger 'degrade_escalate' (14th value in HaltTrigger union). Per-resource circuit-breaker + Context-Gaps emission + required-vs-optional classification deferred to engine-cycle integration per `rules/no-silent-deferrals.md`."
+  - status: locked
+    at: 2026-05-07
+    by: wave-015 / lane-a
+    note: "Post-impl council review verdict ACCEPT (median confidence 88; advocate 90 / skeptic 74 / architect 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 4 PRAISE). MINOR findings: 5 ledger §Behavior contract integrations deferred to engine-cycle integration; ledger §Acceptance scenarios not runtime-verifiable today; deferred integrations not yet promoted to F-NNN; unbounded history size design choice for v1. Review at docs/05-design-reviews/council-reviews/F-021-degradation-fallback-review.md. **Closes the M2 governance triad — F-014/15/16/17/18/19/20/22 already LOCKED; F-021 was the last GREEN → LOCKED candidate. M2 reaches 0R + 0G + 9L (100% LOCKED).**"
 feature-id: F-021
 short-slug: degradation-fallback
 milestone: M2

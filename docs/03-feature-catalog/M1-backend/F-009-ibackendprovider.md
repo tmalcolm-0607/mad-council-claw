@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-014 / lane-d
     note: "RED → GREEN: tests/unit/F-009-ibackend-provider.test.ts (6 scenarios) + packages/engine-core/src/backend.ts (~190 LOC: IBackendProvider interface + BackendEvent discriminated union + BackendSessionConfig + StubBackend); barrel export added. 6/6 PASS; full suite 122/122 PASS. First M1 (backend pluggability) feature flipped; first feature in repo using session-oriented backend shape (startSession/sendPrompt/halt/stopSession) per wave-014 brief — generalizes ledger's iterator-of-events pattern and composes with F-018 RunHaltedVerdict. Scope deviation from ledger's complete()/cancel()/listModels() shape recorded openly in §Implementation notes per no-silent-deferrals.md."
+  - status: locked
+    at: 2026-05-07
+    by: wave-015 / lane-a
+    note: "Post-impl council review verdict ACCEPT (median confidence 89; advocate 91 / skeptic 76 / architect 89; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). MINOR findings: concrete providers F-010/F-011 + factory F-012 + event-normalization F-013 remain RED; scope deviation from original ledger recorded openly; origin: string vs typed union design choice; additive union extension path. Review at docs/05-design-reviews/council-reviews/F-009-ibackendprovider-review.md. **First M1 (backend pluggability) feature LOCKED.**"
 feature-id: F-009
 short-slug: ibackendprovider
 milestone: M1

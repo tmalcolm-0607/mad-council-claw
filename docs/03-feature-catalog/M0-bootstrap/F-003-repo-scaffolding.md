@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-014 / lane-b
     note: "RED test authored at tests/node/F-003-repo-scaffolding.test.ts (11 scenarios). RED captured 2/11 fail (desktop-shell + cli package.json missing); GREEN flip added both as empty-but-named workspace packages with @mad-council-claw/<slug> naming. 11/11 PASS at GREEN time. Most scaffolding (root tsconfig, eslint, prettier, editorconfig, engine-core, LICENSE/README/.gitignore) was de-facto landed by waves 11+13; this lane closes the workspace-package gap."
+  - status: locked
+    at: 2026-05-07
+    by: wave-015 / lane-a
+    note: "Post-impl council review verdict ACCEPT (median confidence 87; advocate 90 / skeptic 75 / architect 87; 0 CRITICAL / 0 MAJOR / 3 MINOR / 3 PRAISE). MINOR findings: concrete src/ for desktop-shell+cli deferred to M4/M5; working topological build deferred to M3+; per-package tsconfig deferred to per-package divergence. Review at docs/05-design-reviews/council-reviews/F-003-repo-scaffolding-review.md."
 feature-id: F-003
 short-slug: repo-scaffolding
 milestone: M0

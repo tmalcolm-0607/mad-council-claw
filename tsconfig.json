@@ -13,6 +13,6 @@
     "verbatimModuleSyntax": false,
     "lib": ["ES2022", "DOM"]
   },
-  "include": ["packages/*/src/**/*.ts", "tests/**/*.ts"],
+  "include": ["packages/*/src/**/*.ts", "tests/**/*.ts", "common/**/*.ts"],
   "exclude": ["node_modules", "dist"]
 }

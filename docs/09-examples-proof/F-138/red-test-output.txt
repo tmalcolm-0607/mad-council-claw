@@ -1,0 +1,30 @@
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-138-engine-cycle-orchestrator.test.ts[2m > [22mF-138 engine-cycle-orchestrator[2m > [22mscenario 2: forceHaltTrigger=manual returns halted RunOutcome
+[31m[1mTypeError[22m: runEngineCycle is not a function[39m
+[36m [2m❯[22m tests/unit/F-138-engine-cycle-orchestrator.test.ts:[2m77:27[22m[39m
+    [90m 75| [39m        [32m'0000000000000000000000000000000000000000000000000000000000000[39m…
+    [90m 76| [39m    }[33m;[39m
+    [90m 77| [39m    [35mconst[39m outcome [33m=[39m [35mawait[39m [34mrunEngineCycle[39m({
+    [90m   | [39m                          [31m^[39m
+    [90m 78| [39m      backend[33m:[39m [35mnew[39m [33mStubBackend[39m()[33m,[39m
+    [90m 79| [39m      prompt[33m:[39m [32m'hello'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/19]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-138-engine-cycle-orchestrator.test.ts[2m > [22mF-138 engine-cycle-orchestrator[2m > [22mscenario 3: missing retro throws RetroMissingError
+[31m[1mTypeError[22m: runEngineCycle is not a function[39m
+[36m [2m❯[22m tests/unit/F-138-engine-cycle-orchestrator.test.ts:[2m95:7[22m[39m
+    [90m 93| [39m  [34mit[39m([32m'scenario 3: missing retro throws RetroMissingError'[39m[33m,[39m [35masync[39m () [33m=>[39m…
+    [90m 94| [39m    [35mawait[39m [34mexpect[39m(
+    [90m 95| [39m      [34mrunEngineCycle[39m({
+    [90m   | [39m      [31m^[39m
+    [90m 96| [39m        backend[33m:[39m [35mnew[39m [33mStubBackend[39m()[33m,[39m
+    [90m 97| [39m        prompt[33m:[39m [32m'hello'[39m[33m,[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/19]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m3 failed[39m[22m[2m | [22m[1m[32m19 passed[39m[22m[90m (22)[39m
+[2m      Tests [22m [1m[31m19 failed[39m[22m[2m | [22m[1m[32m144 passed[39m[22m[90m (163)[39m
+[2m   Start at [22m 12:47:31
+[2m   Duration [22m 18.82s[2m (transform 12.89s, setup 0ms, collect 28.25s, tests 15.64s, environment 8ms, prepare 16.53s)[22m
+
+ ELIFECYCLE  Command failed with exit code 1.

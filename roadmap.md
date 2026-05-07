@@ -29,8 +29,8 @@ status: living
 
 | Milestone | Theme | Span | Total | RED | GREEN | LOCKED | DEFERRED | PLANNED |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| M0 | Project bootstrap | F-001..F-008 | 8 | 2 | 1 | 5 | 0 | 0 |
-| M1 | Pluggable backend | F-009..F-013 | 5 | 5 | 0 | 0 | 0 | 0 |
+| M0 | Project bootstrap | F-001..F-008 | 8 | 1 | 2 | 5 | 0 | 0 |
+| M1 | Pluggable backend | F-009..F-013 | 5 | 4 | 1 | 0 | 0 | 0 |
 | M2 | Governance triad | F-014..F-022 | 9 | 0 | 1 | 8 | 0 | 0 |
 | M3 | Cron / heartbeat | F-023..F-027 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M4 | Headless CLI | F-028..F-031 | 4 | 4 | 0 | 0 | 0 | 0 |
@@ -50,7 +50,7 @@ status: living
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 3 | 0 | 0 | 0 | 0 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M19 | Deferred (user-acknowledged tracking row) | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **111** | **2** | **13** | **18** | **0** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **110** | **3** | **13** | **18** | **0** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
 
@@ -70,7 +70,11 @@ status: living
 
 > Wave-13 / Lane B transition note: **F-005 RED → GREEN** + **F-007 GREEN → LOCKED** (paired flip in same lane). F-005 deps-pinning lands `tests/node/F-005-deps-pinning.test.ts` (4 tests; root + workspace package.json exact-pin sweep, lockfile presence, engines.node specified) — RED captured (5 `^`-prefixed devDeps), root `package.json` updated to exact pins (vitest 2.1.9, @vitest/ui 2.1.9, happy-dom 15.11.7, typescript 5.9.3, @types/node 20.19.39) + `packageManager: pnpm@9.0.0` declared, `pnpm-lock.yaml` regenerated with exact-pin specifiers, GREEN captured (4/4 PASS); package-manager choice (npm → pnpm) recorded in F-005 ledger §Implementation notes (transfers F-005 intent: committed lockfile + reproducible install + frozen-lockfile install path). F-007 ipc-contract-scaffold council review at `docs/05-design-reviews/council-reviews/F-007-ipc-contract-scaffold-review.md` verdict ACCEPT (median confidence per Advocate / Skeptic / Architect lenses; 0 CRITICAL / 0 MAJOR; scaffold-shape contract only, M5 integration scenarios deferred per F-007 ledger). M0 row 3R + 1G + 4L → 2R + 1G + 5L; TOTAL 112R + 10G + 4L → 111R + 10G + 5L. **Fifth LOCKED transition in the repo** (after F-001 wave-11, F-002 + F-006 + F-008 wave-12). Full suite at GREEN time: 98/98 across 15 test files (was 94/94 across 14 pre-F-005).
 
+> Wave-14 / Lane C transition note: **F-004 RED → GREEN** (vitest-playwright-config). `vitest.config.ts` gains the `browser` project (4th in `projects[]`, env `happy-dom` + glob `tests/browser/**/*.test.ts`, runtime wiring `browser: { provider: 'playwright', ... }` deferred to first DOM-rendering spec consumer wave to avoid shipping ~200MB browser-binary download to every clone before any spec exists). New `playwright.config.ts` at repo root mirrors clawpilot baseline (`C:/Users/tonym/Repos/m-main/playwright.config.ts`): `defineConfig({ testDir: 'e2e', testMatch: '**/*.test.ts', timeout: 60_000, expect: { timeout: 10_000 }, workers: 1, retries: 2, reporter: [['html'], ['list']], projects: [] })`. `@playwright/test` devDep + sharedTest fixture-mode behavior + `pnpm e2e` script deferred per `rules/no-silent-deferrals.md` to M5 desktop-shell + e2e companion suites — config-present at v1, runtime-functional at first consumer wave. New `tests/node/F-004-vitest-playwright-config.test.ts` (7 tests; vitest.config.ts existence + 4 project names + integration testTimeout=30_000 + playwright.config.ts existence + parseable defineConfig invocation; all structural via `existsSync` + `readFileSync` + regex; no module imports — works without `@playwright/test` installed); 7/7 PASS. M0 row aggregate-count update is owned by whichever lane lands last in wave-14 (per the cross-lane stale-input race convention from wave-13 / lane-d). Per-feature row state above (F-004 row) owned by this lane. **M0 active-feature set is now 100% RED-cleared** when this lane + the F-003 sibling lane both land. Tenth feature transition lane in the repo for M0; F-004 is **15th feature transition RED → GREEN** in repo history (after F-001/F-002/F-006/F-007/F-008/F-014/F-015/F-016/F-017/F-018/F-019/F-020/F-021/F-022/F-005). Full suite at GREEN time: 28/28 across `tests/node` (4 test files: F-003 + F-004 + F-005 + F-008).
+
 > Wave-13 / Lane C transition note: **F-014 + F-015 + F-016 + F-017 flipped GREEN → LOCKED** via post-impl council reviews (parallel-quadruple LOCKED-flip). Four new review files under `docs/05-design-reviews/council-reviews/` (F-014 median 88; F-015 median 89; F-016 median 87; F-017 median 86; all verdict ACCEPT; 0 CRITICAL / 0 MAJOR each; MINOR findings are honest scope-narrowing notes per `no-silent-deferrals.md`). **Sixth, seventh, eighth, and ninth LOCKED transitions in the repo** (after F-001 wave-11, F-002 + F-006 + F-008 wave-12, F-007 wave-13/lane-b). Lane C is the **last-lander** for wave-13 and refreshes the M2 + TOTAL aggregate counts (per the wave-13/lane-d deferral): M2 row 0R + 9G → 0R + 1G + 8L (F-014/15/16/17/18/19/20/22 LOCKED; F-021 still GREEN); TOTAL 111R + 10G + 5L → 111R + 2G + 13L. **M2 governance triad GREEN→LOCKED batch is COMPLETE except F-021** (which remains GREEN since wave-12/lane-a's redactor-helper-primitive flip is not yet a council-reviewed scope-locked surface; F-021 LOCKED is a future-wave candidate). Wave-13 lands **8 LOCKED transitions in a single wave** (4 from lane-c + 4 from lane-d). Validates the parallel-quadruple LOCKED pattern proposed in wave-12/lane-d's "parallel-triple LOCKED-flip wave" finding.
+
+> Wave-14 / Lane B transition note: **F-003 repo-scaffolding RED → GREEN.** New `tests/node/F-003-repo-scaffolding.test.ts` (11 structural assertions: workspace globs + strict TS + lint/format/editor configs + 3-package monorepo + LICENSE/README/.gitignore). RED captured 2/11 fail (`packages/desktop-shell/package.json` + `packages/cli/package.json` missing); GREEN flip authored both as empty-but-named workspace packages with `@mad-council-claw/<slug>` naming, `type: module`, `private: true`. 11/11 PASS at GREEN time. Most scaffolding (root tsconfig, eslint, prettier, editorconfig, engine-core, LICENSE/README/.gitignore) was de-facto landed by waves 11+13; this lane closes the workspace-package gap. M0 row 2R + 1G + 5L → 1R + 2G + 5L; TOTAL 111R + 2G + 13L → 110R + 3G + 13L. **15th feature transition RED → GREEN in the repo** (after F-001 / F-002 / F-006 / F-008 / F-014 / F-015 / F-016 / F-017 / F-018 / F-019 / F-020 / F-021 / F-022 / F-007 / F-005). Per-package tsconfig + working `npm run build` topological compile + concrete src/ for desktop-shell/cli deferred per `no-silent-deferrals.md`.
 
 ## Per-milestone detail
 
@@ -82,8 +86,8 @@ status: living
 |---|---|---|---|
 | F-001 | engine-bootstrap-loop | 🔒 LOCKED | `tests/unit/F-001-engine-bootstrap-loop.test.ts` (3/3 PASS); council review verdict ACCEPT (median 88) — wave-11 / lane-b |
 | F-002 | per-agent-identity-runid | 🔒 LOCKED | `tests/unit/F-002-per-agent-identity-runid.test.ts` (3/3 PASS); council review verdict ACCEPT (median 90) — wave-12 / lane-d |
-| F-003 | repo-scaffolding | 🔴 RED | TBD |
-| F-004 | vitest-playwright-config | 🔴 RED | TBD |
+| F-003 | repo-scaffolding | 🟢 GREEN | `tests/node/F-003-repo-scaffolding.test.ts` (11/11 PASS) — wave-14/lane-b flip; workspace globs + strict TS + lint/format/editor configs + 3-package monorepo (engine-core/desktop-shell/cli) + LICENSE/README/.gitignore; per-package tsconfig + working `npm run build` + concrete src/ deferred per `no-silent-deferrals.md` |
+| F-004 | vitest-playwright-config | 🟢 GREEN | `tests/node/F-004-vitest-playwright-config.test.ts` (7/7 PASS) — wave-14/lane-c flip; vitest.config.ts gains `browser` project (4th, env happy-dom + tests/browser/** glob, runtime wiring deferred to first DOM-rendering spec); new `playwright.config.ts` at repo root mirroring clawpilot baseline (`defineConfig` + testDir + reporter + workers=1 + retries=2 + projects: []); `@playwright/test` devDep + sharedTest fixtures + `pnpm e2e` script deferred to first Playwright spec consumer wave (M5) per `no-silent-deferrals.md` |
 | F-005 | deps-pinning | 🟢 GREEN | `tests/node/F-005-deps-pinning.test.ts` (4/4 PASS) — wave-13/lane-b flip; root + workspace package.json exact-pin sweep + lockfile presence + engines.node check; package-manager choice (npm → pnpm) recorded in §Implementation notes (transfers F-005 intent: committed lockfile + reproducible-install discipline); cross-OS byte-identity + drift-fails-CI deferred to M16 per `no-silent-deferrals.md` |
 | F-006 | logging-pipeline | 🔒 LOCKED | `tests/unit/F-006-logging-pipeline.test.ts` (4/4 PASS); council review verdict ACCEPT (median 86) — wave-12 / lane-d |
 | F-007 | ipc-contract-scaffold | 🔒 LOCKED | `tests/unit/F-007-ipc-contract-scaffold.test.ts` (3/3 PASS); council review verdict ACCEPT — wave-13 / lane-b; scaffold-shape contract; M5 integration scenarios deferred |
@@ -95,7 +99,7 @@ status: living
 
 | F-ID | Slug | Status | Test files |
 |---|---|---|---|
-| F-009 | ibackendprovider | 🔴 RED | TBD |
+| F-009 | ibackendprovider | 🟢 GREEN | `tests/unit/F-009-ibackend-provider.test.ts` (6/6 PASS) — wave-014 / lane-d |
 | F-010 | anthropic-sdk-provider | 🔴 RED | TBD |
 | F-011 | copilot-sdk-provider | 🔴 RED | TBD |
 | F-012 | backend-factory | 🔴 RED | TBD |

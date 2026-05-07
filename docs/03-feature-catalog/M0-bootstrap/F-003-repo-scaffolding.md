@@ -1,13 +1,17 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: green
+    at: 2026-05-07
+    by: wave-014 / lane-b
+    note: "RED test authored at tests/node/F-003-repo-scaffolding.test.ts (11 scenarios). RED captured 2/11 fail (desktop-shell + cli package.json missing); GREEN flip added both as empty-but-named workspace packages with @mad-council-claw/<slug> naming. 11/11 PASS at GREEN time. Most scaffolding (root tsconfig, eslint, prettier, editorconfig, engine-core, LICENSE/README/.gitignore) was de-facto landed by waves 11+13; this lane closes the workspace-package gap."
 feature-id: F-003
 short-slug: repo-scaffolding
 milestone: M0
@@ -20,11 +24,13 @@ provenance:
 fr-coverage: []
 test-files:
   unit: []
-  node: []
+  node:
+    - tests/node/F-003-repo-scaffolding.test.ts
   browser: []
   integration: []
   e2e: []
-test-runner-projects: []
+test-runner-projects:
+  - node
 red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
@@ -73,4 +79,37 @@ The repository follows a 3-package monorepo layout: `packages/engine-core/`, `pa
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+**GREEN flip (wave-014 / lane-b, 2026-05-07).** The test
+`tests/node/F-003-repo-scaffolding.test.ts` enumerates 11 structural
+assertions against the F-003 §Behavior contract. RED state at lane
+start: 2/11 failing — `packages/desktop-shell/package.json` and
+`packages/cli/package.json` were absent; everything else
+(workspace globs, strict TS, lint/format/editor configs, LICENSE /
+README.md / .gitignore, engine-core package.json) was de-facto
+landed by waves 11 (engine-core file split) and 13 (governance
+triad). GREEN flip authored the two missing package.json files as
+empty-but-named scaffolds with `name: @mad-council-claw/<slug>`,
+`type: module`, `private: true` — matching engine-core's pattern.
+
+**Out-of-scope at v1 (per ledger §out-of-scope-notes + this lane's
+test-file out-of-scope notes):**
+
+1. Per-package `tsconfig.json` extending a `tsconfig.base.json`. The
+   root `tsconfig.json` covers all sources via `include` globs
+   (`packages/*/src/**/*.ts`); per-package tsconfigs are a future
+   refinement that does not change the F-003 contract.
+2. Working `npm run build` topological compile. The current root
+   `package.json` defines `build` as a no-op echo per F-001's
+   library-only design. Build wiring is part of M3+ feature scope.
+3. Concrete `src/` content for desktop-shell and cli. Those packages
+   are scaffold-only at v1; M3+ (cli) and M5+ (desktop-shell) will
+   populate.
+4. CI workflow files — F-006 logging-pipeline territory.
+5. electron-builder packaging + code signing — M15 (F-104+).
+
+**Cross-lane discipline:** committed only Lane B paths (test file +
+2 package.json + green output + ledger/roadmap/confidence-ledger/
+lane-summary updates). `vitest.config.ts` modification + sibling
+F-004/F-009 RED stubs left untouched in working tree per the
+non-negotiable rules — no `git reset` used; selective `git add`
+only.

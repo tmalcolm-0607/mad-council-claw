@@ -1,13 +1,21 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-002 / lane-b)
-status: red
+generated-by: hand-authored (wave-005 / lane-d)
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
     at: 2026-05-07
     by: wave-002 / lane-b
     note: "Initial creation; behavior contract + acceptance scenarios drafted; no test or implementation yet"
+  - status: red
+    at: 2026-05-07
+    by: wave-003 / lane-c
+    note: "RED test scaffold landed at tests/unit/F-001-engine-bootstrap-loop.test.ts; 3 assertions match acceptance contract; impl still throws not-yet-implemented"
+  - status: green
+    at: 2026-05-07
+    by: wave-005 / lane-d
+    note: "Implementation landed in packages/engine-core/src/index.ts; SHA-256 hash-chained audit + lifecycle [open, active, closing, closed] + cycle_cap at 50; 3/3 acceptance scenarios passing (vitest output in docs/09-examples-proof/F-001/green-test-output.txt)"
 feature-id: F-001
 short-slug: engine-bootstrap-loop
 milestone: M0
@@ -32,6 +40,12 @@ red-green-rule: |
   RED   if any test file is missing OR any runner returns non-zero exit.
   GREEN if all test files exist AND all runners return zero exit.
   LOCKED if GREEN AND reviews/F-001-engine-bootstrap-loop-review.md exists with verdict: ACCEPT.
+green-evidence:
+  test-runner: vitest@2.1.9 (project: unit, filter: tests/unit)
+  scenarios-passing: 3
+  scenarios-total: 3
+  test-output: docs/09-examples-proof/F-001/green-test-output.txt
+  physical-proof: docs/09-examples-proof/F-001/physical-proof.md
 depends-on: []
 out-of-scope-notes: |
   Per .claude/rules/no-silent-deferrals.md, every adjacent surface this feature
@@ -77,4 +91,14 @@ The engine kernel boots a single CoClaw run with a deterministic lifecycle (`ope
 
 ## Implementation notes
 
-(empty — populated when implementation begins)
+Wave-5 / Lane D — first feature transition RED → GREEN in the repo.
+
+- Implementation: `packages/engine-core/src/index.ts` (~95 LOC)
+- Public surface: `bootstrap(config: RunConfig): Promise<RunResult>` + 4 type exports (`LifecycleState`, `TerminatedBy`, `RunConfig`, `AuditEntry`, `RunResult`) + `MAX_CYCLES_HARD_CAP = 50` constant
+- Lifecycle order: `open` (init) → `active` (cycle loop) → `closing` (pre-close retro signal seam for F-014) → `closed` (final). Termination ALWAYS flows through `closing` so the F-014 retro hook fires even on cycle-cap or exception paths.
+- Cycle cap: `min(maxCycles, MAX_CYCLES_HARD_CAP=50)`; when `requested >= 50` the run terminates with `terminatedBy: 'cycle_cap'`, otherwise `'completion'`. Per ledger acceptance scenario 2.
+- Audit chain: SHA-256 of `${priorHash}|${cycle}|${state}` from genesis hash `0` × 64. Hash-chain shape is what scenario 1 + 2 assert; F-015 will extend with cycle payload + signed verdicts.
+- Exception path (scenario 3): type surface (`TerminatedBy = 'completion' | 'cycle_cap' | 'exception'`) is in place; F-021 will wire the actual exception-injection seam without breaking this contract.
+- Toolchain hop: vitest 2.1.9's `--project <name>` flag did not resolve `tests/unit/**` — switched `package.json` `test:unit` script from `vitest run --project unit` to `vitest run tests/unit` (path-glob filter; same effect, vitest-version-tolerant).
+- Workspace fix: added `pnpm-workspace.yaml` + `@mad-council-claw/engine-core: workspace:*` devDependency on root so the package is resolvable from the test suite (pnpm warns on `workspaces` field in package.json but does not honor it).
+- Proof: `docs/09-examples-proof/F-001/{green-test-output.txt,physical-proof.md}`.

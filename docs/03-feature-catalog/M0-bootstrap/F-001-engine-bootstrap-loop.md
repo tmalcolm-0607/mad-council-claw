@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
-generated-by: hand-authored (wave-005 / lane-d)
-status: green
+generated-by: hand-authored (wave-011 / lane-b)
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -16,6 +16,10 @@ status-history:
     at: 2026-05-07
     by: wave-005 / lane-d
     note: "Implementation landed in packages/engine-core/src/index.ts; SHA-256 hash-chained audit + lifecycle [open, active, closing, closed] + cycle_cap at 50; 3/3 acceptance scenarios passing (vitest output in docs/09-examples-proof/F-001/green-test-output.txt)"
+  - status: locked
+    at: 2026-05-07
+    by: wave-011 / lane-b
+    note: "Post-impl council review at docs/05-design-reviews/council-reviews/F-001-engine-bootstrap-loop-review.md with verdict ACCEPT (Verdict consensus: APPROVE; median confidence 88; 0 CRITICAL / 0 MAJOR / 3 MINOR / 3 PRAISE). FIRST LOCKED transition in the repo — proves the RED → GREEN → LOCKED state machine end-to-end."
 feature-id: F-001
 short-slug: engine-bootstrap-loop
 milestone: M0

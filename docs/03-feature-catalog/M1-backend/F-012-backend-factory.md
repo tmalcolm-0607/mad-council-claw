@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-015 / lane-d
     note: "RED test authored (6 scenarios, 6/6 fail at construct boundary); GREEN impl ~95 LOC at packages/engine-core/src/backend-factory.ts; barrel re-export added; full suite 151/151 PASS (was 136/136 pre-F-012/F-013); scope simplified vs ledger (createBackend({kind,model}) instead of createBackendProvider(name,opts)+MAD_BACKEND env override; BackendNotRegistered realized via TS exhaustive-switch never-arm + runtime throw)"
+  - status: locked
+    at: 2026-05-07
+    by: wave-016 / lane-a
+    note: "GREEN → LOCKED via post-impl council review (verdict ACCEPT, median confidence 90; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Review at docs/05-design-reviews/council-reviews/F-012-backend-factory-review.md. MINOR findings: lint rule forbidding direct concrete-class instantiation does not exist yet (convention not enforcement); scope simplification from wave-002 ledger recorded openly; runtime throw is generic Error not typed exception; model: string is loosely-typed pending real-SDK validation. PRAISE: TS exhaustive-switch _exhaustive: never pattern + pure-function shape (no I/O) + documented forward path for F-124 multi-tier routing."
 feature-id: F-012
 short-slug: backend-factory
 milestone: M1

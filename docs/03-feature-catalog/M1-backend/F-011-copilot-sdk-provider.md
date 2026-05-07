@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-015 / lane-c
     note: "RED → GREEN flip. tests/unit/F-011-copilot-backend.test.ts (7/7 PASS) authored against F-009 session-oriented surface (parity with F-010 wave-015/lane-b). packages/engine-core/src/backend-copilot.ts implements CopilotBackend (origin='copilot', deterministic stub, default model 'gpt-5') with halt-flips-state semantics matching F-010. v1 minimal impl — real Copilot CLI / SDK invocation deferred per ledger out-of-scope-notes (gated on CLI install + device-flow OAuth + recorded-fixture harness)."
+  - status: locked
+    at: 2026-05-07
+    by: wave-016 / lane-a
+    note: "GREEN → LOCKED via post-impl council review (verdict ACCEPT, median confidence 87; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Review at docs/05-design-reviews/council-reviews/F-011-copilot-sdk-provider-review.md. MINOR findings: stub body defers real Copilot CLI / SDK; ledger scenario 2 (ConfigurationError on missing CLI) impossible to exercise with stub; multi-model catalog validation deferred; F-010 + F-011 share the same coupled deferral set (recorded-fixture harness shape is shared). Cross-provider parity with F-010 is the architectural validation."
 feature-id: F-011
 short-slug: copilot-sdk-provider
 milestone: M1

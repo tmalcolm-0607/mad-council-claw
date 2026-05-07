@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-015 / lane-b
     note: "RED → GREEN. AnthropicBackend implements IBackendProvider (F-009 session shape) with deterministic stub body; 7/7 scenarios passing (129/129 suite). Real @anthropic-ai/sdk integration deferred per out-of-scope-notes (gated on F-070 secure-storage + recorded-fixture harness)."
+  - status: locked
+    at: 2026-05-07
+    by: wave-016 / lane-a
+    note: "GREEN → LOCKED via post-impl council review (verdict ACCEPT, median confidence 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Review at docs/05-design-reviews/council-reviews/F-010-anthropic-sdk-provider-review.md. MINOR findings: stub body defers real @anthropic-ai/sdk; ledger scenario 3 (ConfigurationError) impossible to exercise with stub; halt-keeps-session-registered divergence from StubBackend intentional per F-018 RUN_HALTED contract; default model 'claude-opus-4-7' pinned with override path. Closes M1 100% LOCKED batch (F-009 + F-010 + F-011 + F-012 + F-013)."
 feature-id: F-010
 short-slug: anthropic-sdk-provider
 milestone: M1

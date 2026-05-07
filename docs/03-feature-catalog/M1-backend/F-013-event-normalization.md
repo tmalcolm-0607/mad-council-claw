@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-002 / lane-b)
-status: green
+status: locked
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-015 / lane-d
     note: "RED test authored (9 scenarios across 4 type-guard + 4 content-extractor + 1 cross-provider witness; 9/9 fail at import boundary); GREEN impl ~95 LOC at packages/engine-core/src/backend-events.ts; barrel re-export added; full suite 151/151 PASS (was 136/136 pre-F-012/F-013); scope simplified vs ledger (4-variant BackendEvent union from F-009 reused as-is — 'cross-SDK normalization' goal already satisfied; F-013 contributes the convenience layer of type guards + eventTextContent so downstream consumers don't re-implement narrowing)"
+  - status: locked
+    at: 2026-05-07
+    by: wave-016 / lane-a
+    note: "GREEN → LOCKED via post-impl council review (verdict ACCEPT, median confidence 88; 0 CRITICAL / 0 MAJOR / 4 MINOR / 3 PRAISE). Review at docs/05-design-reviews/council-reviews/F-013-event-normalization-review.md. MINOR findings: convenience-layer scope (cross-SDK MAPPING co-locates with each backend's SDK call site, NOT in F-013); scope simplification from wave-002 ledger (9-variant NormalizedEvent → 4-variant BackendEvent reuse + helpers) recorded openly; future event-richness wave will additively extend the union (5 missing variants tracked); audit-formatter forward path documented. **Closes M1 100% LOCKED** — F-009 + F-010 + F-011 + F-012 + F-013 = 5 of 5 locked."
 feature-id: F-013
 short-slug: event-normalization
 milestone: M1

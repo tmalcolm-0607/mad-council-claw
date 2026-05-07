@@ -4,7 +4,7 @@ generated-by: hand-authored (wave-004 / lane-d)
 status: red
 milestone: M8
 short-slug: settings-persistence
-features: F-067..F-075
+features: F-067..F-075, F-126
 authored: 2026-05-07
 ---
 
@@ -25,6 +25,7 @@ The durable-state plane (`foundational-plan.md` § Feature catalog M8). M8 owns 
 | F-073 | project-workspace | **NEW.** Named, isolated configuration scopes overlaying global; per-workspace skill/MCP/permission/personality; `default` workspace always present + non-deletable |
 | F-074 | workspace-switcher-ui | **NEW.** Window-chrome dropdown switcher; "+ New workspace..." action; type-name-to-confirm delete; default workspace non-deletable in UI |
 | F-075 | workspace-persistence | **NEW.** Active workspace persists across restart via `active-workspace.json`; missing-workspace fallback to default with structured warning; immutable workspace IDs; atomic writes |
+| F-126 | context-budget-allocation | Per-workspace context-budget thresholds (ADVISORY/PREPARE/HALT) mirroring `rules/context-guardian.md`; signal-only (no auto-compaction); HALT rejects without `--force-context-overflow` (NEW from frontier research) |
 
 ## Provenance
 

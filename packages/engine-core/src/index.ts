@@ -49,3 +49,4 @@ export * from './backend-copilot.js';
 export * from './backend-factory.js';
 export * from './backend-events.js';
 export * from './heartbeat.js';
+export * from './checkpoint.js';

@@ -4,7 +4,7 @@ generated-by: hand-authored (wave-007 / lane-a)
 status: red
 milestone: M16
 short-slug: telemetry
-features: F-110..F-113
+features: F-110..F-113, F-123
 authored: 2026-05-06
 ---
 
@@ -22,6 +22,7 @@ This milestone consumes M0 (kernel, storage, identity) and M2 (audit-log, PII re
 | F-111 | crash-reporting | Electron `crashReporter` wired to local dump dir; crash records to F-110's sink; previous-run-crashed event on next boot |
 | F-112 | performance-metrics | LLM latency histograms + token counters + MCP tool latency + engine-cycle phases + RSS/CPU resource samples; OTel GenAI semantic conventions |
 | F-113 | telemetry-opt-in | Tri-state `off` / `local-only` (default) / `remote`; remote-mode = Dangerous Operation; transitions audited per F-015 |
+| F-123 | otel-genai-spans | Per-LLM-call spans conforming to OpenTelemetry GenAI semantic conventions (`gen_ai.*` attribute namespace); tool-use child spans; chained from engine-cycle (NEW from frontier research) |
 
 ## Dependency DAG
 

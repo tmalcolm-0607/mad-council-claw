@@ -5,7 +5,9 @@
   "description": "Headless CLI surface for MAD Council Claw - exposes engine-core lifecycle, council commands, and audit log readers as command-line entrypoints. F-028 ships the entry + dispatcher scaffold; M4 features (F-029..F-031) bind concrete subcommands.",
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./subcommands": "./src/subcommands.ts",
+    "./json-output": "./src/json-output.ts"
   },
   "bin": {
     "nested-quilt": "./src/index.ts"

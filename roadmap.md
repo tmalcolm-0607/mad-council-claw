@@ -29,9 +29,9 @@ status: living
 
 | Milestone | Theme | Span | Total | RED | GREEN | LOCKED | DEFERRED | PLANNED |
 |---|---|---|---:|---:|---:|---:|---:|---:|
-| M0 | Project bootstrap | F-001..F-008 | 8 | 3 | 5 | 0 | 0 | 0 |
+| M0 | Project bootstrap | F-001..F-008 | 8 | 3 | 1 | 4 | 0 | 0 |
 | M1 | Pluggable backend | F-009..F-013 | 5 | 5 | 0 | 0 | 0 | 0 |
-| M2 | Governance triad | F-014..F-022 | 9 | 2 | 7 | 0 | 0 | 0 |
+| M2 | Governance triad | F-014..F-022 | 9 | 1 | 8 | 0 | 0 | 0 |
 | M3 | Cron / heartbeat | F-023..F-027 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M4 | Headless CLI | F-028..F-031 | 4 | 4 | 0 | 0 | 0 | 0 |
 | M5 | Desktop chat shell | F-032..F-043 | 12 | 12 | 0 | 0 | 0 | 0 |
@@ -50,13 +50,15 @@ status: living
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 3 | 0 | 0 | 0 | 0 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M19 | Deferred (user-acknowledged tracking row) | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
-| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **114** | **12** | **0** | **18** | **0** |
+| **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **113** | **9** | **4** | **18** | **0** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
 
 > Wave-10 transition note (closing summary `docs/11-loop-state/wave-history/wave-010.md`): F-008 (M0), F-019 / F-020 / F-022 (M2) flipped RED → GREEN. Wave-11 in flight: Lane A (F-007 ipc-contract-scaffold), Lane B (F-001 GREEN → LOCKED candidate via post-impl council review), Lane C (M5 desktop-shell ledger refresh + RED→GREEN candidate), Lane D (this lane — roadmap freshness).
 
 > Wave-12 / Lane C transition note: F-122..F-126 (the 5 frontier-research candidates that had been PLANNED for several waves) flipped PLANNED → RED. Ledgers now exist in their respective milestone directories: F-122 (M4), F-123 (M16), F-124 (M1), F-125 (M7), F-126 (M8). Provenance traces to wave-1 Lane A (findings 21, 23) + Lane B (findings 10, 15, 16). D-3 (F-125 default cap) and D-4 (F-124 default policy) remain OPEN; closure is prerequisite for RED → GREEN flips.
+
+> Wave-12 / Lane D transition note: F-002 + F-006 + F-008 flipped GREEN → LOCKED via post-impl council reviews. Three new review files under `docs/05-design-reviews/council-reviews/` (F-002 median confidence 90; F-006 median 86; F-008 median 88; all verdict ACCEPT, 0 CRITICAL / 0 MAJOR each). M0 now reads 3R + 1G + 4L (F-001/F-002/F-006/F-008 LOCKED; F-007 GREEN; F-003/F-004/F-005 RED). Total project state: 114 RED / 8 GREEN / 4 LOCKED across 144 features (126 active + 18 deferred).
 
 ## Per-milestone detail
 
@@ -66,14 +68,14 @@ status: living
 
 | F-ID | Slug | Status | Test files |
 |---|---|---|---|
-| F-001 | engine-bootstrap-loop | 🟢 GREEN | `tests/unit/F-001-engine-bootstrap-loop.test.ts` (3/3 PASS) — wave-11 lane-b LOCKED candidate |
-| F-002 | per-agent-identity-runid | 🟢 GREEN | `tests/unit/F-002-per-agent-identity-runid.test.ts` (3/3 PASS) |
+| F-001 | engine-bootstrap-loop | 🔒 LOCKED | `tests/unit/F-001-engine-bootstrap-loop.test.ts` (3/3 PASS); council review verdict ACCEPT (median 88) — wave-11 / lane-b |
+| F-002 | per-agent-identity-runid | 🔒 LOCKED | `tests/unit/F-002-per-agent-identity-runid.test.ts` (3/3 PASS); council review verdict ACCEPT (median 90) — wave-12 / lane-d |
 | F-003 | repo-scaffolding | 🔴 RED | TBD |
 | F-004 | vitest-playwright-config | 🔴 RED | TBD |
 | F-005 | deps-pinning | 🔴 RED | TBD |
-| F-006 | logging-pipeline | 🟢 GREEN | `tests/unit/F-006-logging-pipeline.test.ts` (4/4 PASS) |
+| F-006 | logging-pipeline | 🔒 LOCKED | `tests/unit/F-006-logging-pipeline.test.ts` (4/4 PASS); council review verdict ACCEPT (median 86) — wave-12 / lane-d |
 | F-007 | ipc-contract-scaffold | 🟢 GREEN | `tests/unit/F-007-ipc-contract-scaffold.test.ts` (3/3 PASS) — wave-11/lane-a flip; scaffold-shape contract; M5 integration scenarios deferred |
-| F-008 | local-storage-layout | 🟢 GREEN | `tests/node/F-008-local-storage-layout.test.ts` (6/6 PASS) |
+| F-008 | local-storage-layout | 🔒 LOCKED | `tests/node/F-008-local-storage-layout.test.ts` (6/6 PASS); council review verdict ACCEPT (median 88) — wave-12 / lane-d |
 
 ### M1 — Pluggable backend
 
@@ -100,7 +102,7 @@ status: living
 | F-018 | failure-pattern-halt | 🟢 GREEN | `tests/unit/F-018-failure-pattern-halt.test.ts` (9/9 PASS) |
 | F-019 | cost-ledger | 🟢 GREEN | `tests/unit/F-019-cost-ledger.test.ts` (8/8 PASS) |
 | F-020 | kill-switch | 🟢 GREEN | `tests/unit/F-020-kill-switch.test.ts` (11/11 PASS) |
-| F-021 | degradation-fallback | 🔴 RED | TBD |
+| F-021 | degradation-fallback | 🟢 GREEN | `tests/unit/F-021-degradation-ladder.test.ts` (11/11 PASS) — wave-12/lane-a flip; in-memory escalation-ladder primitive (5 rungs + halt); per-resource circuit-breaker + Context-Gaps + required-vs-optional classification deferred to engine-cycle integration |
 | F-022 | tool-quota | 🟢 GREEN | `tests/unit/F-022-tool-call-quota.test.ts` (8/8 PASS) |
 
 ### M3 — Cron / heartbeat

@@ -55,3 +55,23 @@ Source: `docs/05-design-reviews/copilot-cli-design-reviews/2026-05-07-wave-001-f
 | F-132 | parent-child-supervision-locks | M2/M3 | Major: matches OpenClaw F4 (detached background processes); needs OS-level flock/LockFileEx + heartbeat lease + orphan reaper. | HIGH (single-model) |
 | F-133 | real-agent-filesystem-isolation | M2 | Major: matches Lane C L1 (per-agent isolation must be filesystem-real, not synthetic). | HIGH (single-model) |
 | F-134 | skill-supply-chain-attestation | M7 with M0 gate | Major: 70 inherited skills have no manifest lockfile / content hash / signature gate today. | HIGH (single-model) |
+
+## Wave-3 / Lane B update — Copilot CLI design review retry (Opus succeeded, cross-model populated)
+
+Source: `docs/05-design-reviews/copilot-cli-design-reviews/2026-05-07-wave-001-foundation-review.md` § Wave-3 retry resolution + § Cross-model agreement table.
+
+Cross-model verdict on each wave-2 F-NNN promotion + 3 NEW F-NNN candidates surfaced by Opus only:
+
+| F-NNN | Title | Wave-2 conf | Wave-3 cross-model verdict | Notes |
+|---|---|---|---|---|
+| F-127 | foundation-governance-kernel | HIGH (gpt-5.5) | HARD BLOCK (Opus C1 + gpt-5.5 C1 both Critical) | Both models flag governance retrofit as a foundation-order blocker. M0/M1 must not ship without F-014/F-015/F-019/F-022/F-088 forward-moved. |
+| F-128 | per-agent-identity-bootstrap | HIGH (gpt-5.5) | HARD BLOCK (Opus M4 + gpt-5.5 C2; severity escalates to Critical) | Both flag; gpt-5.5 escalates to Critical. CE FR-IDENTITY-001 + OpenClaw F1 cost-attribution drift = root convergence. |
+| F-129 | oauth-refresh-singleflight-lock | HIGH (gpt-5.5) | HARD BLOCK (Opus M3 + gpt-5.5 C3; severity escalates to Critical) | Both flag OpenClaw F3 root cause. Spec F-079 token refresh must require single-flight per identity. |
+| F-130 | tool-invocation-proof-gate | HIGH (gpt-5.5) | HARD BLOCK (Opus C3 + gpt-5.5 C4 both Critical) | Both models flag Devin #1 failure mode. F-022/F-058/F-125 are rate/cardinality, not schema-validation. New error code `ERR_TOOL_HALLUCINATED`. |
+| F-131 | fanout-budget-governor | HIGH (gpt-5.5) | HARD BLOCK (Opus M2 + gpt-5.5 C5; severity escalates to Critical) | Both flag Anthropic 10x token cost; both place at M2. Tie F-126 context-budget to F-018 cost ledger. |
+| F-132 | parent-child-supervision-locks | HIGH (gpt-5.5) | MUST-FIX (Opus M5 + gpt-5.5 M-E both Major) | Both flag OpenClaw F4. OS-level flock/LockFileEx + heartbeat lease. |
+| F-133 | real-agent-filesystem-isolation | HIGH (gpt-5.5) | **MEDIUM** (gpt-5.5 only — Opus folds into supervision-lock C2/M5) | Demoted to MEDIUM cross-model. Wave-4 third-model corroboration recommended. |
+| F-134 | skill-supply-chain-attestation | HIGH (gpt-5.5) | HARD BLOCK (Opus C4 + gpt-5.5 M-G; severity escalates to Critical) | Both flag; Opus escalates to Critical. M0 gate (NOT M7-only). MSEC bootcamp parallel + 70 inherited skills. |
+| **F-135** | mcp-oauth-2.1-tls-pin | n/a (new) | MEDIUM (Opus G5 + gpt-5.5 G8 — both flag gap; F-NNN shape divergent) | New cross-model gap. Either fold into F-122 hardening or new F-NNN. |
+| **F-136** | agent-manifest-export | n/a (new) | LOW (Opus G7 only) | Opus-only; promote at LOW pending wave-4 corroboration. |
+| **F-137** | supervisor-status-stream | n/a (new) | LOW (Opus G9 only) | Opus-only; F-024 heartbeat doesn't surface degraded states to UX. |

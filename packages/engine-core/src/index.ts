@@ -25,6 +25,7 @@
  *   - backend-factory.ts   — F-012 (backend-factory) — `createBackend({kind, model})` → IBackendProvider
  *   - backend-events.ts    — F-013 (event-normalization) — type guards + `eventTextContent` for BackendEvent
  *   - heartbeat.ts         — F-023 (cron-heartbeat) — HeartbeatScheduler + cadence-zone validation per loop-cadence-discipline.md
+ *   - cycle.ts             — F-138 (engine-cycle-orchestrator) — runEngineCycle composes F-001/F-002/F-009/F-014/F-015/F-018/F-019; resolves wave-016 HARD-BLOCK F1
  *
  * Cross-feature type sharing rule: shared types live with their FIRST owner;
  * later features import via `./<owner>.js` (ESM extension required even for
@@ -50,3 +51,5 @@ export * from './backend-factory.js';
 export * from './backend-events.js';
 export * from './heartbeat.js';
 export * from './checkpoint.js';
+export * from './manual-halt.js';
+export * from './cycle.js';

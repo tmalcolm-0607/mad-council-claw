@@ -22,6 +22,8 @@
  * library surface; binary wiring is package.json's `bin` field.
  */
 
+import { stripJsonFlag } from './json-output.js';
+
 export type Subcommand = (args: string[]) => Promise<number>;
 
 export interface CliOptions {
@@ -59,7 +61,15 @@ export async function runCli(argv: string[], opts: CliOptions): Promise<number> 
     return 1;
   }
 
-  return await subcommand(subArgs);
+  // F-030: strip --json before forwarding to subcommand. The subcommand
+  // never sees the flag in its own args; orchestrator-level JSON-mode
+  // detection is the responsibility of the caller (or a future wrapping
+  // skill). hasJsonFlag(subArgs) here would let runCli wrap the
+  // subcommand result in a JsonOutput envelope, but v1 keeps the shape
+  // backward-compatible: just strip + forward. Concrete subcommand
+  // wrapping lands when the first F-029 stub gets a real implementation.
+  const forwarded = stripJsonFlag(subArgs);
+  return await subcommand(forwarded);
 }
 
 function printRootHelp(programName: string, opts: CliOptions): void {

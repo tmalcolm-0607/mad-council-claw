@@ -1,0 +1,15 @@
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [32m✓[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 1: consentGate returns true → RUN_HALTED verdict with trigger=manual
+ [32m✓[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 2: consentGate returns false → throws abort error mentioning consent denied
+ [32m✓[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 3: runId is stamped onto verdict.run_id verbatim
+ [32m✓[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 4: reason is carried through to verdict.reason verbatim
+ [32m✓[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 5: async consentGate is awaited (Promise<true> resolves to halt)
+ [32m✓[39m tests/unit/F-027-manual-halt-override.test.ts[2m > [22mF-027 manual-halt-override[2m > [22mscenario 6: timestamp is an ISO-8601 string captured at halt time
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 12:54:20
+[2m   Duration [22m 1.65s[2m (transform 232ms, setup 0ms, collect 317ms, tests 7ms, environment 0ms, prepare 366ms)[22m
+

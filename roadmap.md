@@ -49,7 +49,7 @@ status: living
 | M17 | Documentation | F-114..F-118 | 5 | 5 | 0 | 0 | 0 | 0 |
 | M18 | Marketplace local-v1 | F-119..F-121 | 3 | 3 | 0 | 0 | 0 | 0 |
 | **NEW from research** | Frontier-2026 candidates | F-122..F-126 | 5 | 0 | 0 | 0 | 0 | 5 |
-| M19 | Deferred / out-of-scope | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
+| M19 | Deferred (user-acknowledged tracking row) | F-D-001..F-D-018 | 18 | 0 | 0 | 0 | 18 | 0 |
 | **TOTAL** | (121 base + 5 new = 126 active) + 18 deferred | | **144** | **109** | **12** | **0** | **18** | **5** |
 
 > Wave-1 research lanes consolidated ~78 additional F-NNN candidates as F-127..F-204 (see `docs/04-research/wave-001-new-fnnn-candidates-consolidated.md`). These are tracked in the consolidation matrix and will be allocated against existing milestones (or roll a M20+) as design decisions close. They are NOT counted in the milestone-overview table above; that table uses the foundational-plan F-NNN allocation only.
@@ -324,7 +324,7 @@ status: living
 | F-125 | mcp-tool-cap-per-workspace | M7 | ⚪ PLANNED | `[R:WorkIQ internal tool-explosion lesson]` |
 | F-126 | context-budget-allocation | M8 | ⚪ PLANNED | `[R:WebSearch frontier 2026]` |
 
-### M19 — Deferred / out-of-scope (tracking only)
+### M19 — Deferred (tracking only; user-acknowledged)
 
 ⏸ DEFERRED — explicitly out of v1 per user-acknowledged scope. Re-open trigger: see `docs/10-backlog/`. F-D-016/017/018 are reserved IDs without ledger files yet (15 ledgers exist on disk, 3 reserved).
 
@@ -387,7 +387,7 @@ Notes:
 - M11 depends on M2 (audit-log) + M14 (replay UI in scrubber).
 - M12..M14 are NEW surfaces; depend on M5 (desktop shell) for UI hosts.
 - M15..M17 cross-cut all milestones; M15 lands continuously as packaging concerns surface.
-- M18 closes v1 with local marketplace; cloud variant deferred to M19.
+- M18 closes v1 with local marketplace; cloud variant tracked under M19 (user-acknowledged).
 
 ## Source
 

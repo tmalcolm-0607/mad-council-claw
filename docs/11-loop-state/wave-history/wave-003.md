@@ -43,4 +43,4 @@ generated-by-version: 0.1.0
 ## Wave-4 carryover
 
 - Lane E Copilot CLI re-dispatch persisted to wave-4 as Lane C (per wave-4 plan in then-current-wave.md).
-- M5 ledger refinement carried as wave-3 lane B already landed all 12 — but RED→GREEN flips deferred to later waves.
+- M5 ledger refinement carried as wave-3 lane B already landed all 12; RED→GREEN flips begin in subsequent waves (per per-wave plan).

@@ -41,4 +41,4 @@ generated-by-version: 0.1.0
 ## Wave-5 carryover
 
 - M9 (M365), M10 (multi-model), M11 (soul/replay) catalog drops queued for wave-5 (3 lanes).
-- Roadmap.md per-milestone tables now drift from PLANNED → RED for M6/M7/M8 (refresh deferred to wave-11 lane-d).
+- Roadmap.md per-milestone tables now drift from PLANNED → RED for M6/M7/M8 (refresh handled in wave-11 lane-d).

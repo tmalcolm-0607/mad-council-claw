@@ -28,7 +28,7 @@ generated-by-version: 0.1.0
 
 ## Methodology evolution
 
-- **3-lane GREEN flip parallelism** validated. The append-only staging-race pattern is documented as Anomaly A1 in lane summaries (4th sighting of the multi-lane disjoint-zone race; full pattern characterization deferred to wave-10).
+- **3-lane GREEN flip parallelism** validated. The append-only staging-race pattern is documented as Anomaly A1 in lane summaries (4th sighting of the multi-lane disjoint-zone race; full pattern characterization captured in wave-10 lane summaries).
 - **Lane D backlog intake** as a recurring shape: every other wave has a Lane D that pulls Microsoft 2026 / Anthropic-published / community signals into structured `docs/10-backlog/` rows.
 - **Confidence-ledger per-lane appends** are now the discipline: every Lane that produces a GREEN flip writes a ≥3-entry block in `docs/11-loop-state/confidence-ledger.md`.
 

@@ -1,0 +1,60 @@
+[31m   [31m×[31m F-006 logging-pipeline[2m > [22mscenario 3: context fields merge onto the LogEvent record[90m 1[2mms[22m[31m[39m
+[31m     → createLogger is not a function[39m
+[31m   [31m×[31m F-006 logging-pipeline[2m > [22mscenario 4: sink injection — every emitted event flows through the injected sink only[90m 1[2mms[22m[31m[39m
+[31m     → createLogger is not a function[39m
+
+[31m⎯⎯⎯⎯⎯⎯⎯[1m[7m Failed Tests 4 [27m[22m⎯⎯⎯⎯⎯⎯⎯[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-006-logging-pipeline.test.ts[2m > [22mF-006 logging-pipeline[2m > [22mscenario 1: logger.info emits LogEvent with timestamp + level + event + context
+[31m[1mTypeError[22m: createLogger is not a function[39m
+[36m [2m❯[22m tests/unit/F-006-logging-pipeline.test.ts:[2m60:28[22m[39m
+    [90m 58| [39m  [34mit[39m([32m'scenario 1: logger.info emits LogEvent with timestamp + level + [39m…
+    [90m 59| [39m    [35mconst[39m sink [33m=[39m vi[33m.[39mfn[33m<[39m(e[33m:[39m [33mLogEvent[39m) [33m=>[39m [35mvoid[39m[33m>[39m()[33m;[39m
+    [90m 60| [39m    [35mconst[39m logger[33m:[39m [33mLogger[39m [33m=[39m [34mcreateLogger[39m([32m'debug'[39m[33m,[39m sink)[33m;[39m
+    [90m   | [39m                           [31m^[39m
+    [90m 61| [39m
+    [90m 62| [39m    logger[33m.[39m[34minfo[39m([32m'cycle.start'[39m[33m,[39m { cycle[33m:[39m [34m3[39m })[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-006-logging-pipeline.test.ts[2m > [22mF-006 logging-pipeline[2m > [22mscenario 2: level-gating drops events below the configured threshold
+[31m[1mTypeError[22m: createLogger is not a function[39m
+[36m [2m❯[22m tests/unit/F-006-logging-pipeline.test.ts:[2m75:28[22m[39m
+    [90m 73| [39m  [34mit[39m([32m'scenario 2: level-gating drops events below the configured thres[39m…
+    [90m 74| [39m    [35mconst[39m sink [33m=[39m vi[33m.[39mfn[33m<[39m(e[33m:[39m [33mLogEvent[39m) [33m=>[39m [35mvoid[39m[33m>[39m()[33m;[39m
+    [90m 75| [39m    [35mconst[39m logger[33m:[39m [33mLogger[39m [33m=[39m [34mcreateLogger[39m([32m'warn'[39m[33m,[39m sink)[33m;[39m
+    [90m   | [39m                           [31m^[39m
+    [90m 76| [39m
+    [90m 77| [39m    logger[33m.[39m[34mdebug[39m([32m'drop.me.1'[39m)[33m;[39m
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-006-logging-pipeline.test.ts[2m > [22mF-006 logging-pipeline[2m > [22mscenario 3: context fields merge onto the LogEvent record
+[31m[1mTypeError[22m: createLogger is not a function[39m
+[36m [2m❯[22m tests/unit/F-006-logging-pipeline.test.ts:[2m91:28[22m[39m
+    [90m 89| [39m  [34mit[39m([32m'scenario 3: context fields merge onto the LogEvent record'[39m[33m,[39m () [33m=[39m…
+    [90m 90| [39m    [35mconst[39m sink [33m=[39m vi[33m.[39mfn[33m<[39m(e[33m:[39m [33mLogEvent[39m) [33m=>[39m [35mvoid[39m[33m>[39m()[33m;[39m
+    [90m 91| [39m    [35mconst[39m logger[33m:[39m [33mLogger[39m [33m=[39m [34mcreateLogger[39m([32m'debug'[39m[33m,[39m sink)[33m;[39m
+    [90m   | [39m                           [31m^[39m
+    [90m 92| [39m
+    [90m 93| [39m    logger[33m.[39m[34merror[39m([32m'audit.write.failed'[39m[33m,[39m {
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯[22m[39m
+
+[31m[1m[7m FAIL [27m[22m[39m tests/unit/F-006-logging-pipeline.test.ts[2m > [22mF-006 logging-pipeline[2m > [22mscenario 4: sink injection — every emitted event flows through the injected sink only
+[31m[1mTypeError[22m: createLogger is not a function[39m
+[36m [2m❯[22m tests/unit/F-006-logging-pipeline.test.ts:[2m115:28[22m[39m
+    [90m113| [39m    [35mconst[39m captured[33m:[39m [33mLogEvent[39m[] [33m=[39m [][33m;[39m
+    [90m114| [39m    [35mconst[39m customSink [33m=[39m (e[33m:[39m [33mLogEvent[39m) [33m=>[39m captured[33m.[39m[34mpush[39m(e)[33m;[39m
+    [90m115| [39m    [35mconst[39m logger[33m:[39m [33mLogger[39m [33m=[39m [34mcreateLogger[39m([32m'debug'[39m[33m,[39m customSink)[33m;[39m
+    [90m   | [39m                           [31m^[39m
+    [90m116| [39m
+    [90m117| [39m    [90m// Spy on console.log to confirm the facade does NOT fall back to [39m…
+
+[31m[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯[22m[39m
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m4 failed[39m[22m[90m (4)[39m
+[2m   Start at [22m 00:04:25
+[2m   Duration [22m 2.62s[2m (transform 173ms, setup 0ms, collect 175ms, tests 17ms, environment 0ms, prepare 986ms)[22m
+

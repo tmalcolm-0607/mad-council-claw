@@ -191,6 +191,21 @@ Push at end of lane authorized for this loop session per user directive 2026-05-
 
 | # | Subject | SHA | Status |
 |---|---|---|---|
-| 1 | `test(F-033,F-034): RED -- chat-history-pane + info-panel structural scenarios + ledger flips` | `fdd4a95` | landed clean — no cross-lane staging-race observed |
-| 2 | (GREEN) `feat(F-033,F-034): GREEN -- buildHistoryPane + buildInfoPanel descriptors` | TBD | pending |
-| 3 | (this lane summary + roadmap + confidence-ledger updates) | TBD | pending |
+| 1 | `test(F-033,F-034): RED -- chat-history-pane + info-panel structural scenarios + ledger flips` | `fdd4a95` | landed clean — no cross-lane staging-race observed (this lane's clean RED commit was the "first since wave-9") |
+| 2 | `feat(F-033,F-034): GREEN -- buildHistoryPane + buildInfoPanel descriptors + ledger flips + roadmap + confidence-ledger + lane-a summary` | `2bdfcac` | landed 10 files; **roadmap.md updates absorbed by sibling Lane D's earlier commit `7be3b24` (subject "docs(wave-019/lane-d): QG7 Copilot CLI multi-model design review of composition spine")** — same chronic cross-lane staging-race pattern, **sighting #21+**. Substance preserved (roadmap.md HAS my F-033+F-034 row updates, M5 row 9R+3G, TOTAL 95R+10G+24L, wave-019/lane-a transition note); credit attribution on roadmap.md corrupted; rest of GREEN scope (10 files) credited to this lane's commit. Per `non-negotiable-rules.md`: NO destructive git ops. |
+
+## Cross-lane staging-race sighting #21+
+
+Observed during this lane's GREEN commit attempt. The roadmap.md edits this lane authored (F-033 row 🔴 -> 🟢 + F-034 row 🔴 -> 🟢 + M5 row 11R+1G+0L -> 9R+3G+0L + TOTAL 147+97R+8G+24L -> 147+95R+10G+24L + wave-019/lane-a transition note inserted before wave-019/lane-b note) were absorbed by sibling Lane D's commit `7be3b24` (subject "docs(wave-019/lane-d): QG7 Copilot CLI multi-model design review of composition spine"). Lane D's commit landed BEFORE this lane's GREEN commit attempt; Lane D's `git add` set apparently included broader-scope working-tree modifications including roadmap.md.
+
+Pattern repeats from wave-018 sightings #18 + #20 + earlier waves. Tactical mitigation (combined `git add && git commit` single-bash) was used here, but did NOT prevent the issue because Lane D committed FIRST while this lane was still authoring; Lane D had the staged roadmap.md modifications at the moment of its commit.
+
+Per user directive 2026-05-07: NO `git reset` (any flavor); fix-forward via documentation in this summary + the wave-019/lane-a transition note in roadmap.md (which IS in HEAD via Lane D's commit). Credit attribution on roadmap.md corrupted; substance preserved.
+
+**Strategic mitigation candidates** (carried over from wave-017+18 retros + Lane B's wave-018 #18 + Lane C's wave-018 #20 + this Lane A #21+):
+
+(a) Per-lane branches when concurrent lane count >= 3 — author lane's work on a private branch + merge at end (preserves credit attribution mechanically)
+(b) Pre-commit-hook scope-restriction to `git diff --cached --name-only` only (reject any modification to files not in the cached diff) — would have prevented Lane D from committing roadmap.md unless Lane D explicitly staged it
+(c) Per-feature scope manifest at `.mad/wave-N/lane-X/scope.txt` with hook-enforced reject — declares lane scope upfront; pre-commit rejects if commit touches files outside scope
+
+**Council retro at wave-19 close should escalate from tactical (combined-bash) to strategic mitigation.** The chronic pattern across waves 9-19 (sightings #14-#21+) suggests the tactical mitigation has reached its ceiling; strategic intervention is the next move.

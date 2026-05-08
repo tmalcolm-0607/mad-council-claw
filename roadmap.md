@@ -1,9 +1,9 @@
 ---
 artifact-class: navigable-roadmap
-generated-by: wave-011 / lane-d
+generated-by: wave-011 / lane-d (last full refresh) + wave-020 / lane-d (frontmatter wave bump only)
 generated-by-version: 0.2.0
-wave: wave-011
-date: 2026-05-07
+wave: wave-020
+date: 2026-05-08
 status: living
 ---
 

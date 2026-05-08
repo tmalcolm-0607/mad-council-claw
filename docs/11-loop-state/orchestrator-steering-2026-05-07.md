@@ -18,6 +18,46 @@ This file is the **out-of-band steering channel**: the user works in session 967
 
 **Why this section is placed at the top:** HARD BLOCK is the highest-priority signal in this steering file. Readers (concurrent session 64bf21c6 picking up at iter start) should see this BEFORE backlog-update tables or pickup-order recommendations. Per `loop-stop-language-discipline.md`, the loop continues — but the F-205 frontmatter must be corrected on the next batch transition (Batch 2 landing) so the loop doesn't propagate a false-GREEN reading to F-206..F-210 or M19 reopen evaluation.
 
+## Runtime-validation gap (2026-05-07T23:50Z; honest accounting)
+
+Session 967a44fb authored 4 batches + ran a multi-model cross-model review (real Copilot CLI dispatch — Opus 4.7 + GPT-5.5; 8m10s; 35 findings; agreement table at `MAD - Clean/.mad/reports/copilot-review-2026-05-07/agreement-table.md`). 14 MUST-FIX findings remediated. 1 HARD BLOCK (F3) flagged in the directive section above.
+
+But: of the surfaces authored, only ~5 have real E2E runtime evidence. The other ~12 are structural / file-existence proofs only. Concurrent session 64bf21c6 (and any successor session picking up F-205 batches 2-N) should know which surfaces have NOT been runtime-validated:
+
+### Validated end-to-end (real invocation, real output)
+
+- `Invoke-CopilotMultiModel.ps1` → real Opus + GPT dispatch returned real findings (8m10s)
+- `Bootstrap-CouncilClawKit.ps1 -DryRun` → parser + planner exercised (479 file plan, 32 LENS-strip, 1 path-rewrite)
+- `pnpm test` in mad-council-claw → 323/323 PASS (38 vitest files)
+- Pre-commit hook chain (`validate-quality-gates.js`, `content-scan-deferrals.js`, `validate-mad-pipeline.js`) → fired, blocked correctly, passed correctly
+- Hook test suite (sampled) → PASS
+
+### NOT validated (asserted-by-frontmatter or structural-only)
+
+- **3 new MAD-Clean kit skills** (`skill-sanitize`, `mcp-permission-validate`, `copilot-cli-bridge`) — registered in skill registry per system-reminder, BUT never invoked with synthetic input + output verified. Skill bodies could have semantic bugs the cross-model review didn't catch.
+- **Council skills** (`/council-open`, `/council-post`, `/council-review`, `/council-resolve`, `/council-retro`, etc.) — not invoked end-to-end by session 967a44fb. The cross-model dispatch went through `Invoke-CopilotMultiModel.ps1` directly, not via a `/council-*` skill chain.
+- **MAD pipeline skills** (`/mad-spec`, `/mad-plan`, `/mad-tasks`, `/mad-implement`, `/mad-validate`) — not invoked.
+- **Chained skill calls** — `/mad-spec → /testplan` auto-fire NOT verified. CLAUDE.md claims it auto-fires; kit's own iter1-41 collab-engine antipattern doc reports it failed across 41 iters. Whether the bug is fixed today is UNVERIFIED in this session.
+- **Bootstrap script NON-DryRun** — never run live. 464 file copies + path rewrites + CLAUDE.md generation are dry-run-planned only. Concurrent session is doing staged batches; live full-bootstrap deferred.
+- **Generated CLAUDE.md semantic quality** — multi-model review read the SCRIPT, not the OUTPUT. Whether the generated council-claw CLAUDE.md actually makes sense as a working orchestrator contract is UNVERIFIED.
+- **Reopen-request package consumer** — `m19-reopen-request` artifact-class has typed schema; no skill yet PARSES it. Documentation-only until `/council-review` (or a new schema-validator) reads it.
+- **F-205 acceptance test full assertion path** — concurrent session's `tests/node/F-205-kit-bootstrap.test.ts` runs the skip-when-not-landed branch (most items NOT met). The full post-bootstrap assertion path has not executed.
+- **F-206..F-210 m-relay-main lift ledgers** — contractual only. No implementation, no test, no integration. Soft-blocked on F-D-008 reopen verdict; reopen verdict gates on `/council-review` skill availability post-F-205.
+- **UI / UX** — does not exist. M5 desktop shell hasn't started; Electron not installed; no UI code; no Playwright wired despite F-093 planning browser tests. Cannot validate UX.
+- **Automations** — none built. Horizon/"Prepare" equivalent not authored. Cannot validate.
+- **Bootstrap script smoke tests** (hook fires, `/council-list`, `/mad-spec` dry-run) — documented in script body but only execute in NON-DryRun mode; not run.
+- **Audit synthesis as downstream input** — read by session 967a44fb + dispatch subagent only. No skill consumes it as a typed input contract.
+
+### Disposition (per user direction 2026-05-07T23:50Z)
+
+User explicitly chose: **acknowledge the gap; do not try to close it in this session.** The concurrent session's staged-batches plan for F-205 will land kit components incrementally; runtime testing per-batch is the executing session's responsibility (concurrent session 64bf21c6 has been doing this — recent commits show test-first RED→GREEN cadence and commit-message gate-results).
+
+When concurrent session lands a batch that includes a previously-untested skill (e.g. F-205 Batch 2 likely covers `/council-*` + `/mad-*` skills), the per-batch test extension SHOULD include at least one synthetic invocation of each skill (not just file existence). Recommendation, not directive.
+
+### Cross-reference
+
+Ownership of the 14 fixes already remediated (commits `1ca69e47` MAD-Clean main; `cd88fa9` mad-council-claw main; `eca205e0` MAD-Clean main audit trail). HARD BLOCK F3 still pending concurrent session revert.
+
 ## What's new in the backlog (2026-05-07 silent-deferral surfacing)
 
 Authored across 4 user-scoped batches; all RED + uncommitted-or-recently-committed:

@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-019 / lane-a
     note: "RED test authored at tests/unit/F-033-chat-history-pane.test.ts (6 structural scenarios per the wave-019 / lane-a brief that simplifies the ledger's 3 launch-Electron browser-suite scenarios to a structural / interface-based shape contract — mirrors F-032's wave-018/lane-c idiom). Test fails with module-resolution error: @mad-council-claw/desktop-shell exports do not yet include `buildHistoryPane` / `resolveHistoryEntry` / `DEFAULT_HISTORY_PANE` / `HISTORY_PANE_DEFAULT_VIRTUALIZATION_THRESHOLD` / `HistoryPaneOptions` / `HistoryPaneDescriptor` / `HistoryEntry` / `HistoryEntryLifecycle`. Implementation will land buildHistoryPane() + resolveHistoryEntry() + DEFAULT_HISTORY_PANE + HISTORY_PANE_DEFAULT_VIRTUALIZATION_THRESHOLD + HistoryEntry/HistoryEntryLifecycle types in packages/desktop-shell/src/history-pane.ts."
+  - status: green
+    at: 2026-05-07
+    by: wave-019 / lane-a
+    note: "GREEN. New packages/desktop-shell/src/history-pane.ts (~165 LOC) lands buildHistoryPane() + resolveHistoryEntry() + DEFAULT_HISTORY_PANE + HISTORY_PANE_DEFAULT_VIRTUALIZATION_THRESHOLD (=100) + types (HistoryPaneOptions / HistoryPaneDescriptor / HistoryEntry / HistoryEntryLifecycle / HistoryPaneVirtualization). Pure-data descriptor (JSON-cloneable; no functions, no class instances) sorted by lastActivityUtc DESC; virtualization toggles on entries.length >= threshold; lifecycle badge type-safe ('active' | 'closed' | 'halted'); selectedRunId + liveUpdateChannel pass-through with default 'history.run.progress' channel. package.json exports map gains `./history-pane` subpath; barrel src/index.ts re-exports history-pane.ts. 6/6 PASS at GREEN time; full suite 323/323 PASS across 38 test files; pnpm build exits 0."
 feature-id: F-033
 short-slug: history
 milestone: M5

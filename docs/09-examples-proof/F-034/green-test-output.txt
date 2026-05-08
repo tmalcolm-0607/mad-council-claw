@@ -1,0 +1,19 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "tests/unit/F-034-session-info-panel.test.ts" "--reporter=verbose"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [32m✓[39m tests/unit/F-034-session-info-panel.test.ts[2m > [22mF-034 session-info-panel[2m > [22mscenario 1: buildInfoPanel with no opts returns descriptor with default state (panel open; placeholder fields; chain status null)
+ [32m✓[39m tests/unit/F-034-session-info-panel.test.ts[2m > [22mF-034 session-info-panel[2m > [22mscenario 2: active run with audit chain green + live cost breakdown (ledger scenario 1: all metadata fields present + live sub-totals)
+ [32m✓[39m tests/unit/F-034-session-info-panel.test.ts[2m > [22mF-034 session-info-panel[2m > [22mscenario 3: tampered audit chain → status red + costBreakdown masked + contextGap line (ledger scenario 2: chain broken → red badge + integrity warning + cost masked)
+ [32m✓[39m tests/unit/F-034-session-info-panel.test.ts[2m > [22mF-034 session-info-panel[2m > [22mscenario 4: missing cost-ledger file → cost section shows placeholders + Context Gap line (ledger scenario 3: NOT silent zeros)
+ [32m✓[39m tests/unit/F-034-session-info-panel.test.ts[2m > [22mF-034 session-info-panel[2m > [22mscenario 5: closed run renders retroSummary; killSwitchActive surfaces verbatim
+ [32m✓[39m tests/unit/F-034-session-info-panel.test.ts[2m > [22mF-034 session-info-panel[2m > [22mscenario 6: descriptor is a plain object — JSON-cloneable + isOpen toggle + resolveInfoPanelField hydrator
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 16:46:59
+[2m   Duration [22m 918ms[2m (transform 89ms, setup 0ms, collect 102ms, tests 8ms, environment 0ms, prepare 298ms)[22m
+

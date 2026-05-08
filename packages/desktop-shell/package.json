@@ -2,10 +2,12 @@
   "name": "@mad-council-claw/desktop-shell",
   "version": "0.0.0",
   "private": true,
-  "description": "Electron desktop shell for MAD Council Claw - hosts the engine-core runtime and renderer UI. F-032 ships the createMainWindow descriptor + window-state resolution helpers; subsequent M5 features (F-033..F-043) add IPC handlers, BrowserWindow lifecycle wiring, and electron-builder packaging.",
+  "description": "Electron desktop shell for MAD Council Claw - hosts the engine-core runtime and renderer UI. F-032 ships the createMainWindow descriptor + window-state resolution helpers; F-033 ships the chat-history-pane descriptor; F-034 ships the info-panel descriptor; subsequent M5 features (F-035..F-043) add IPC handlers, BrowserWindow lifecycle wiring, and electron-builder packaging.",
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./window": "./src/window.ts"
+    "./window": "./src/window.ts",
+    "./history-pane": "./src/history-pane.ts",
+    "./info-panel": "./src/info-panel.ts"
   }
 }

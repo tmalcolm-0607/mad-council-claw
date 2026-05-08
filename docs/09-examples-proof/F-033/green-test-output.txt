@@ -1,0 +1,19 @@
+
+> mad-council-claw@0.0.0 test C:\Users\tonym\Repos\mad-council-claw
+> vitest run "tests/unit/F-033-chat-history-pane.test.ts" "--reporter=verbose"
+
+
+[1m[7m[36m RUN [39m[27m[22m [36mv2.1.9 [39m[90mC:/Users/tonym/Repos/mad-council-claw[39m
+
+ [32m✓[39m tests/unit/F-033-chat-history-pane.test.ts[2m > [22mF-033 chat-history-pane[2m > [22mscenario 1: buildHistoryPane with no opts returns descriptor with default state (empty entries; default virtualization threshold; default live-update channel)
+ [32m✓[39m tests/unit/F-033-chat-history-pane.test.ts[2m > [22mF-033 chat-history-pane[2m > [22mscenario 2: buildHistoryPane sorts entries by lastActivityUtc DESC (ledger scenario 1: most-recent run first)
+ [32m✓[39m tests/unit/F-033-chat-history-pane.test.ts[2m > [22mF-033 chat-history-pane[2m > [22mscenario 3: virtualization toggles based on entry count vs threshold (ledger scenario 3: virtualize >100 runs)
+ [32m✓[39m tests/unit/F-033-chat-history-pane.test.ts[2m > [22mF-033 chat-history-pane[2m > [22mscenario 4: selectedRunId + liveUpdateChannel pass-through (ledger scenario 2: live updates via IPC; selection state)
+ [32m✓[39m tests/unit/F-033-chat-history-pane.test.ts[2m > [22mF-033 chat-history-pane[2m > [22mscenario 5: resolveHistoryEntry hydrates partial input with safe defaults; never throws on null/undefined/{}
+ [32m✓[39m tests/unit/F-033-chat-history-pane.test.ts[2m > [22mF-033 chat-history-pane[2m > [22mscenario 6: descriptor is a plain object — JSON-cloneable + type witness (mirrors F-032 idiom)
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m6 passed[39m[22m[90m (6)[39m
+[2m   Start at [22m 16:46:54
+[2m   Duration [22m 954ms[2m (transform 74ms, setup 0ms, collect 89ms, tests 7ms, environment 0ms, prepare 285ms)[22m
+

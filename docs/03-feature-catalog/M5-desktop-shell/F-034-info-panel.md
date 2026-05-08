@@ -1,7 +1,7 @@
 ---
 artifact-class: feature-ledger
 generated-by: hand-authored (wave-003 / lane-a)
-status: red
+status: green
 status-since: 2026-05-07
 status-history:
   - status: red
@@ -12,6 +12,10 @@ status-history:
     at: 2026-05-07
     by: wave-019 / lane-a
     note: "RED test authored at tests/unit/F-034-session-info-panel.test.ts (6 structural scenarios per the wave-019 / lane-a brief that simplifies the ledger's 3 launch-Electron browser-suite scenarios to a structural / interface-based shape contract). Test fails with module-resolution error: @mad-council-claw/desktop-shell exports do not yet include `buildInfoPanel` / `resolveInfoPanelField` / `DEFAULT_INFO_PANEL` / `INFO_PANEL_PLACEHOLDER` / `InfoPanelOptions` / `InfoPanelDescriptor` / `AuditChainStatus` / `CostBreakdown`. Implementation will land buildInfoPanel() + resolveInfoPanelField() + DEFAULT_INFO_PANEL + INFO_PANEL_PLACEHOLDER + AuditChainStatus/CostBreakdown types in packages/desktop-shell/src/info-panel.ts."
+  - status: green
+    at: 2026-05-07
+    by: wave-019 / lane-a
+    note: "GREEN. New packages/desktop-shell/src/info-panel.ts (~190 LOC) lands buildInfoPanel() + resolveInfoPanelField() + DEFAULT_INFO_PANEL + INFO_PANEL_PLACEHOLDER (= '—') + types (InfoPanelOptions / InfoPanelDescriptor / AuditChainStatus / CostBreakdown / RunLifecycle). Pure-data descriptor (JSON-cloneable; no functions, no class instances) with explicit-placeholder discipline (no silent zeros per kit:rules/verification-protocol.md Rule 4 ACTUAL BEFORE PRESENT); audit-chain status 'red' masks costBreakdown + emits Context Gap; missing cost-ledger emits placeholder + Context Gap; closed-only retroSummary; default isOpen=true. package.json exports map gains `./info-panel` subpath; barrel src/index.ts re-exports info-panel.ts. 6/6 PASS at GREEN time; full suite 323/323 PASS across 38 test files; pnpm build exits 0."
 feature-id: F-034
 short-slug: info-panel
 milestone: M5

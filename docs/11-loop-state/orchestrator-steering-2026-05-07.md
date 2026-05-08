@@ -6,6 +6,18 @@
 
 This file is the **out-of-band steering channel**: the user works in session 967a44fb and authors backlog updates here; the executing session 64bf21c6 reads this file each iter to learn priorities and unlocks that landed off-wave.
 
+## HARD BLOCK directive — F-205 frontmatter status field
+
+- **Severity:** HARD BLOCK (both-agree from cross-model review; Opus MUST-FIX correctness, GPT BLOCKING correctness, GPT REJECT verdict on artifact 4)
+- **File:** `docs/03-feature-catalog/M0-bootstrap/F-205-kit-bootstrap.md:4`
+- **Issue:** top-level frontmatter `status: green` contradicts the embedded `red-green-rule: GREEN if ALL 8 acceptance items pass`. The status-history entry at line 18 (wave-019 / lane-c, by orchestrator session 64bf21c6, commit `e57351e`) explicitly acknowledges that only 1 of 8 acceptance items (item (a) — `.claude/rules/`) is even partially met by Batch 1; items (b)-(h) are explicitly enumerated as "NOT YET MET" in that same entry. The frontmatter `status: green` is therefore inconsistent with the ledger's own self-reported state.
+- **Impact:** automated tooling (`Check-LoopStopConditions.ps1`, roadmap counters, `validate-mad-pipeline.js`, any future M0 rollup) WILL misread the gate state and treat F-205 as fully satisfied. F-205 is the hard `depends-on` for F-206..F-210 AND the gating prerequisite for the M19 reopen council-review verdict — a false-GREEN reading propagates downstream incorrectly.
+- **Requested fix:** change `status: green` → `status: red`. Add a new frontmatter field `batch-1-status: green` to capture incremental progress without misleading the top-level field. The `status-history` array retains the existing wave-019/lane-c entry verbatim — no rewriting of history.
+- **Owner:** wave-019 / lane-c session `64bf21c6` (per `single-owner-accountability.md` — the amendment owner does the revert; the orchestrator session 967a44fb does NOT directly edit the concurrent session's amendment).
+- **Discovered:** 2026-05-07T22:30Z via cross-model review dispatch (Copilot CLI multi-model review; Claude Opus 4.7 + GPT-5.5 in parallel). Agreement table at `C:/Users/tonym/Repos/MAD - Clean/.mad/reports/copilot-review-2026-05-07/agreement-table.md`, finding F3 (line 29).
+
+**Why this section is placed at the top:** HARD BLOCK is the highest-priority signal in this steering file. Readers (concurrent session 64bf21c6 picking up at iter start) should see this BEFORE backlog-update tables or pickup-order recommendations. Per `loop-stop-language-discipline.md`, the loop continues — but the F-205 frontmatter must be corrected on the next batch transition (Batch 2 landing) so the loop doesn't propagate a false-GREEN reading to F-206..F-210 or M19 reopen evaluation.
+
 ## What's new in the backlog (2026-05-07 silent-deferral surfacing)
 
 Authored across 4 user-scoped batches; all RED + uncommitted-or-recently-committed:
@@ -30,6 +42,23 @@ For the next wave's lane allocation:
 2. **Test authoring for F-205:** `tests/node/F-205-kit-bootstrap.test.ts` per ledger red-green-rule. Should mechanically verify the 8 acceptance items (a)-(h).
 3. **/council-review on M19 reopen package** once /council-review is available. If HIGH ≥80%, transitions F-D-008/F-D-010/F-D-018 status from `deferred` → RED, target milestone selected (M9 expansion vs new M-Teams).
 4. **F-206..F-210 transitions** unblock once F-205 GREEN AND F-D-008 reopen verdict is HIGH.
+
+### Update — 2026-05-07T22:30Z (post-original-authoring)
+
+Concurrent session 64bf21c6 picked up F-205 in **wave-019 / lane-c** and **re-scoped it as a 4-batch incremental landing**. Commit `e57351e` flipped F-205 RED → GREEN at the **Batch 1 (kit-generic LOAD-BEARING rules)** level — 26 rules landed in `.claude/rules/` plus a Batch-1 acceptance test `tests/node/F-205-kit-bootstrap.test.ts` (323/323 vitest PASS at HEAD).
+
+The 8-item acceptance contract is preserved at FULL-LEDGER granularity per `F-205-kit-bootstrap.md:286`: *"When all 4 batches land + the test extends accordingly, the ledger's red-green-rule (ALL 8 items pass) will be satisfied at FULL-LEDGER granularity. Until then, batch-N GREEN is per-batch GREEN documented in status-history."*
+
+**Implication for `Bootstrap-CouncilClawKit.ps1`:** the script's `-Tier critical` mode does the entire CRITICAL set in one shot (`.claude/{rules,hooks,skills,agents,scripts,settings.json}` + `.mad/{templates,scripts,docs}` + `CLAUDE.md` + 3 m-main skills). That collides with the staged-batches plan now in flight. **The script is now a FALLBACK** — invoke only if the staged approach stalls (≥3 iters with no progress on F-205 batches OR concurrent session signals it can't proceed). Default path: let concurrent session land Batches 2-N incrementally with their own test extensions per batch.
+
+Updated next-iter pickup order:
+
+1. **F-205 Batch 2** (concurrent session's call to define scope — likely `.claude/skills/` core council + MAD primitives, OR `.claude/hooks/`).
+2. **F-205 test extension** at each per-batch GREEN flip — concurrent session's pattern is to extend the test file with new assertions at each Batch N→GREEN transition.
+3. **Once F-205 Batch covering `/council-review` lands** (probably Batch 2 or 3, since council skills are CRITICAL set): the M19 reopen-request package can run `/council-review` to ratify the F-D-008/F-D-010/F-D-018 transitions.
+4. **F-206..F-210 implementations** unblock once F-205 reaches FULL-LEDGER GREEN AND F-D-008 reopen verdict is HIGH.
+
+If concurrent session stalls on F-205 (no batch progress for ≥3 iters), the orchestrator session 967a44fb may decide to invoke `Bootstrap-CouncilClawKit.ps1 -Tier critical` as a fallback consolidation. That decision is owner's call (per `single-owner-accountability.md`); the script is staged and validated (dry-run 464 file plan, 32 LENS-prefix filter, 1 path-rewrite).
 
 ## How to execute F-205 (concrete invocation)
 

@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/digest.schema.json",
+  "title": "digest.json",
+  "description": "Channel-level polling target; <2KB target size. Lives at ~/claude-data/channels/<channel>/digest.json. See mad.council.a2a.md §7.5.",
+  "type": "object",
+  "required": ["channel_seq", "rebuilt_utc", "total_messages", "threads"],
+  "additionalProperties": false,
+  "properties": {
+    "channel_seq": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Current high-water mark; compared against each member's read-marker.last_read_seq."
+    },
+    "rebuilt_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the digest was last rebuilt."
+    },
+    "total_messages": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "threads": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["thread_id", "status", "last_msg_seq"],
+        "properties": {
+          "thread_id": { "type": "string" },
+          "status": {
+            "enum": ["active", "stale", "resolved", "archived"],
+            "description": "stale = no message in >24h; per §7.4."
+          },
+          "last_msg_seq": { "type": "integer", "minimum": 0 },
+          "last_msg_utc": { "type": "string", "format": "date-time" },
+          "message_count": { "type": "integer", "minimum": 0 },
+          "verdict_ref": {
+            "type": "string",
+            "description": "Relative path to verdict.json if reviewed."
+          }
+        }
+      }
+    },
+    "context_gaps": {
+      "type": "array",
+      "description": "Populated when digest couldn't be fully computed; per §9.3.",
+      "items": {
+        "type": "object",
+        "required": ["source", "status", "impact"],
+        "properties": {
+          "source": { "type": "string", "description": "File/path that couldn't be read." },
+          "status": { "type": "string", "description": "Error class (e.g. 'permission denied', 'read timeout')." },
+          "impact": { "type": "string", "description": "What the reader should know is potentially stale." }
+        }
+      }
+    },
+    "mad_state": {
+      "type": "object",
+      "description": "Present when settings.mad_enabled=true.",
+      "properties": {
+        "phase": {
+          "enum": ["spec-drafting", "plan-drafting", "tasks-drafting", "implementation", "verification"]
+        },
+        "gate_status": {
+          "enum": ["pending", "passed", "failed"]
+        }
+      }
+    },
+    "council_open": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "thread_ids with open Council reviews (no verdict yet)."
+    }
+  }
+}

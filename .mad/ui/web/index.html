@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MAD.Council — channels</title>
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header class="page-header">
+  <h1><a href="/">MAD.Council</a></h1>
+  <nav>
+    <a href="/">channels</a>
+    <a href="/metrics">metrics</a>
+    <a href="/help">help</a>
+  </nav>
+</header>
+<main>
+  <section>
+    <h2>channels</h2>
+    <p class="subtitle">local read-only view of <code>~/claude-data/channels/</code></p>
+    <div id="channels-status" class="status-line">loading&hellip;</div>
+    <table id="channels-table" hidden>
+      <thead>
+        <tr>
+          <th>name</th>
+          <th>purpose</th>
+          <th>tier</th>
+          <th>status</th>
+          <th>owner</th>
+          <th>members</th>
+          <th>threads</th>
+          <th>messages</th>
+          <th>created</th>
+        </tr>
+      </thead>
+      <tbody id="channels-tbody"></tbody>
+    </table>
+    <div id="channels-empty" class="empty-state" hidden>
+      <p>No channels yet. Run <code>/council-open</code> to create one.</p>
+    </div>
+  </section>
+</main>
+<footer class="page-footer">
+  <span>MAD.Council UI &middot; phase-1c</span>
+</footer>
+<script>
+(async function () {
+  const status = document.getElementById('channels-status');
+  const table = document.getElementById('channels-table');
+  const empty = document.getElementById('channels-empty');
+  const tbody = document.getElementById('channels-tbody');
+  try {
+    const r = await fetch('/api/channels');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const rows = await r.json();
+    status.hidden = true;
+    if (!rows.length) { empty.hidden = false; return; }
+    table.hidden = false;
+    for (const ch of rows) {
+      const tr = document.createElement('tr');
+      const cells = [
+        linkCell('/channel/' + encodeURIComponent(ch.name), ch.name),
+        plainCell(ch.purpose || ''),
+        badgeCell('tier-' + (ch.tier || 'local'), ch.tier || 'local'),
+        badgeCell('status-' + (ch.status || 'active'), ch.status || 'active'),
+        plainCell(ch.owner_alias || ''),
+        plainCell((ch.active_members ?? ch.member_count ?? 0) + '/' + (ch.member_count ?? 0)),
+        plainCell(ch.thread_count ?? 0),
+        plainCell(ch.total_messages ?? 0),
+        plainCell(formatDate(ch.created_utc))
+      ];
+      for (const c of cells) tr.appendChild(c);
+      tbody.appendChild(tr);
+    }
+  } catch (err) {
+    status.textContent = 'failed to load channels: ' + err.message;
+    status.classList.add('error');
+  }
+  function plainCell(text) { const td = document.createElement('td'); td.textContent = text; return td; }
+  function linkCell(href, text) {
+    const td = document.createElement('td'); const a = document.createElement('a');
+    a.href = href; a.textContent = text; td.appendChild(a); return td;
+  }
+  function badgeCell(cls, text) {
+    const td = document.createElement('td'); const span = document.createElement('span');
+    span.className = 'badge ' + cls; span.textContent = text; td.appendChild(span); return td;
+  }
+  function formatDate(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toISOString().replace('T', ' ').replace(/\..*$/, ' UTC');
+  }
+})();
+</script>
+</body>
+</html>

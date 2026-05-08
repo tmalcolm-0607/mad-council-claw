@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/channel.schema.json",
+  "title": "channel.json",
+  "description": "Channel metadata, member registry, settings, and Agent Cards. Lives at ~/claude-data/channels/<channel-name>/channel.json. See mad.council.a2a.md §7.1 and §6.1.",
+  "type": "object",
+  "required": ["name", "purpose", "created_utc", "owner_alias", "environment_tier", "members", "settings"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Document schema version per schemas/README.md §Schema-version increment invariant (ADOPT-036). Current = 2 after iters 1-8 added owner_alias / environment_tier / status / acceptance_criteria / effort_estimate_hours / triaged_at_utc / triaged_by_alias / channel_slug / membership_expires_at / role fields. Absent == 1 (pre-ADOPT), readers MUST up-convert; value > reader's known version → SCHEMA_VERSION_AHEAD."
+    },
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}$",
+      "description": "Canonical channel name; matches directory name under ~/claude-data/channels/."
+    },
+    "channel_slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{0,63}-(local|ci|prod)$",
+      "description": "Optional operator-facing human-readable slug: '<topic-kebab>-<tier>'. Used in operator logs, runbooks, and digest rendering when a GUID `name` is cryptic. Example: 'es-training-prod'. Per ADOPT-010 (distilled from a common `<Ecosystem><Service><Env>Metrics` naming convention). Not a unique identifier — `name` remains authoritative."
+    },
+    "purpose": {
+      "type": "string",
+      "maxLength": 500,
+      "description": "Human-readable statement of what the channel exists for. Used in digest rendering and STRIDE Info-Disclosure mitigation."
+    },
+    "created_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC timestamp of channel creation."
+    },
+    "created_with_run_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "run_id of the /council-open invocation that created the channel."
+    },
+    "owner_alias": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 64,
+      "description": "Single accountable owner for the channel. MUST match one members[i].alias. Per rules/single-owner-accountability.md (ADOPT-001) — channels with ambiguous ownership fail preflight. Transferred via explicit council-verdict resolution, never implicitly."
+    },
+    "environment_tier": {
+      "enum": ["local", "ci", "prod"],
+      "description": "Trust tier for this channel's data. local = developer workstation (relaxed gates); ci = ephemeral CI runner (non-interactive, preauth required for destructive acts); prod = customer-facing managed runtime (owner-gated, session-strict, signed messages in Phase 4+). Per operations/environment-tiers.md (ADOPT-004). Skills MUST read this field on every invocation and apply per-tier gates."
+    },
+    "status": {
+      "enum": ["triage", "ready", "active", "resolved", "closed"],
+      "default": "active",
+      "description": "Lifecycle state of the channel per rules/triage-gate.md (ADOPT-002). triage = awaiting acceptance-criteria + owner confirmation; ready = triage passed, work not yet started; active = normal operation (posts + verdicts allowed); resolved = final verdict rendered, awaiting close confirmation; closed = no further writes permitted. Transitions: triage→ready (TRIAGE_ACCEPT verdict) or closed (TRIAGE_REJECT); ready→active (first post); active→resolved (final council-verdict); resolved→closed (council-resolve). Channels opened without --triage flag start at active (backward-compatible)."
+    },
+    "acceptance_criteria": {
+      "type": "string",
+      "minLength": 10,
+      "maxLength": 2000,
+      "description": "Human-readable description of what 'done' looks like for this channel. REQUIRED when status=triage at creation time. Confirmed or amended on TRIAGE_ACCEPT verdict; written back to this field atomically."
+    },
+    "effort_estimate_hours": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Rough effort estimate at triage time. Informational — not enforced. Tracked for retro calibration (metrics/reliability-metrics.md ships a self-vs-outcome gap counter)."
+    },
+    "triaged_at_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC when the TRIAGE_ACCEPT verdict was resolved. Null until then."
+    },
+    "triaged_by_alias": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "Alias of the member who issued the TRIAGE_ACCEPT verdict (normally the owner_alias, but may differ if ownership_transfer preceded triage acceptance)."
+    },
+    "members": {
+      "type": "array",
+      "description": "Active + idle + disconnected member records.",
+      "items": {
+        "type": "object",
+        "required": ["alias", "session_id", "joined_utc", "status"],
+        "additionalProperties": false,
+        "properties": {
+          "alias": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Display name (human-typed; not the same as session_id)."
+          },
+          "session_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Claude Code session identifier bound to this alias; used to defeat spoofing per §7.2."
+          },
+          "project": {
+            "type": "string",
+            "description": "Originating project identifier; used for cross-project disclosure mitigation."
+          },
+          "joined_utc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "enum": ["active", "idle", "disconnected"],
+            "description": "active = recent heartbeat; idle = no heartbeat in 30 min; disconnected = circuit-breaker tripped."
+          },
+          "last_seen_utc": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "agent_card": {
+            "$ref": "#/$defs/agentCard"
+          },
+          "membership_expires_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Optional ISO-8601 expiry per ADOPT-011 (distilled from gettingstartedpermissions.md 180d-FTE / 90d-vendor / 4h-prod-admin lifecycles). Null = no expiry (default, backward-compatible). When set, the next council-* invocation after this timestamp MUST auto-invoke council-leave for this member (no dangling expired membership). A channel's owner_alias member cannot have membership_expires_at set without a matching scheduled OWNERSHIP_TRANSFER verdict."
+          },
+          "role": {
+            "enum": ["advocate", "skeptic", "architect", "observer", "admin"],
+            "description": "Member role. Drives verdict authorisation (e.g., TRIAGE_ACCEPT requires owner OR skeptic per rules/triage-gate.md). Default 'observer' for joiners who did not self-declare a role."
+          }
+        }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mad_enabled", "a2a_enabled"],
+      "properties": {
+        "mad_enabled": { "type": "boolean" },
+        "a2a_enabled": { "type": "boolean" },
+        "ensemble_mode": {
+          "enum": ["propose", "auto"],
+          "description": "propose = single-reviewer; auto = 3-model ensemble on Skeptic."
+        },
+        "confidence_thresholds": {
+          "type": "object",
+          "properties": {
+            "autonomous": { "type": "number", "minimum": 0, "maximum": 1 },
+            "with_caveats": { "type": "number", "minimum": 0, "maximum": 1 }
+          },
+          "description": "Per-channel override of 0.85/0.5 defaults from ICLR 2025 'Trust or Escalate.'"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Reserved for future extensions; not schema-validated."
+    }
+  },
+  "$defs": {
+    "agentCard": {
+      "type": "object",
+      "description": "A2A-compatible Agent Card per Google A2A spec; see wiki/implementations/a2a.md.",
+      "required": ["name", "version", "capabilities"],
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "version": { "type": "string" },
+        "capabilities": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "skills": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "auth_schemes": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "a2a_endpoint_url": {
+          "type": "string",
+          "format": "uri"
+        }
+      }
+    }
+  }
+}

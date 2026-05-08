@@ -1,0 +1,65 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Pattern Fingerprint",
+  "description": "Schema for pattern fingerprints used in cross-repo eval and architecture drift detection. Captures presence, confidence, and evidence for architectural patterns.",
+  "type": "object",
+  "required": ["repo", "dimensions", "timestamp"],
+  "properties": {
+    "repo": {
+      "type": "string",
+      "description": "Repository name or path that was fingerprinted",
+      "minLength": 1
+    },
+    "dimensions": {
+      "type": "object",
+      "description": "Pattern dimensions detected in the repo. Keys are dimension names (e.g., 'di_pattern', 'error_handling', 'logging').",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["present"],
+        "properties": {
+          "present": {
+            "type": "boolean",
+            "description": "Whether this pattern dimension is present in the repo"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Confidence score for the presence/absence determination (0.0 = uncertain, 1.0 = certain)"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "File paths, code snippets, or grep results supporting the presence/absence determination"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Additional dimension-specific metadata (e.g., framework version, config values)"
+          }
+        }
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp when the fingerprint was captured"
+    },
+    "cache_key": {
+      "type": "string",
+      "description": "Hash or unique identifier for caching this fingerprint (e.g., SHA256 of repo path + git commit SHA)"
+    },
+    "git_commit_sha": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{40}$",
+      "description": "Git commit SHA of the repo when fingerprint was captured (for cache invalidation)"
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional repo-level metadata (e.g., primary language, framework versions, LOC)"
+    }
+  }
+}

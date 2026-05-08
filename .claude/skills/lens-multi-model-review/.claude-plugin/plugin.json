@@ -1,0 +1,12 @@
+{
+  "name": "lens-multi-model-review",
+  "description": "Multi-model code review using Copilot CLI (GPT 5.5 + Claude Opus 4.7) with LENS-specific context injection and an S1–S15 security pitfalls checklist (recurring auth, secret-leakage, IaC, crypto, injection, and supply-chain themes). Reviews ADO pull requests or local git diffs against project CLAUDE.md, .claude/rules, and security pitfalls.",
+  "version": "1.1.0",
+  "author": {
+    "name": "Shayon Gupta",
+    "email": "shaygupt@microsoft.com"
+  },
+  "homepage": "https://o365exchange.visualstudio.com/O365%20Core/_git/LENS-Common",
+  "license": "private",
+  "keywords": ["code-review", "quality", "copilot", "multi-model", "pr-review", "lens", "gpt", "opus"]
+}

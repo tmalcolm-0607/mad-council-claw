@@ -1,0 +1,12 @@
+{
+  "name": "lens-standards-audit",
+  "description": "Audit LENS repositories for documentation standards, code conventions, and infrastructure compliance.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Tony Malcolm",
+    "email": "tonym@microsoft.com"
+  },
+  "homepage": "https://o365exchange.visualstudio.com/O365%20Core/_git/LENS-Common",
+  "license": "Proprietary",
+  "keywords": ["audit", "standards", "compliance", "lens", "quality"]
+}

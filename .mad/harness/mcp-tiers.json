@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "tiers": {
+    "context": {
+      "description": "Lightweight - tool schemas loaded into context",
+      "servers": [],
+      "max_servers": 5
+    },
+    "cli": {
+      "description": "Heavyweight - invoke via CLI only",
+      "servers": ["playwright", "postgres", "github", "memory", "filesystem", "fetch", "sequential-thinking"],
+      "redirect_message": "This server is CLI-tier. Use built-in tools, Bash CLI equivalents, or an appropriate skill instead of calling MCP tools directly."
+    }
+  }
+}

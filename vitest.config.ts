@@ -2,6 +2,11 @@ import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
+    // Kit tooling under .claude/ + .mad/ ships its own test files written for
+    // node:test (not vitest); exclude them from vitest's default scan so they
+    // don't trip "describe is not defined" errors when discovery runs outside
+    // the per-project `include` globs.
+    exclude: ['**/node_modules/**', '**/dist/**', '.claude/**', '.mad/**'],
     projects: [
       {
         extends: true,

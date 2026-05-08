@@ -1,0 +1,626 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "AgentEvalResult",
+  "description": "Schema for agent evaluation results in the MAD framework",
+  "type": "object",
+  "required": [
+    "run_id",
+    "git_commit_sha",
+    "git_branch",
+    "timestamp_utc",
+    "trigger",
+    "scenarios",
+    "summary"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string",
+      "description": "Unique run ID: eval-{timestamp}-{short_sha} or custom",
+      "pattern": "^eval-.+"
+    },
+    "schema_version": {
+      "type": "string",
+      "description": "Schema version identifier",
+      "enum": ["2.0"]
+    },
+    "git_commit_sha": {
+      "type": "string",
+      "description": "Full 40-character Git commit SHA",
+      "pattern": "^[a-f0-9]{40}$"
+    },
+    "git_branch": {
+      "type": "string",
+      "description": "Git branch name where eval was executed"
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of eval run start"
+    },
+    "trigger": {
+      "type": "string",
+      "enum": ["manual", "aci", "pipeline", "cron"],
+      "description": "How the eval was triggered"
+    },
+    "environment": {
+      "type": "string",
+      "description": "Environment name (tonym, npe, ppe, prod)"
+    },
+    "config_source": {
+      "type": "string",
+      "description": "Path to project root used for .claude/ config, or 'default'"
+    },
+    "git_commit_message": {
+      "type": "string",
+      "description": "Short commit message (first line) of the git commit being evaluated"
+    },
+    "git_commit_date": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 author date of the git commit being evaluated"
+    },
+    "scenarios": {
+      "type": "array",
+      "description": "Individual scenario results",
+      "items": {
+        "type": "object",
+        "required": ["name", "status", "timing", "tokens", "assertions"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Scenario name e.g. investigate-and-implement"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["passed", "failed", "error", "skipped"],
+            "description": "Overall scenario status (kept for backward compat)"
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Assertion pass rate as decimal (0.0 to 1.0). Primary metric."
+          },
+          "timing": {
+            "type": "object",
+            "required": ["start_utc", "end_utc", "duration_seconds"],
+            "properties": {
+              "start_utc": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "end_utc": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "duration_seconds": {
+                "type": "number",
+                "minimum": 0
+              }
+            }
+          },
+          "tokens": {
+            "type": "object",
+            "required": ["input_tokens", "output_tokens", "total_tokens"],
+            "properties": {
+              "input_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "output_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "total_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_read_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cache_creation_tokens": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Total cost in USD from token usage"
+              },
+              "num_turns": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Number of agentic turns taken by the Claude CLI"
+              },
+              "duration_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Total wall-clock duration in milliseconds from Claude CLI"
+              },
+              "duration_api_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "API-only duration in milliseconds (excludes tool execution time)"
+              },
+              "stop_reason": {
+                "type": "string",
+                "description": "Result subtype from Claude CLI (e.g. success, error_max_turns)"
+              },
+              "session_id": {
+                "type": "string",
+                "description": "Claude CLI session identifier"
+              },
+              "model_breakdown": {
+                "type": "object",
+                "description": "Per-model token and cost breakdown. Keys are model identifiers.",
+                "additionalProperties": {
+                  "type": "object",
+                  "properties": {
+                    "input_tokens": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "output_tokens": {
+                      "type": "integer",
+                      "minimum": 0
+                    },
+                    "cache_read_tokens": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Cache read input tokens for this model"
+                    },
+                    "cache_creation_tokens": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "description": "Cache creation input tokens for this model"
+                    },
+                    "cost_usd": {
+                      "type": "number",
+                      "minimum": 0
+                    }
+                  },
+                  "required": ["input_tokens", "output_tokens"]
+                }
+              }
+            }
+          },
+          "assertions": {
+            "type": "array",
+            "description": "Individual assertion results",
+            "items": {
+              "type": "object",
+              "required": ["name", "passed"],
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Assertion name"
+                },
+                "passed": {
+                  "type": "boolean",
+                  "description": "Whether the assertion passed"
+                },
+                "expected": {
+                  "type": "string",
+                  "description": "Expected value or condition"
+                },
+                "actual": {
+                  "type": "string",
+                  "description": "Actual value or condition"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Additional context or error message"
+                }
+              }
+            }
+          },
+          "cost_usd": {
+            "type": "number",
+            "minimum": 0,
+            "description": "Total cost in USD for this scenario"
+          },
+          "quality_checks": {
+            "type": "object",
+            "description": "Quality gate results",
+            "properties": {
+              "build_passed": {
+                "type": "boolean"
+              },
+              "tests_passed": {
+                "type": "boolean"
+              },
+              "lint_passed": {
+                "type": "boolean"
+              },
+              "files_created": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Files created during scenario"
+              },
+              "files_modified": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Files modified during scenario"
+              }
+            }
+          },
+          "claude_output": {
+            "type": "string",
+            "description": "Raw Claude CLI output (truncated to 10KB)",
+            "maxLength": 10240
+          },
+          "error_message": {
+            "type": "string",
+            "description": "Error message if scenario failed or errored"
+          },
+          "schema_version": {
+            "type": "string",
+            "description": "Schema version identifier for this scenario result",
+            "enum": ["2.0"]
+          },
+          "operational": {
+            "type": "object",
+            "description": "Operational metadata capturing run configuration",
+            "properties": {
+              "timeout_ms": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Timeout in milliseconds for the scenario"
+              },
+              "cost_limit_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Cost limit in USD that triggers circuit breaker"
+              },
+              "circuit_breaker_fired": {
+                "type": "boolean",
+                "description": "Whether the cost circuit breaker was triggered"
+              },
+              "max_turns": {
+                "type": "integer",
+                "minimum": 0,
+                "description": "Maximum agentic turns allowed"
+              },
+              "rules_hash": {
+                "type": ["string", "null"],
+                "description": "SHA256 hash of the .claude/rules directory contents"
+              },
+              "workspace_checksum": {
+                "type": ["string", "null"],
+                "description": "Checksum of the workspace directory before execution"
+              }
+            }
+          },
+          "llm_judge": {
+            "type": "object",
+            "description": "LLM-as-Judge evaluation results",
+            "properties": {
+              "model": {
+                "type": "string",
+                "description": "Model used for judging (e.g., claude-haiku-4-5-20251001)"
+              },
+              "score": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 3,
+                "description": "Total judge score"
+              },
+              "max_score": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Maximum possible score"
+              },
+              "rationale": {
+                "type": "string",
+                "maxLength": 1000,
+                "description": "Overall assessment rationale"
+              },
+              "criteria_scores": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "criterion": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 1
+                    },
+                    "explanation": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["criterion", "score"]
+                }
+              },
+              "cost_usd": {
+                "type": "number",
+                "minimum": 0,
+                "description": "Cost of the judge invocation in USD"
+              },
+              "tokens": {
+                "type": "object",
+                "properties": {
+                  "input_tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  "output_tokens": {
+                    "type": "integer",
+                    "minimum": 0
+                  }
+                }
+              }
+            },
+            "required": ["model", "score", "max_score"]
+          },
+          "eval_type": {
+            "type": "string",
+            "enum": ["trap", "replay", "context-stress", "arch-drift", "mutation", "workflow", "cross-repo"],
+            "description": "Type of evaluation (new in v2.0 extensions)"
+          },
+          "multi_dimensional_score": {
+            "type": "object",
+            "description": "Multi-dimensional scoring for advanced eval types",
+            "properties": {
+              "dimensions": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "score"],
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "description": "Dimension name (e.g., correctness, efficiency, style)"
+                    },
+                    "score": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1,
+                      "description": "Score for this dimension (0.0 to 1.0)"
+                    },
+                    "weight": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 1,
+                      "default": 1,
+                      "description": "Weight of this dimension in composite score"
+                    },
+                    "details": {
+                      "type": "string",
+                      "description": "Additional details or context for this dimension"
+                    }
+                  }
+                }
+              },
+              "composite": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1,
+                "description": "Composite score across all dimensions"
+              },
+              "method": {
+                "type": "string",
+                "enum": ["weighted_average", "geometric_mean"],
+                "description": "Method used to calculate composite score"
+              },
+              "discrimination_delta": {
+                "type": "number",
+                "description": "Standard deviation or range of dimension scores (measures discrimination power)"
+              }
+            }
+          },
+          "eval_metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Eval-type-specific metadata (extensible per eval type)"
+          }
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "required": [
+        "total_scenarios",
+        "passed",
+        "failed",
+        "errors",
+        "skipped",
+        "total_duration_seconds",
+        "total_tokens",
+        "assertion_pass_rate"
+      ],
+      "properties": {
+        "total_scenarios": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "errors": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_duration_seconds": {
+          "type": "number",
+          "minimum": 0
+        },
+        "total_tokens": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "total_cost_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total cost in USD across all scenarios"
+        },
+        "assertion_pass_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Ratio of passed assertions to total assertions (kept for backward compat)"
+        },
+        "avg_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Average per-scenario score (assertion pass rate) across all scenarios"
+        },
+        "cost_regression": {
+          "type": "boolean",
+          "description": "True if cost exceeded 2x rolling average"
+        },
+        "avg_judge_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Average judge score normalized to 0-1 across all scenarios"
+        },
+        "total_judge_cost_usd": {
+          "type": "number",
+          "minimum": 0,
+          "description": "Total cost of all judge invocations in USD"
+        },
+        "eval_types_run": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["trap", "replay", "context-stress", "arch-drift", "mutation", "workflow", "cross-repo"]
+          },
+          "description": "List of eval types executed in this run"
+        },
+        "multi_dimensional_summary": {
+          "type": "object",
+          "description": "Summary statistics for multi-dimensional scores",
+          "properties": {
+            "avg_composite": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Average composite score across all scenarios with multi-dimensional scoring"
+            },
+            "avg_discrimination_delta": {
+              "type": "number",
+              "description": "Average discrimination delta across all scenarios (measures overall discrimination power)"
+            },
+            "dimensions_coverage": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Number of unique dimension names scored across all scenarios"
+            }
+          }
+        }
+      }
+    },
+    "comparison": {
+      "type": "object",
+      "description": "Populated by Generate-EvalReport.ps1, not by the entrypoint",
+      "properties": {
+        "baseline_run_id": {
+          "type": "string",
+          "description": "Run ID of the baseline for comparison"
+        },
+        "previous_run_id": {
+          "type": "string",
+          "description": "Run ID of the previous run for sequential comparison"
+        },
+        "deltas": {
+          "type": "object",
+          "description": "Delta calculations vs baseline",
+          "properties": {
+            "assertion_pass_rate": {
+              "type": "object",
+              "required": ["current", "baseline", "delta", "verdict"],
+              "properties": {
+                "current": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "baseline": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 1
+                },
+                "delta": {
+                  "type": "number",
+                  "description": "current - baseline"
+                },
+                "verdict": {
+                  "type": "string",
+                  "enum": ["IMPROVED", "REGRESSED", "STABLE"]
+                }
+              }
+            },
+            "total_tokens": {
+              "type": "object",
+              "required": ["current", "baseline", "delta_pct", "verdict"],
+              "properties": {
+                "current": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "baseline": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "delta_pct": {
+                  "type": "number",
+                  "description": "Percentage change from baseline"
+                },
+                "verdict": {
+                  "type": "string",
+                  "enum": ["IMPROVED", "REGRESSED", "STABLE"]
+                }
+              }
+            },
+            "total_duration": {
+              "type": "object",
+              "required": ["current", "baseline", "delta_pct", "verdict"],
+              "properties": {
+                "current": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "baseline": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "delta_pct": {
+                  "type": "number",
+                  "description": "Percentage change from baseline"
+                },
+                "verdict": {
+                  "type": "string",
+                  "enum": ["IMPROVED", "REGRESSED", "STABLE"]
+                }
+              }
+            }
+          }
+        },
+        "overall_verdict": {
+          "type": "string",
+          "enum": ["IMPROVED", "REGRESSED", "STABLE", "MIXED"],
+          "description": "Overall verdict based on all deltas"
+        }
+      }
+    }
+  }
+}

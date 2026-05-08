@@ -1,0 +1,1101 @@
+#!/bin/bash
+# LENS-CMS ACI E2E Test — Full-Field Entity Coverage
+# Runs inside ACI container with Managed Identity on VNet.
+#
+# Tests ALL entity fields: Case (create + PATCH), DFT (PATCH), DataCategory (PATCH),
+# NDO (create + PATCH), Note (create), and verifies field persistence via GET.
+#
+# Env vars (injected by Test-E2E-ACI.ps1):
+#   CLIENT_ID   — User-assigned MI client ID
+#   BASE_URL    — CMS API base URL (e.g. https://app-lenscmsapi-tonym-westus3.azurewebsites.net)
+#   RESOURCE    — API resource URI (e.g. api://6c5a00ce-...)
+#   COSMOS_ENDPOINT — Cosmos DB endpoint
+
+set -euo pipefail
+
+PASS=0
+FAIL=0
+TOTAL=0
+# Tracked by cosmos_query; declare here so set -u doesn't trip when the helper
+# runs before any query has populated it (e.g. SKIP_NO_TOKEN early-exit path).
+LAST_COSMOS_STATUS=""
+
+log_pass() { echo "PASS : $1"; PASS=$((PASS + 1)); TOTAL=$((TOTAL + 1)); }
+log_fail() { echo "FAIL : $1 — $2"; FAIL=$((FAIL + 1)); TOTAL=$((TOTAL + 1)); }
+log_info() { echo "INFO : $1"; }
+
+assert_http() {
+    local test_name="$1" expected="$2" actual="$3" body="${4:-}"
+    if [ "$actual" = "$expected" ]; then
+        log_pass "$test_name — HTTP $actual"
+    else
+        log_fail "$test_name — expected HTTP $expected, got $actual" "$body"
+    fi
+}
+
+# Helper: extract JSON field via python3
+jq_py() {
+    python3 -c "import sys,json; d=json.load(sys.stdin); print($1)" 2>/dev/null
+}
+
+# Helper: extract ETag from response headers file
+extract_etag() {
+    grep -i "etag" "$1" 2>/dev/null | sed 's/[Ee][Tt][Aa][Gg]: *//' | tr -d '\r\n'
+}
+
+# --- Step 0: Acquire MI token via az CLI ---
+# Note: classic IMDS endpoint (169.254.169.254) is NOT available on SF-ACI, and the
+# IDENTITY_ENDPOINT/IDENTITY_HEADER sidecar is not reliably injected on our current ACI SKU.
+# Use `az login --identity` + `az account get-access-token` — `az` wraps the right path.
+# (Mirrors the pattern in Test-CmsApi-ACI.sh lines 1-8 and acquire_token_for.)
+echo "=== LENS-CMS ACI E2E Test — Full-Field Entity Coverage ==="
+echo "Base URL : $BASE_URL"
+echo "Resource : $RESOURCE"
+echo "Client ID: $CLIENT_ID"
+echo ""
+
+# az login --identity --client-id <uami> (idempotent across the script)
+echo "--- az login --identity ---"
+if ! login_out=$(az login --identity --client-id "$CLIENT_ID" 2>&1); then
+    echo "FATAL: az login --identity failed: $(echo "$login_out" | head -c 400)"
+    exit 1
+fi
+echo "PASS : az login OK (client_id=$CLIENT_ID)"
+
+# get_token: retry/backoff wrapper around `az account get-access-token`.
+# Tries the api://<guid> form first, then bare GUID as fallback.
+get_token() {
+    local res="$1" max_retries=4 attempt out tok bare
+    for attempt in $(seq 1 $max_retries); do
+        if out=$(az account get-access-token --resource "$res" --query accessToken -o tsv 2>&1); then
+            tok="$out"
+            if [ -n "$tok" ] && [ "$tok" != "None" ]; then echo "$tok"; return 0; fi
+        fi
+        bare="${res#api://}"
+        if [ "$bare" != "$res" ]; then
+            if out=$(az account get-access-token --resource "$bare" --query accessToken -o tsv 2>&1); then
+                tok="$out"
+                if [ -n "$tok" ] && [ "$tok" != "None" ]; then echo "$tok"; return 0; fi
+            fi
+        fi
+        if [ "$attempt" -lt "$max_retries" ]; then
+            local wait=$((attempt * 5))
+            echo "  Token attempt $attempt for $res failed, waiting ${wait}s..." >&2
+            sleep $wait
+        fi
+    done
+    return 1
+}
+
+echo "--- Acquiring API token ---"
+TOKEN=$(get_token "$RESOURCE") || true
+if [ -z "$TOKEN" ]; then
+    echo "FATAL: Could not acquire API token for $RESOURCE after 4 attempts"
+    exit 1
+fi
+echo "PASS : API token acquired (${#TOKEN} chars)"
+echo ""
+
+AUTH_HEADER="Authorization: Bearer $TOKEN"
+
+# --- Acquire Cosmos token (best-effort; SKIPs verification if unavailable) ---
+COSMOS_DB="${COSMOS_DB:-CMS}"
+COSMOS_TOKEN=""
+if [ -n "${COSMOS_ENDPOINT:-}" ]; then
+    echo "--- Acquiring Cosmos DB token ---"
+    COSMOS_RESOURCE=$(echo "$COSMOS_ENDPOINT" | sed 's/:443$//')
+    COSMOS_TOKEN=$(get_token "$COSMOS_RESOURCE" 2>/dev/null || echo "")
+    if [ -n "$COSMOS_TOKEN" ]; then
+        echo "PASS : Cosmos DB token acquired (${#COSMOS_TOKEN} chars)"
+    else
+        echo "WARN : Cosmos token unavailable -- read-back diffs will SKIP (likely missing data-plane role on MI)"
+    fi
+fi
+
+# cosmos_query: Execute a partition-scoped query against Cosmos DB.
+#   $1 container_name, $2 query_json, $3 partition_key_value
+# Writes response body to stdout. Sets LAST_COSMOS_STATUS.
+cosmos_query() {
+    local container="$1" query="$2" pk="$3"
+    if [ -z "$COSMOS_TOKEN" ]; then
+        LAST_COSMOS_STATUS="SKIP_NO_TOKEN"
+        return 1
+    fi
+    local status_code
+    status_code=$(curl -s -o /tmp/cosmos_body.txt -w "%{http_code}" --max-time 15 \
+        -H "Authorization: type=aad&ver=1.0&sig=$COSMOS_TOKEN" \
+        -H "Content-Type: application/query+json" \
+        -H "x-ms-documentdb-isquery: True" \
+        -H "x-ms-documentdb-partitionkey: [\"$pk\"]" \
+        -H "x-ms-version: 2018-12-31" \
+        -X POST "${COSMOS_ENDPOINT}/dbs/${COSMOS_DB}/colls/${container}/docs" \
+        -d "$query" 2>/dev/null) || status_code="ERR"
+    LAST_COSMOS_STATUS="$status_code"
+    cat /tmp/cosmos_body.txt 2>/dev/null || true
+}
+
+# cosmos_first_doc: Run cosmos_query and emit the first Document. Empty if none.
+# NOTE: cosmos_query is called WITHOUT command substitution so its LAST_COSMOS_STATUS
+# write propagates to the parent shell. The body lands in /tmp/cosmos_body.txt.
+cosmos_first_doc() {
+    local container="$1" query="$2" pk="$3"
+    cosmos_query "$container" "$query" "$pk" > /dev/null 2>&1 || true
+    if [ "${LAST_COSMOS_STATUS:-}" != "200" ]; then
+        return 1
+    fi
+    local body
+    body=$(cat /tmp/cosmos_body.txt 2>/dev/null || echo "")
+    echo "$body" | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+    docs=d.get('Documents', [])
+    if docs:
+        print(json.dumps(docs[0]))
+except Exception:
+    pass
+" 2>/dev/null
+}
+
+# cosmos_assert_field: Assert a JSON path on the doc string equals expected.
+# Args: doc_json, jsonpath_expr (python d[...] form), expected, label
+cosmos_assert_field() {
+    local doc="$1" expr="$2" expected="$3" label="$4"
+    local actual
+    actual=$(echo "$doc" | python3 -c "
+import sys,json
+try:
+    d=json.load(sys.stdin)
+    v=$expr
+    if v is None:
+        print('__ABSENT__')
+    elif isinstance(v, bool):
+        print('true' if v else 'false')
+    else:
+        print(v)
+except Exception as e:
+    print('__ERR__'+str(e))
+" 2>/dev/null) || actual="__ERR__"
+    if [ "$actual" = "$expected" ]; then
+        log_pass "Cosmos $label = $expected"
+    else
+        log_fail "Cosmos $label" "expected '$expected', got '$actual'"
+    fi
+}
+
+# cosmos_dump_doc: Print a labeled section dumping a Cosmos document JSON.
+cosmos_dump_doc() {
+    local label="$1" doc="$2"
+    echo ""
+    echo "=== Cosmos shape: $label ==="
+    echo "$doc" | python3 -m json.tool 2>/dev/null || echo "$doc"
+    echo "=== End: $label ==="
+}
+
+# =================================================================
+# Step 1: CREATE CASE with ALL fields populated
+# =================================================================
+echo "--- Step 1: Create Case (full-field) ---"
+IDEMPOTENCY_KEY=$(cat /proc/sys/kernel/random/uuid)
+NOW_ISO=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+DUE_DATE=$(date -u -d "+30 days" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v+30d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "2026-05-03T00:00:00Z")
+RECV_DATE=$(date -u -d "-2 days" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || date -u -v-2d +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "2026-04-01T00:00:00Z")
+
+CREATE_BODY=$(cat <<'ENDJSON'
+{
+  "requestType": "SubpoenaSummons",
+  "title": "Full-Field E2E Test Case",
+  "jurisdiction": "US-WA",
+  "country": "US",
+  "description": "Comprehensive field coverage test for all case entities",
+  "priority": "Urgent",
+  "requestOrigin": "LEPortal",
+  "leReferenceNumber": "LE-FULLFIELD-001",
+  "additionalCaseInformation": "This case was created by the full-field E2E test script",
+  "cpConcern": "Minor involved - child protection concern noted",
+  "isPreservationRequest": true,
+  "isWAShieldLaw": false,
+  "natureOfCrimes": ["Fraud", "IdentityTheft"],
+  "dsaCategories": ["Terrorism"],
+  "urgencyLevel": "Critical",
+  "dsaAgencyName": "CNIL",
+  "dsaAgencyCountry": "FR",
+ENDJSON
+)
+
+# Append date fields (need dynamic values)
+CREATE_BODY=$(echo "$CREATE_BODY" | sed "s/}$//")
+CREATE_BODY="${CREATE_BODY}
+  \"caseDueDate\": \"${DUE_DATE}\",
+  \"originalReceivedDate\": \"${RECV_DATE}\",
+  \"dataFulfillmentTasks\": [
+    {
+      \"service\": \"Exchange\",
+      \"targetIdentifierValue\": \"fullfield-test@example.com\",
+      \"identifierType\": \"Email\",
+      \"scenario\": \"LegalDemand\",
+      \"dataCategories\": [
+        {
+          \"categoryType\": \"Content\",
+          \"service\": \"Exchange\"
+        },
+        {
+          \"categoryType\": \"basicSubscriberInformation\",
+          \"service\": \"MSA\"
+        }
+      ]
+    }
+  ]
+}"
+
+CREATE_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/create_headers.txt \
+    -H "$AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -H "X-Idempotency-Key: $IDEMPOTENCY_KEY" \
+    -X POST "$BASE_URL/api/v1/cases" \
+    -d "$CREATE_BODY")
+CREATE_CODE=$(echo "$CREATE_RESP" | tail -1)
+CREATE_RESP_BODY=$(echo "$CREATE_RESP" | sed '$d')
+
+assert_http "CreateCase (full-field)" "201" "$CREATE_CODE" "$CREATE_RESP_BODY"
+
+CASE_ID=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("caseId","")') || true
+CREATE_ETAG=$(extract_etag /tmp/create_headers.txt) || true
+
+log_info "CaseId : $CASE_ID"
+log_info "ETag   : $CREATE_ETAG"
+
+if [ -z "$CASE_ID" ]; then
+    echo "FATAL: No caseId returned — cannot continue"
+    echo "Response: $CREATE_RESP_BODY"
+    exit 1
+fi
+
+# Verify key fields on create response
+CREATE_STATUS=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("caseStatus","")') || true
+CREATE_PRIORITY=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("priority","")') || true
+CREATE_JURISDICTION=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("jurisdiction","")') || true
+CREATE_COUNTRY=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("country","")') || true
+CREATE_LE_REF=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("leReferenceNumber","")') || true
+CREATE_CP=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("cpConcern","")') || true
+CREATE_PRESERVATION=$(echo "$CREATE_RESP_BODY" | jq_py 'str(d.get("isPreservationRequest",""))') || true
+CREATE_URGENCY=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("urgencyLevel","")') || true
+CREATE_DSA_AGENCY=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("dsaAgencyName","")') || true
+CREATE_DSA_COUNTRY=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("dsaAgencyCountry","")') || true
+CREATE_ADDITIONAL=$(echo "$CREATE_RESP_BODY" | jq_py 'd.get("additionalCaseInformation","")') || true
+
+[ "$CREATE_STATUS" = "draft" ] && log_pass "Initial status = draft" || log_fail "Initial status" "expected draft, got '$CREATE_STATUS'"
+[ "$CREATE_PRIORITY" = "urgent" ] && log_pass "Priority = urgent" || log_fail "Priority" "expected urgent, got '$CREATE_PRIORITY'"
+[ "$CREATE_JURISDICTION" = "US-WA" ] && log_pass "Jurisdiction = US-WA" || log_fail "Jurisdiction" "expected US-WA, got $CREATE_JURISDICTION"
+[ "$CREATE_COUNTRY" = "US" ] && log_pass "Country = US" || log_fail "Country" "expected US, got $CREATE_COUNTRY"
+[ -n "$CREATE_LE_REF" ] && log_pass "leReferenceNumber present" || log_fail "leReferenceNumber" "missing"
+[ -n "$CREATE_CP" ] && log_pass "cpConcern present" || log_fail "cpConcern" "missing"
+[ "$CREATE_PRESERVATION" = "True" ] && log_pass "isPreservationRequest = True" || log_fail "isPreservationRequest" "expected True, got $CREATE_PRESERVATION"
+[ "$CREATE_URGENCY" = "Critical" ] && log_pass "urgencyLevel = Critical" || log_fail "urgencyLevel" "expected Critical, got $CREATE_URGENCY"
+[ "$CREATE_DSA_AGENCY" = "CNIL" ] && log_pass "dsaAgencyName = CNIL" || log_fail "dsaAgencyName" "expected CNIL, got $CREATE_DSA_AGENCY"
+[ "$CREATE_DSA_COUNTRY" = "FR" ] && log_pass "dsaAgencyCountry = FR" || log_fail "dsaAgencyCountry" "expected FR, got $CREATE_DSA_COUNTRY"
+[ -n "$CREATE_ADDITIONAL" ] && log_pass "additionalCaseInformation present" || log_fail "additionalCaseInformation" "missing"
+
+# Verify DFTs were created inline
+DFT_COUNT=$(echo "$CREATE_RESP_BODY" | python3 -c "import sys,json; d=json.load(sys.stdin); dfts=d.get('dataFulfillmentTasks',{}); print(len(dfts))" 2>/dev/null) || true
+[ "$DFT_COUNT" = "1" ] && log_pass "1 DFT created inline" || log_fail "DFT count" "expected 1, got $DFT_COUNT"
+
+# =================================================================
+# Step 2: GET Case — verify all fields from Step 1
+# =================================================================
+echo ""
+echo "--- Step 2: GET Case (verify create fields) ---"
+GET_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/get1_headers.txt \
+    -H "$AUTH_HEADER" \
+    "$BASE_URL/api/v1/cases/$CASE_ID")
+GET_CODE=$(echo "$GET_RESP" | tail -1)
+GET_BODY=$(echo "$GET_RESP" | sed '$d')
+
+assert_http "GetCase (post-create)" "200" "$GET_CODE" "$GET_BODY"
+
+ETAG=$(extract_etag /tmp/get1_headers.txt) || true
+ETAG="${ETAG:-$CREATE_ETAG}"
+log_info "ETag for PATCH: $ETAG"
+
+# Spot check fields persisted via GET
+GET_TITLE=$(echo "$GET_BODY" | jq_py 'd.get("title","")') || true
+GET_DESCRIPTION=$(echo "$GET_BODY" | jq_py 'd.get("description","")') || true
+GET_NATURE=$(echo "$GET_BODY" | python3 -c "import sys,json; d=json.load(sys.stdin); n=d.get('natureOfCrimes',[]); print(len(n))" 2>/dev/null) || true
+
+[ "$GET_TITLE" = "Full-Field E2E Test Case" ] && log_pass "Title persisted" || log_fail "Title" "expected 'Full-Field E2E Test Case', got '$GET_TITLE'"
+[ -n "$GET_DESCRIPTION" ] && log_pass "Description persisted" || log_fail "Description" "missing after GET"
+[ "$GET_NATURE" = "2" ] && log_pass "natureOfCrimes has 2 items" || log_fail "natureOfCrimes count" "expected 2, got $GET_NATURE"
+
+# Extract first DFT ID for later steps
+FIRST_DFT_ID=$(echo "$GET_BODY" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+dfts=d.get('dataFulfillmentTasks',{})
+if dfts:
+    print(list(dfts.keys())[0])
+else:
+    print('')
+" 2>/dev/null) || true
+log_info "First DFT ID: $FIRST_DFT_ID"
+
+# =================================================================
+# Step 3: PATCH Case — comprehensive field set
+# =================================================================
+echo ""
+echo "--- Step 3: PATCH Case (comprehensive fields) ---"
+
+# Cosmos DB PatchItemAsync supports max 10 operations per request (+ 2 audit fields added server-side).
+# Split into two batches to stay within the limit.
+
+PATCH_CASE_BODY_1='[
+  {"op":"replace","path":"/status","value":"Open"},
+  {"op":"replace","path":"/workflowStage","value":"Fulfillment"},
+  {"op":"replace","path":"/priority","value":"Emergency"},
+  {"op":"replace","path":"/assigneeName","value":"Full-Field Test Analyst"},
+  {"op":"replace","path":"/description","value":"Updated description after comprehensive PATCH"},
+  {"op":"replace","path":"/leReferenceNumber","value":"LE-FULLFIELD-002-UPDATED"},
+  {"op":"replace","path":"/additionalCaseInformation","value":"Updated additional info after triage review"},
+  {"op":"replace","path":"/country","value":"DE"}
+]'
+
+PATCH_CASE_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/patch_case_headers.txt \
+    -H "$AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -H "If-Match: $ETAG" \
+    -X PATCH "$BASE_URL/api/v1/cases/$CASE_ID" \
+    -d "$PATCH_CASE_BODY_1")
+PATCH_CASE_CODE=$(echo "$PATCH_CASE_RESP" | tail -1)
+PATCH_CASE_BODY_RESP=$(echo "$PATCH_CASE_RESP" | sed '$d')
+
+assert_http "PatchCase (batch 1: core fields)" "200" "$PATCH_CASE_CODE" "$PATCH_CASE_BODY_RESP"
+
+PATCH_ETAG=$(extract_etag /tmp/patch_case_headers.txt) || true
+ETAG="${PATCH_ETAG:-$ETAG}"
+log_info "ETag after batch 1: $ETAG"
+
+# Batch 2: authorization + W8 fields
+PATCH_CASE_BODY_2='[
+  {"op":"replace","path":"/authorization","value":{"approverName":"Judge Smith"}},
+  {"op":"replace","path":"/cpConcern","value":"Updated CP concern via PATCH"},
+  {"op":"replace","path":"/isPreservationRequest","value":false},
+  {"op":"replace","path":"/urgencyLevel","value":"High"},
+  {"op":"replace","path":"/dsaAgencyName","value":"BKA"},
+  {"op":"replace","path":"/dsaAgencyCountry","value":"DE"}
+]'
+
+PATCH_CASE_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/patch_case_headers.txt \
+    -H "$AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -H "If-Match: $ETAG" \
+    -X PATCH "$BASE_URL/api/v1/cases/$CASE_ID" \
+    -d "$PATCH_CASE_BODY_2")
+PATCH_CASE_CODE=$(echo "$PATCH_CASE_RESP" | tail -1)
+PATCH_CASE_BODY_RESP=$(echo "$PATCH_CASE_RESP" | sed '$d')
+
+assert_http "PatchCase (batch 2: auth + W8 fields)" "200" "$PATCH_CASE_CODE" "$PATCH_CASE_BODY_RESP"
+
+PATCH_ETAG=$(extract_etag /tmp/patch_case_headers.txt) || true
+ETAG="${PATCH_ETAG:-$ETAG}"
+log_info "New ETag: $ETAG"
+
+# Verify patched fields in response
+PC_STATUS=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("caseStatus","")') || true
+PC_STAGE=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("workflowStage","")') || true
+PC_PRIORITY=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("priority","")') || true
+PC_ASSIGNEE=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("assigneeName","")') || true
+PC_DESC=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("description","")') || true
+PC_ADDITIONAL=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("additionalCaseInformation","")') || true
+PC_COUNTRY=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("country","")') || true
+PC_AUTH=$(echo "$PATCH_CASE_BODY_RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); a=d.get('authorization'); print(a.get('approverName','') if a else '')" 2>/dev/null) || true
+
+[ "$PC_STATUS" = "open" ] && log_pass "Status patched to open" || log_fail "Status patch" "expected open, got '$PC_STATUS'"
+[ "$PC_STAGE" = "fulfillment" ] && log_pass "WorkflowStage patched to fulfillment" || log_fail "WorkflowStage patch" "expected fulfillment, got '$PC_STAGE'"
+[ "$PC_PRIORITY" = "emergency" ] && log_pass "Priority patched to emergency" || log_fail "Priority patch" "expected emergency, got '$PC_PRIORITY'"
+[ "$PC_ASSIGNEE" = "Full-Field Test Analyst" ] && log_pass "AssigneeName patched" || log_fail "AssigneeName patch" "expected 'Full-Field Test Analyst', got '$PC_ASSIGNEE'"
+[ "$PC_DESC" = "Updated description after comprehensive PATCH" ] && log_pass "Description patched" || log_fail "Description patch" "got '$PC_DESC'"
+[ "$PC_ADDITIONAL" = "Updated additional info after triage review" ] && log_pass "additionalCaseInformation patched" || log_fail "additionalCaseInformation patch" "got '$PC_ADDITIONAL'"
+[ "$PC_COUNTRY" = "DE" ] && log_pass "Country patched to DE" || log_fail "Country patch" "expected DE, got $PC_COUNTRY"
+[ "$PC_AUTH" = "Judge Smith" ] && log_pass "Authorization.approverName patched" || log_fail "Authorization.approverName patch" "expected 'Judge Smith', got '$PC_AUTH'"
+
+# W8 field assertions (PATCH paths added in latest deployment)
+PC_CP=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("cpConcern","")') || true
+PC_PRESERVATION=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'str(d.get("isPreservationRequest",""))') || true
+PC_URGENCY=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("urgencyLevel","")') || true
+PC_DSA_AGENCY=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("dsaAgencyName","")') || true
+PC_DSA_COUNTRY=$(echo "$PATCH_CASE_BODY_RESP" | jq_py 'd.get("dsaAgencyCountry","")') || true
+
+[ "$PC_CP" = "Updated CP concern via PATCH" ] && log_pass "cpConcern patched" || log_fail "cpConcern patch" "expected 'Updated CP concern via PATCH', got '$PC_CP'"
+[ "$PC_PRESERVATION" = "False" ] && log_pass "isPreservationRequest patched to False" || log_fail "isPreservationRequest patch" "expected False, got $PC_PRESERVATION"
+[ "$PC_URGENCY" = "High" ] && log_pass "urgencyLevel patched to High" || log_fail "urgencyLevel patch" "expected High, got $PC_URGENCY"
+[ "$PC_DSA_AGENCY" = "BKA" ] && log_pass "dsaAgencyName patched to BKA" || log_fail "dsaAgencyName patch" "expected BKA, got $PC_DSA_AGENCY"
+[ "$PC_DSA_COUNTRY" = "DE" ] && log_pass "dsaAgencyCountry patched to DE" || log_fail "dsaAgencyCountry patch" "expected DE, got $PC_DSA_COUNTRY"
+
+# =================================================================
+# Step 4: GET Case after PATCH — verify persistence
+# =================================================================
+echo ""
+echo "--- Step 4: GET Case (verify PATCH persistence) ---"
+GET2_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/get2_headers.txt \
+    -H "$AUTH_HEADER" \
+    "$BASE_URL/api/v1/cases/$CASE_ID")
+GET2_CODE=$(echo "$GET2_RESP" | tail -1)
+GET2_BODY=$(echo "$GET2_RESP" | sed '$d')
+
+assert_http "GetCase (post-patch)" "200" "$GET2_CODE" "$GET2_BODY"
+
+GET2_STATUS=$(echo "$GET2_BODY" | jq_py 'd.get("caseStatus","")') || true
+GET2_ASSIGNEE=$(echo "$GET2_BODY" | jq_py 'd.get("assigneeName","")') || true
+GET2_LE_REF=$(echo "$GET2_BODY" | jq_py 'd.get("leReferenceNumber","")') || true
+
+[ "$GET2_STATUS" = "open" ] && log_pass "Status persisted as open" || log_fail "Status persistence" "expected open, got '$GET2_STATUS'"
+[ "$GET2_ASSIGNEE" = "Full-Field Test Analyst" ] && log_pass "AssigneeName persisted" || log_fail "AssigneeName persistence" "got '$GET2_ASSIGNEE'"
+[ "$GET2_LE_REF" = "LE-FULLFIELD-002-UPDATED" ] && log_pass "leReferenceNumber persisted" || log_fail "leReferenceNumber persistence" "got '$GET2_LE_REF'"
+
+# Update ETAG from GET
+ETAG=$(extract_etag /tmp/get2_headers.txt) || true
+log_info "ETag for DFT ops: $ETAG"
+
+# =================================================================
+# Step 4b: Cosmos read-back diff — Cases container
+# =================================================================
+echo ""
+echo "--- Step 4b: Cosmos read-back diff (Cases) ---"
+if [ -z "$COSMOS_TOKEN" ]; then
+    log_info "Cosmos read-back: SKIPPED (no Cosmos token; MI may be missing 'Cosmos DB Built-in Data Reader' role)"
+else
+    COSMOS_CASE_QUERY="{\"query\":\"SELECT * FROM c WHERE c.caseId = @id\",\"parameters\":[{\"name\":\"@id\",\"value\":\"$CASE_ID\"}]}"
+    COSMOS_CASE_DOC=$(cosmos_first_doc "Cases" "$COSMOS_CASE_QUERY" "$CASE_ID") || true
+    if [ -z "$COSMOS_CASE_DOC" ]; then
+        log_fail "Cosmos Cases read" "no doc returned (LAST_COSMOS_STATUS=${LAST_COSMOS_STATUS:-})"
+    else
+        log_pass "Cosmos Cases read returned doc"
+        cosmos_dump_doc "Cases / $CASE_ID" "$COSMOS_CASE_DOC"
+        # Field-by-field assertions: PATCHed Case state must match Cosmos
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("status")' "open" "Cases.status"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("workflowStage")' "fulfillment" "Cases.workflowStage"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("priority")' "emergency" "Cases.priority"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("assigneeName")' "Full-Field Test Analyst" "Cases.assigneeName"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("leReferenceNumber")' "LE-FULLFIELD-002-UPDATED" "Cases.leReferenceNumber"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("country")' "DE" "Cases.country"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("urgencyLevel")' "High" "Cases.urgencyLevel"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("dsaAgencyName")' "BKA" "Cases.dsaAgencyName"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("dsaAgencyCountry")' "DE" "Cases.dsaAgencyCountry"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("isPreservationRequest")' "false" "Cases.isPreservationRequest"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("requestType")' "SubpoenaSummons" "Cases.requestType"
+        cosmos_assert_field "$COSMOS_CASE_DOC" '(d.get("authorization") or {}).get("approverName")' "Judge Smith" "Cases.authorization.approverName"
+        # ETag must be present
+        cosmos_assert_field "$COSMOS_CASE_DOC" '("present" if d.get("_etag") else "__ABSENT__")' "present" "Cases._etag present"
+        # natureOfCrimes preserved as array of 2
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'str(len(d.get("natureOfCrimes",[])))' "2" "Cases.natureOfCrimes count"
+        # cpConcern was patched to "Updated CP concern via PATCH"
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("cpConcern")' "Updated CP concern via PATCH" "Cases.cpConcern"
+        # Type discriminator should be present
+        cosmos_assert_field "$COSMOS_CASE_DOC" 'd.get("type")' "case" "Cases.type discriminator"
+    fi
+fi
+
+# =================================================================
+# Step 5: PATCH DFT — update fulfillment fields
+# =================================================================
+echo ""
+echo "--- Step 5: PATCH DFT ---"
+
+if [ -z "$FIRST_DFT_ID" ]; then
+    log_fail "PATCH DFT" "No DFT ID available — skipping DFT/DataCategory steps"
+else
+    # First GET the DFT to get its ETag
+    DFT_GET_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/dft_get_headers.txt \
+        -H "$AUTH_HEADER" \
+        "$BASE_URL/api/v1/cases/$CASE_ID/dfts/$FIRST_DFT_ID")
+    DFT_GET_CODE=$(echo "$DFT_GET_RESP" | tail -1)
+    DFT_GET_BODY=$(echo "$DFT_GET_RESP" | sed '$d')
+
+    assert_http "GetDft (pre-patch)" "200" "$DFT_GET_CODE" "$DFT_GET_BODY"
+
+    DFT_ETAG=$(extract_etag /tmp/dft_get_headers.txt) || true
+    DFT_ETAG="${DFT_ETAG:-$ETAG}"
+    log_info "DFT ETag: $DFT_ETAG"
+
+    DFT_IDEM_KEY=$(cat /proc/sys/kernel/random/uuid)
+    PATCH_DFT_BODY='{
+      "fulfillmentStatus": "InProgress",
+      "etsiTaskStatus": "Active",
+      "statusReason": "Full-field test — DFT processing started"
+    }'
+
+    PATCH_DFT_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/patch_dft_headers.txt \
+        -H "$AUTH_HEADER" \
+        -H "Content-Type: application/json" \
+        -H "If-Match: $DFT_ETAG" \
+        -H "X-Idempotency-Key: $DFT_IDEM_KEY" \
+        -X PATCH "$BASE_URL/api/v1/cases/$CASE_ID/dfts/$FIRST_DFT_ID" \
+        -d "$PATCH_DFT_BODY")
+    PATCH_DFT_CODE=$(echo "$PATCH_DFT_RESP" | tail -1)
+    PATCH_DFT_BODY_RESP=$(echo "$PATCH_DFT_RESP" | sed '$d')
+
+    assert_http "PatchDft" "200" "$PATCH_DFT_CODE" "$PATCH_DFT_BODY_RESP"
+
+    DFT_ETAG=$(extract_etag /tmp/patch_dft_headers.txt) || true
+    log_info "DFT ETag after patch: $DFT_ETAG"
+
+    # Verify DFT fields
+    PD_FULFILLMENT=$(echo "$PATCH_DFT_BODY_RESP" | jq_py 'd.get("fulfillmentStatus","")') || true
+    PD_ETSI_STATUS=$(echo "$PATCH_DFT_BODY_RESP" | jq_py 'd.get("etsiTaskStatus","")') || true
+
+    [ "$PD_FULFILLMENT" = "inProgress" ] && log_pass "DFT fulfillmentStatus = InProgress" || log_fail "DFT fulfillmentStatus" "expected inProgress, got $PD_FULFILLMENT"
+    [ "$PD_ETSI_STATUS" = "active" ] && log_pass "DFT etsiTaskStatus = Active" || log_fail "DFT etsiTaskStatus" "expected active, got $PD_ETSI_STATUS"
+
+    # =================================================================
+    # Step 6: GET DFT — verify fields persisted
+    # =================================================================
+    echo ""
+    echo "--- Step 6: GET DFT (verify persistence) ---"
+    DFT_GET2_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/dft_get2_headers.txt \
+        -H "$AUTH_HEADER" \
+        "$BASE_URL/api/v1/cases/$CASE_ID/dfts/$FIRST_DFT_ID")
+    DFT_GET2_CODE=$(echo "$DFT_GET2_RESP" | tail -1)
+    DFT_GET2_BODY=$(echo "$DFT_GET2_RESP" | sed '$d')
+
+    assert_http "GetDft (post-patch)" "200" "$DFT_GET2_CODE" "$DFT_GET2_BODY"
+
+    G2_FULFILLMENT=$(echo "$DFT_GET2_BODY" | jq_py 'd.get("fulfillmentStatus","")') || true
+    [ "$G2_FULFILLMENT" = "inProgress" ] && log_pass "DFT fulfillmentStatus persisted" || log_fail "DFT fulfillmentStatus persistence" "got $G2_FULFILLMENT"
+
+    # Get data category IDs from the DFT
+    DC_COUNT=$(echo "$DFT_GET2_BODY" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+dcs=d.get('dataCategories',{})
+print(len(dcs))
+" 2>/dev/null) || true
+    log_info "DataCategory count: $DC_COUNT"
+
+    FIRST_DC_ID=$(echo "$DFT_GET2_BODY" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+dcs=d.get('dataCategories',{})
+if dcs:
+    print(list(dcs.keys())[0])
+else:
+    print('')
+" 2>/dev/null) || true
+    log_info "First DataCategory ID: $FIRST_DC_ID"
+
+    DFT_ETAG=$(extract_etag /tmp/dft_get2_headers.txt) || true
+
+    # =================================================================
+    # Step 7: PATCH DataCategory — update collection fields
+    # =================================================================
+    echo ""
+    echo "--- Step 7: PATCH DataCategory ---"
+
+    if [ -z "$FIRST_DC_ID" ]; then
+        log_fail "PATCH DataCategory" "No DataCategory ID available — skipping"
+    else
+        DC_IDEM_KEY=$(cat /proc/sys/kernel/random/uuid)
+        PATCH_DC_BODY='{
+          "collectionState": "InProgress",
+          "dcsJobId": "DCS-FULLFIELD-001",
+          "dpsJobId": "DPS-FULLFIELD-001",
+          "collectedSize": 1048576,
+          "estimatedTotalSize": 5242880,
+          "regionDataCenter": "WUS3",
+          "regionCountryName": "United States",
+          "region": "NA",
+          "dataExists": true
+        }'
+
+        PATCH_DC_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/patch_dc_headers.txt \
+            -H "$AUTH_HEADER" \
+            -H "Content-Type: application/json" \
+            -H "If-Match: $DFT_ETAG" \
+            -H "X-Idempotency-Key: $DC_IDEM_KEY" \
+            -X PATCH "$BASE_URL/api/v1/cases/$CASE_ID/dfts/$FIRST_DFT_ID/datacategories/$FIRST_DC_ID" \
+            -d "$PATCH_DC_BODY")
+        PATCH_DC_CODE=$(echo "$PATCH_DC_RESP" | tail -1)
+        PATCH_DC_BODY_RESP=$(echo "$PATCH_DC_RESP" | sed '$d')
+
+        assert_http "PatchDataCategory" "200" "$PATCH_DC_CODE" "$PATCH_DC_BODY_RESP"
+
+        # Verify DataCategory fields
+        PDC_STATUS=$(echo "$PATCH_DC_BODY_RESP" | jq_py 'd.get("collectionState","")') || true
+        PDC_DCS=$(echo "$PATCH_DC_BODY_RESP" | jq_py 'd.get("dcsJobId","")') || true
+        PDC_DPS=$(echo "$PATCH_DC_BODY_RESP" | jq_py 'd.get("dpsJobId","")') || true
+        PDC_SIZE=$(echo "$PATCH_DC_BODY_RESP" | jq_py 'str(d.get("collectedSize",""))') || true
+        PDC_REGION=$(echo "$PATCH_DC_BODY_RESP" | jq_py 'd.get("region","")') || true
+
+        [ "$PDC_STATUS" = "inProgress" ] && log_pass "DC collectionState = InProgress" || log_fail "DC collectionState" "expected inProgress, got $PDC_STATUS"
+        [ "$PDC_DCS" = "DCS-FULLFIELD-001" ] && log_pass "DC dcsJobId set" || log_fail "DC dcsJobId" "expected DCS-FULLFIELD-001, got $PDC_DCS"
+        [ "$PDC_DPS" = "DPS-FULLFIELD-001" ] && log_pass "DC dpsJobId set" || log_fail "DC dpsJobId" "expected DPS-FULLFIELD-001, got $PDC_DPS"
+        [ "$PDC_SIZE" = "1048576" ] && log_pass "DC collectedSize = 1048576" || log_fail "DC collectedSize" "expected 1048576, got $PDC_SIZE"
+        [ "$PDC_REGION" = "NA" ] && log_pass "DC region = NA" || log_fail "DC region" "expected NA, got $PDC_REGION"
+    fi
+fi
+
+# =================================================================
+# Step 7b: Cosmos read-back diff — Dfts container
+# =================================================================
+echo ""
+echo "--- Step 7b: Cosmos read-back diff (Dfts) ---"
+if [ -z "$COSMOS_TOKEN" ]; then
+    log_info "Cosmos Dfts read-back: SKIPPED (no Cosmos token)"
+elif [ -z "$FIRST_DFT_ID" ]; then
+    log_info "Cosmos Dfts read-back: SKIPPED (no FIRST_DFT_ID)"
+else
+    COSMOS_DFT_QUERY="{\"query\":\"SELECT * FROM c WHERE c.lensTaskId = @id AND c.caseId = @cid\",\"parameters\":[{\"name\":\"@id\",\"value\":\"$FIRST_DFT_ID\"},{\"name\":\"@cid\",\"value\":\"$CASE_ID\"}]}"
+    COSMOS_DFT_DOC=$(cosmos_first_doc "Dfts" "$COSMOS_DFT_QUERY" "$CASE_ID") || true
+    if [ -z "$COSMOS_DFT_DOC" ]; then
+        log_fail "Cosmos Dfts read" "no doc returned (LAST_COSMOS_STATUS=${LAST_COSMOS_STATUS:-})"
+    else
+        log_pass "Cosmos Dfts read returned doc"
+        cosmos_dump_doc "Dfts / $FIRST_DFT_ID" "$COSMOS_DFT_DOC"
+        # DFT-level fields
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'd.get("fulfillmentStatus")' "InProgress" "Dfts.fulfillmentStatus"
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'd.get("etsiTaskStatus")' "Active" "Dfts.etsiTaskStatus"
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'd.get("statusReason")' "Full-field test — DFT processing started" "Dfts.statusReason"
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'd.get("service")' "Exchange" "Dfts.service"
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'd.get("scenario")' "LegalDemand" "Dfts.scenario"
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'd.get("caseId")' "$CASE_ID" "Dfts.caseId (partition key)"
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'd.get("type")' "dft" "Dfts.type discriminator"
+        # targetIdentifier checks: identifierHash should be a 64-char hex (SHA-256), NOT the literal email
+        cosmos_assert_field "$COSMOS_DFT_DOC" '("len64-hex" if (lambda h: bool(h) and len(h)==64 and all(c in "0123456789abcdef" for c in h.lower()))((d.get("targetIdentifier") or {}).get("identifierHash","")) else "__BAD__")' "len64-hex" "Dfts.targetIdentifier.identifierHash is 64-hex SHA-256"
+        cosmos_assert_field "$COSMOS_DFT_DOC" '(d.get("targetIdentifier") or {}).get("identifierType")' "Email" "Dfts.targetIdentifier.identifierType"
+        # The raw value SHOULD NOT appear in identifierHash (privacy)
+        cosmos_assert_field "$COSMOS_DFT_DOC" '("__LEAK__" if (d.get("targetIdentifier") or {}).get("identifierHash","")=="fullfield-test@example.com" else "ok")' "ok" "Dfts.targetIdentifier.identifierHash is hashed (not raw)"
+        # _etag must be present
+        cosmos_assert_field "$COSMOS_DFT_DOC" '("present" if d.get("_etag") else "__ABSENT__")' "present" "Dfts._etag present"
+        # DataCategories assertions: at least 2, first one's collection fields patched
+        cosmos_assert_field "$COSMOS_DFT_DOC" 'str(len(d.get("dataCategories",{}) or {}))' "2" "Dfts.dataCategories count"
+        if [ -n "$FIRST_DC_ID" ]; then
+            cosmos_assert_field "$COSMOS_DFT_DOC" '(d.get("dataCategories",{}).get("'"$FIRST_DC_ID"'",{}) or {}).get("collectionState","")' "InProgress" "Dfts.dataCategories[first].collectionState"
+            cosmos_assert_field "$COSMOS_DFT_DOC" '(d.get("dataCategories",{}).get("'"$FIRST_DC_ID"'",{}) or {}).get("dcsJobId","")' "DCS-FULLFIELD-001" "Dfts.dataCategories[first].dcsJobId"
+            cosmos_assert_field "$COSMOS_DFT_DOC" '(d.get("dataCategories",{}).get("'"$FIRST_DC_ID"'",{}) or {}).get("dpsJobId","")' "DPS-FULLFIELD-001" "Dfts.dataCategories[first].dpsJobId"
+            cosmos_assert_field "$COSMOS_DFT_DOC" 'str((d.get("dataCategories",{}).get("'"$FIRST_DC_ID"'",{}) or {}).get("collectedSize",""))' "1048576" "Dfts.dataCategories[first].collectedSize"
+            cosmos_assert_field "$COSMOS_DFT_DOC" '(d.get("dataCategories",{}).get("'"$FIRST_DC_ID"'",{}) or {}).get("region","")' "NA" "Dfts.dataCategories[first].region"
+            cosmos_assert_field "$COSMOS_DFT_DOC" '("true" if (d.get("dataCategories",{}).get("'"$FIRST_DC_ID"'",{}) or {}).get("dataExists") else "false")' "true" "Dfts.dataCategories[first].dataExists"
+        fi
+    fi
+fi
+
+# =================================================================
+# Step 8: CREATE NDO
+# =================================================================
+echo ""
+echo "--- Step 8: CREATE NDO ---"
+
+NDO_CREATE_BODY='{
+  "caseId": "'"$CASE_ID"'",
+  "userNotificationAllowed": false,
+  "ndoAttached": true,
+  "temporaryNdo": false,
+  "exclusionReason": "NDOOrder",
+  "ndoExpirationDate": "2027-04-01T00:00:00Z"
+}'
+
+NDO_CREATE_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/ndo_create_headers.txt \
+    -H "$AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -X POST "$BASE_URL/api/v1/cases/$CASE_ID/ndos" \
+    -d "$NDO_CREATE_BODY")
+NDO_CREATE_CODE=$(echo "$NDO_CREATE_RESP" | tail -1)
+NDO_CREATE_BODY_RESP=$(echo "$NDO_CREATE_RESP" | sed '$d')
+
+assert_http "CreateNdo" "201" "$NDO_CREATE_CODE" "$NDO_CREATE_BODY_RESP"
+
+NDO_ID=$(echo "$NDO_CREATE_BODY_RESP" | jq_py 'd.get("ndoId","")') || true
+NDO_ETAG=$(extract_etag /tmp/ndo_create_headers.txt) || true
+log_info "NDO ID  : $NDO_ID"
+log_info "NDO ETag: $NDO_ETAG"
+
+# Verify NDO create fields
+NC_ALLOWED=$(echo "$NDO_CREATE_BODY_RESP" | jq_py 'str(d.get("userNotificationAllowed",""))') || true
+NC_ATTACHED=$(echo "$NDO_CREATE_BODY_RESP" | jq_py 'str(d.get("ndoAttached",""))') || true
+NC_EXCLUSION=$(echo "$NDO_CREATE_BODY_RESP" | jq_py 'd.get("exclusionReason","")') || true
+
+[ "$NC_ALLOWED" = "False" ] && log_pass "NDO userNotificationAllowed = False" || log_fail "NDO userNotificationAllowed" "expected False, got $NC_ALLOWED"
+[ "$NC_ATTACHED" = "True" ] && log_pass "NDO ndoAttached = True" || log_fail "NDO ndoAttached" "expected True, got $NC_ATTACHED"
+[ "$NC_EXCLUSION" = "NDOOrder" ] && log_pass "NDO exclusionReason = NDOOrder" || log_fail "NDO exclusionReason" "expected NDOOrder, got $NC_EXCLUSION"
+
+# =================================================================
+# Step 9: PATCH NDO — update status and flags
+# =================================================================
+echo ""
+echo "--- Step 9: PATCH NDO ---"
+
+if [ -z "$NDO_ID" ]; then
+    log_fail "PATCH NDO" "No NDO ID available — skipping"
+else
+    PATCH_NDO_BODY='{
+      "ndoStatus": "Active",
+      "userNotificationAllowed": true,
+      "ndoAttached": false,
+      "temporaryNdo": true
+    }'
+
+    PATCH_NDO_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/patch_ndo_headers.txt \
+        -H "$AUTH_HEADER" \
+        -H "Content-Type: application/json" \
+        -H "If-Match: $NDO_ETAG" \
+        -X PATCH "$BASE_URL/api/v1/cases/$CASE_ID/ndos/$NDO_ID" \
+        -d "$PATCH_NDO_BODY")
+    PATCH_NDO_CODE=$(echo "$PATCH_NDO_RESP" | tail -1)
+    PATCH_NDO_BODY_RESP=$(echo "$PATCH_NDO_RESP" | sed '$d')
+
+    assert_http "PatchNdo" "200" "$PATCH_NDO_CODE" "$PATCH_NDO_BODY_RESP"
+
+    NDO_ETAG=$(extract_etag /tmp/patch_ndo_headers.txt) || true
+    log_info "NDO ETag after patch: $NDO_ETAG"
+
+    # Verify patched NDO fields
+    PN_STATUS=$(echo "$PATCH_NDO_BODY_RESP" | jq_py 'd.get("ndoStatus","")') || true
+    PN_ALLOWED=$(echo "$PATCH_NDO_BODY_RESP" | jq_py 'str(d.get("userNotificationAllowed",""))') || true
+    PN_TEMP=$(echo "$PATCH_NDO_BODY_RESP" | jq_py 'str(d.get("temporaryNdo",""))') || true
+
+    [ "$PN_STATUS" = "active" ] && log_pass "NDO ndoStatus patched to active" || log_fail "NDO ndoStatus patch" "expected active, got $PN_STATUS"
+    [ "$PN_ALLOWED" = "True" ] && log_pass "NDO userNotificationAllowed patched to True" || log_fail "NDO userNotificationAllowed patch" "expected True, got $PN_ALLOWED"
+    [ "$PN_TEMP" = "True" ] && log_pass "NDO temporaryNdo patched to True" || log_fail "NDO temporaryNdo patch" "expected True, got $PN_TEMP"
+fi
+
+# =================================================================
+# Step 10: GET NDO — verify persistence
+# =================================================================
+echo ""
+echo "--- Step 10: GET NDO (verify persistence via list) ---"
+
+NDO_LIST_RESP=$(curl -s -w "\n%{http_code}" \
+    -H "$AUTH_HEADER" \
+    "$BASE_URL/api/v1/cases/$CASE_ID/ndos")
+NDO_LIST_CODE=$(echo "$NDO_LIST_RESP" | tail -1)
+NDO_LIST_BODY=$(echo "$NDO_LIST_RESP" | sed '$d')
+
+assert_http "ListNdos" "200" "$NDO_LIST_CODE" "$NDO_LIST_BODY"
+
+NDO_LIST_COUNT=$(echo "$NDO_LIST_BODY" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d) if isinstance(d,list) else 0)" 2>/dev/null) || true
+log_info "NDO count: $NDO_LIST_COUNT"
+
+if [ "$NDO_LIST_COUNT" -ge 1 ] 2>/dev/null; then
+    log_pass "At least 1 NDO in list"
+    # Verify fields on first NDO in list
+    NL_STATUS=$(echo "$NDO_LIST_BODY" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d[0].get('ndoStatus',''))" 2>/dev/null) || true
+    NL_EXCLUSION=$(echo "$NDO_LIST_BODY" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d[0].get('exclusionReason',''))" 2>/dev/null) || true
+    [ "$NL_STATUS" = "active" ] && log_pass "NDO ndoStatus persisted as active" || log_fail "NDO ndoStatus persistence" "expected active, got $NL_STATUS"
+    [ "$NL_EXCLUSION" = "NDOOrder" ] && log_pass "NDO exclusionReason persisted" || log_fail "NDO exclusionReason persistence" "got $NL_EXCLUSION"
+else
+    log_fail "NDO list" "expected at least 1, got $NDO_LIST_COUNT"
+fi
+
+# =================================================================
+# Step 11: CREATE Note
+# =================================================================
+echo ""
+echo "--- Step 11: CREATE Note ---"
+
+NOTE_CREATE_BODY='{
+  "caseId": "'"$CASE_ID"'",
+  "noteType": "General",
+  "content": "Full-field E2E test note — verifying note creation and recentNotes embedding on case.",
+  "isInternal": false
+}'
+
+NOTE_CREATE_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/note_create_headers.txt \
+    -H "$AUTH_HEADER" \
+    -H "Content-Type: application/json" \
+    -X POST "$BASE_URL/api/v1/cases/$CASE_ID/notes" \
+    -d "$NOTE_CREATE_BODY")
+NOTE_CREATE_CODE=$(echo "$NOTE_CREATE_RESP" | tail -1)
+NOTE_CREATE_BODY_RESP=$(echo "$NOTE_CREATE_RESP" | sed '$d')
+
+assert_http "CreateNote" "201" "$NOTE_CREATE_CODE" "$NOTE_CREATE_BODY_RESP"
+
+NOTE_ID=$(echo "$NOTE_CREATE_BODY_RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('noteId',''))" 2>/dev/null) || true
+log_info "Note ID: $NOTE_ID"
+
+# Verify note fields in response
+NOTE_TYPE=$(echo "$NOTE_CREATE_BODY_RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('noteType',''))" 2>/dev/null) || true
+NOTE_CONTENT=$(echo "$NOTE_CREATE_BODY_RESP" | python3 -c "import sys,json; d=json.load(sys.stdin); c=d.get('content',''); print('present' if c else '')" 2>/dev/null) || true
+
+[ -n "$NOTE_ID" ] && log_pass "Note created with ID" || log_fail "Note creation" "no noteId returned"
+[ "$NOTE_TYPE" = "General" ] && log_pass "Note type = General" || log_fail "Note type" "expected General, got $NOTE_TYPE"
+[ "$NOTE_CONTENT" = "present" ] && log_pass "Note content present" || log_fail "Note content" "missing"
+
+# =================================================================
+# Step 11b: Cosmos read-back diff — Notes container
+# =================================================================
+echo ""
+echo "--- Step 11b: Cosmos read-back diff (Notes) ---"
+if [ -z "$COSMOS_TOKEN" ]; then
+    log_info "Cosmos Notes read-back: SKIPPED (no Cosmos token)"
+elif [ -z "$NOTE_ID" ]; then
+    log_info "Cosmos Notes read-back: SKIPPED (no NOTE_ID)"
+else
+    COSMOS_NOTE_QUERY="{\"query\":\"SELECT * FROM c WHERE c.noteId = @id AND c.caseId = @cid\",\"parameters\":[{\"name\":\"@id\",\"value\":\"$NOTE_ID\"},{\"name\":\"@cid\",\"value\":\"$CASE_ID\"}]}"
+    COSMOS_NOTE_DOC=$(cosmos_first_doc "Notes" "$COSMOS_NOTE_QUERY" "$CASE_ID") || true
+    if [ -z "$COSMOS_NOTE_DOC" ]; then
+        log_fail "Cosmos Notes read" "no doc returned (LAST_COSMOS_STATUS=${LAST_COSMOS_STATUS:-})"
+    else
+        log_pass "Cosmos Notes read returned doc"
+        cosmos_dump_doc "Notes / $NOTE_ID" "$COSMOS_NOTE_DOC"
+        cosmos_assert_field "$COSMOS_NOTE_DOC" 'd.get("caseId")' "$CASE_ID" "Notes.caseId"
+        cosmos_assert_field "$COSMOS_NOTE_DOC" 'd.get("noteId")' "$NOTE_ID" "Notes.noteId"
+        cosmos_assert_field "$COSMOS_NOTE_DOC" 'd.get("noteType")' "General" "Notes.noteType"
+        cosmos_assert_field "$COSMOS_NOTE_DOC" '("present" if d.get("content") else "__ABSENT__")' "present" "Notes.content present"
+        cosmos_assert_field "$COSMOS_NOTE_DOC" '("false" if d.get("isInternal") is False else ("true" if d.get("isInternal") else "__ABSENT__"))' "false" "Notes.isInternal = false"
+        cosmos_assert_field "$COSMOS_NOTE_DOC" 'd.get("type")' "note" "Notes.type discriminator"
+        cosmos_assert_field "$COSMOS_NOTE_DOC" '("present" if d.get("_etag") else "__ABSENT__")' "present" "Notes._etag present"
+    fi
+fi
+
+# =================================================================
+# Step 11.5: CREATE + GET Attachment (warrant) + Cosmos read-back diff
+# =================================================================
+echo ""
+echo "--- Step 11.5: Attachment round-trip ---"
+
+ATT_FILE=/tmp/fullfield-att-warrant.txt
+echo "fullfield-test warrant body $(date -u +%Y-%m-%dT%H:%M:%SZ)" > "$ATT_FILE"
+ATT_VS_DATE=$(date -u -d "-1 day" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "2026-04-01T00:00:00Z")
+ATT_VE_DATE=$(date -u -d "+30 days" +%Y-%m-%dT%H:%M:%SZ 2>/dev/null || echo "2026-05-01T00:00:00Z")
+ATT_IDEM=$(cat /proc/sys/kernel/random/uuid)
+
+# NOTE: CreateAttachmentRequest only carries AttachmentType, Description, CaseIds,
+# ValidityStartDate, ValidityEndDate. Approval / metadata / additionalProperties are on
+# the entity but NOT on the request DTO — sending them is harmless (multipart form
+# parser will ignore unknown keys), but they will not persist. This is a discoverable
+# gap that the Cosmos read-back will surface.
+ATT_CREATE_RESP=$(curl -s -w "\n%{http_code}" -D /tmp/att_create_headers.txt \
+    -H "$AUTH_HEADER" \
+    -H "X-Idempotency-Key: $ATT_IDEM" \
+    -F "AttachmentType=WarrantInstrument" \
+    -F "Description=Full-field warrant test" \
+    -F "ValidityStartDate=$ATT_VS_DATE" \
+    -F "ValidityEndDate=$ATT_VE_DATE" \
+    -F "ApproverName=Judge Holland" \
+    -F "ApprovalDateTime=$ATT_VS_DATE" \
+    -F "ApprovalReason=Probable cause established" \
+    -F "metadata.source=fullfield-e2e" \
+    -F "additionalProperties.scope=test" \
+    -F "file=@$ATT_FILE;type=text/plain" \
+    -X POST "$BASE_URL/api/v1/cases/$CASE_ID/attachments")
+ATT_CREATE_CODE=$(echo "$ATT_CREATE_RESP" | tail -1)
+ATT_CREATE_BODY=$(echo "$ATT_CREATE_RESP" | sed '$d')
+
+assert_http "CreateAttachment (warrant)" "201" "$ATT_CREATE_CODE" "$ATT_CREATE_BODY"
+
+ATT_ID=$(echo "$ATT_CREATE_BODY" | jq_py 'd.get("attachmentId","")') || true
+log_info "Attachment ID: $ATT_ID"
+
+# Verify response fields
+AC_TYPE=$(echo "$ATT_CREATE_BODY" | jq_py 'd.get("attachmentType","")') || true
+AC_FILENAME=$(echo "$ATT_CREATE_BODY" | jq_py 'd.get("fileName","")') || true
+AC_CTYPE=$(echo "$ATT_CREATE_BODY" | jq_py 'd.get("contentType","")') || true
+AC_SIZE=$(echo "$ATT_CREATE_BODY" | jq_py 'str(d.get("fileSizeBytes",""))') || true
+AC_VS=$(echo "$ATT_CREATE_BODY" | jq_py 'd.get("validityStartDate","")') || true
+AC_VE=$(echo "$ATT_CREATE_BODY" | jq_py 'd.get("validityEndDate","")') || true
+
+[ "$AC_TYPE" = "WarrantInstrument" ] && log_pass "Attachment type = WarrantInstrument" || log_fail "Attachment type" "got '$AC_TYPE'"
+[ -n "$AC_FILENAME" ] && log_pass "Attachment fileName present ($AC_FILENAME)" || log_fail "Attachment fileName" "missing"
+[ "$AC_CTYPE" = "text/plain" ] && log_pass "Attachment contentType = text/plain" || log_fail "Attachment contentType" "got '$AC_CTYPE'"
+[ -n "$AC_SIZE" ] && [ "$AC_SIZE" != "0" ] && log_pass "Attachment fileSizeBytes = $AC_SIZE" || log_fail "Attachment fileSizeBytes" "got '$AC_SIZE'"
+[ -n "$AC_VS" ] && log_pass "Attachment validityStartDate persisted" || log_fail "Attachment validityStartDate" "missing"
+[ -n "$AC_VE" ] && log_pass "Attachment validityEndDate persisted" || log_fail "Attachment validityEndDate" "missing"
+
+# GET attachment
+if [ -n "$ATT_ID" ]; then
+    ATT_GET_RESP=$(curl -s -w "\n%{http_code}" \
+        -H "$AUTH_HEADER" \
+        "$BASE_URL/api/v1/cases/$CASE_ID/attachments/$ATT_ID")
+    ATT_GET_CODE=$(echo "$ATT_GET_RESP" | tail -1)
+    ATT_GET_BODY=$(echo "$ATT_GET_RESP" | sed '$d')
+    assert_http "GetAttachment" "200" "$ATT_GET_CODE" "$ATT_GET_BODY"
+
+    AG_TYPE=$(echo "$ATT_GET_BODY" | jq_py 'd.get("attachmentType","")') || true
+    AG_VS=$(echo "$ATT_GET_BODY" | jq_py 'd.get("validityStartDate","")') || true
+    [ "$AG_TYPE" = "WarrantInstrument" ] && log_pass "GetAttachment.attachmentType round-trip" || log_fail "GetAttachment.attachmentType" "got '$AG_TYPE'"
+    [ -n "$AG_VS" ] && log_pass "GetAttachment.validityStartDate round-trip" || log_fail "GetAttachment.validityStartDate" "missing"
+fi
+
+# Create a second attachment of evidence type to confirm multi-attachment per case
+ATT_FILE2=/tmp/fullfield-att-evidence.txt
+echo "fullfield-test evidence body" > "$ATT_FILE2"
+ATT_IDEM2=$(cat /proc/sys/kernel/random/uuid)
+ATT2_CREATE_RESP=$(curl -s -w "\n%{http_code}" \
+    -H "$AUTH_HEADER" \
+    -H "X-Idempotency-Key: $ATT_IDEM2" \
+    -F "AttachmentType=Evidence" \
+    -F "Description=Full-field evidence test" \
+    -F "file=@$ATT_FILE2;type=text/plain" \
+    -X POST "$BASE_URL/api/v1/cases/$CASE_ID/attachments")
+ATT2_CREATE_CODE=$(echo "$ATT2_CREATE_RESP" | tail -1)
+ATT2_CREATE_BODY=$(echo "$ATT2_CREATE_RESP" | sed '$d')
+assert_http "CreateAttachment (evidence #2)" "201" "$ATT2_CREATE_CODE" "$ATT2_CREATE_BODY"
+ATT2_ID=$(echo "$ATT2_CREATE_BODY" | jq_py 'd.get("attachmentId","")') || true
+
+# LIST attachments for case
+ATT_LIST_RESP=$(curl -s -w "\n%{http_code}" \
+    -H "$AUTH_HEADER" \
+    "$BASE_URL/api/v1/cases/$CASE_ID/attachments")
+ATT_LIST_CODE=$(echo "$ATT_LIST_RESP" | tail -1)
+ATT_LIST_BODY=$(echo "$ATT_LIST_RESP" | sed '$d')
+assert_http "ListAttachments" "200" "$ATT_LIST_CODE" "$ATT_LIST_BODY"
+ATT_LIST_COUNT=$(echo "$ATT_LIST_BODY" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d) if isinstance(d,list) else 0)" 2>/dev/null) || true
+if [ "$ATT_LIST_COUNT" -ge 2 ] 2>/dev/null; then
+    log_pass "Case has >= 2 attachments ($ATT_LIST_COUNT)"
+else
+    log_fail "Attachment list count" "expected >=2, got $ATT_LIST_COUNT"
+fi
+
+# Cosmos read-back diff for first attachment
+echo ""
+echo "--- Step 11.5b: Cosmos read-back diff (Attachments) ---"
+if [ -z "$COSMOS_TOKEN" ]; then
+    log_info "Cosmos Attachments read-back: SKIPPED (no Cosmos token)"
+elif [ -z "$ATT_ID" ]; then
+    log_info "Cosmos Attachments read-back: SKIPPED (no ATT_ID)"
+else
+    COSMOS_ATT_QUERY="{\"query\":\"SELECT * FROM c WHERE c.attachmentId = @id AND c.caseId = @cid\",\"parameters\":[{\"name\":\"@id\",\"value\":\"$ATT_ID\"},{\"name\":\"@cid\",\"value\":\"$CASE_ID\"}]}"
+    COSMOS_ATT_DOC=$(cosmos_first_doc "Attachments" "$COSMOS_ATT_QUERY" "$CASE_ID") || true
+    if [ -z "$COSMOS_ATT_DOC" ]; then
+        log_fail "Cosmos Attachments read" "no doc returned (LAST_COSMOS_STATUS=${LAST_COSMOS_STATUS:-})"
+    else
+        log_pass "Cosmos Attachments read returned doc"
+        cosmos_dump_doc "Attachments / $ATT_ID" "$COSMOS_ATT_DOC"
+        cosmos_assert_field "$COSMOS_ATT_DOC" 'd.get("caseId")' "$CASE_ID" "Attachments.caseId"
+        cosmos_assert_field "$COSMOS_ATT_DOC" 'd.get("attachmentId")' "$ATT_ID" "Attachments.attachmentId"
+        cosmos_assert_field "$COSMOS_ATT_DOC" 'd.get("attachmentType")' "WarrantInstrument" "Attachments.attachmentType"
+        cosmos_assert_field "$COSMOS_ATT_DOC" 'd.get("type")' "att" "Attachments.type discriminator"
+        cosmos_assert_field "$COSMOS_ATT_DOC" 'd.get("contentType")' "text/plain" "Attachments.contentType"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("present" if d.get("blobPath") else "__ABSENT__")' "present" "Attachments.blobPath present"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("present" if d.get("validityStartDate") else "__ABSENT__")' "present" "Attachments.validityStartDate"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("present" if d.get("validityEndDate") else "__ABSENT__")' "present" "Attachments.validityEndDate"
+        cosmos_assert_field "$COSMOS_ATT_DOC" 'd.get("idempotencyKey")' "$ATT_IDEM" "Attachments.idempotencyKey"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("present" if d.get("uploadedAt") else "__ABSENT__")' "present" "Attachments.uploadedAt"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("present" if d.get("uploadedBy") else "__ABSENT__")' "present" "Attachments.uploadedBy"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("present" if d.get("_etag") else "__ABSENT__")' "present" "Attachments._etag"
+        # Discoverable gaps (per AttachmentMapper.cs:54-74 — these are NOT mapped from request DTO)
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("__PRESENT__" if d.get("approverName") else "__ABSENT__")' "__ABSENT__" "Attachments.approverName ABSENT (not in CreateAttachmentRequest DTO)"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("__PRESENT__" if d.get("approvalDateTime") else "__ABSENT__")' "__ABSENT__" "Attachments.approvalDateTime ABSENT (not in CreateAttachmentRequest DTO)"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("__PRESENT__" if d.get("approvalReason") else "__ABSENT__")' "__ABSENT__" "Attachments.approvalReason ABSENT (not in CreateAttachmentRequest DTO)"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("__PRESENT__" if d.get("metadata") else "__ABSENT__")' "__ABSENT__" "Attachments.metadata ABSENT (not in CreateAttachmentRequest DTO)"
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("__PRESENT__" if d.get("additionalProperties") else "__ABSENT__")' "__ABSENT__" "Attachments.additionalProperties ABSENT (not in CreateAttachmentRequest DTO)"
+        # Description IS on the DTO but NOT mapped in AttachmentMapper.ToEntity
+        cosmos_assert_field "$COSMOS_ATT_DOC" '("__PRESENT__" if d.get("description") else "__ABSENT__")' "__ABSENT__" "Attachments.description ABSENT (DTO has it; AttachmentMapper does not map it)"
+    fi
+fi
+
+# =================================================================
+# Step 12: GET Case — verify recentNotes populated
+# =================================================================
+echo ""
+echo "--- Step 12: GET Case (verify recentNotes) ---"
+
+GET3_RESP=$(curl -s -w "\n%{http_code}" \
+    -H "$AUTH_HEADER" \
+    "$BASE_URL/api/v1/cases/$CASE_ID")
+GET3_CODE=$(echo "$GET3_RESP" | tail -1)
+GET3_BODY=$(echo "$GET3_RESP" | sed '$d')
+
+assert_http "GetCase (post-note)" "200" "$GET3_CODE" "$GET3_BODY"
+
+RECENT_NOTES_COUNT=$(echo "$GET3_BODY" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+rn=d.get('recentNotes',{})
+print(len(rn) if rn else 0)
+" 2>/dev/null) || true
+
+if [ "$RECENT_NOTES_COUNT" -ge 1 ] 2>/dev/null; then
+    log_pass "recentNotes has $RECENT_NOTES_COUNT note(s) on case"
+else
+    log_fail "recentNotes on case" "expected >= 1, got $RECENT_NOTES_COUNT"
+fi
+
+# Also verify NDO summary appears on case
+NDO_SUMMARY_COUNT=$(echo "$GET3_BODY" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+ndos=d.get('ndos',{})
+print(len(ndos) if ndos else 0)
+" 2>/dev/null) || true
+
+if [ "$NDO_SUMMARY_COUNT" -ge 1 ] 2>/dev/null; then
+    log_pass "NDO summary embedded on case ($NDO_SUMMARY_COUNT NDOs)"
+else
+    log_fail "NDO summary on case" "expected >= 1, got $NDO_SUMMARY_COUNT"
+fi
+
+# =================================================================
+# Step 12b: Cosmos read-back diff — final Cases doc (NDO + Note embedded)
+# =================================================================
+echo ""
+echo "--- Step 12b: Cosmos read-back diff (Cases — final state) ---"
+if [ -z "$COSMOS_TOKEN" ]; then
+    log_info "Cosmos final Cases read-back: SKIPPED (no Cosmos token)"
+else
+    COSMOS_FINAL_QUERY="{\"query\":\"SELECT * FROM c WHERE c.caseId = @id\",\"parameters\":[{\"name\":\"@id\",\"value\":\"$CASE_ID\"}]}"
+    COSMOS_FINAL_DOC=$(cosmos_first_doc "Cases" "$COSMOS_FINAL_QUERY" "$CASE_ID") || true
+    if [ -z "$COSMOS_FINAL_DOC" ]; then
+        log_fail "Cosmos final Cases read" "no doc returned (LAST_COSMOS_STATUS=${LAST_COSMOS_STATUS:-})"
+    else
+        log_pass "Cosmos final Cases read returned doc"
+        cosmos_dump_doc "Cases (FINAL) / $CASE_ID" "$COSMOS_FINAL_DOC"
+        # NDO must be embedded on the case (no Ndos container exists)
+        cosmos_assert_field "$COSMOS_FINAL_DOC" 'str(len(d.get("ndos",{}) or {}))' "1" "Cases.ndos count = 1 (embedded; no Ndos container)"
+        # NDO is keyed by NDO_ID; verify ndoStatus reflects PATCH
+        if [ -n "$NDO_ID" ]; then
+            cosmos_assert_field "$COSMOS_FINAL_DOC" '(d.get("ndos",{}).get("'"$NDO_ID"'",{}) or {}).get("ndoStatus","")' "Active" "Cases.ndos[NDO_ID].ndoStatus"
+            # Discoverable: API uses "ndoStatus" (camelCase) NOT "status"
+            cosmos_assert_field "$COSMOS_FINAL_DOC" '("__UNEXPECTED__" if (d.get("ndos",{}).get("'"$NDO_ID"'",{}) or {}).get("status") else "ok")' "ok" "Cases.ndos[NDO_ID].status field NOT used (uses ndoStatus instead)"
+        fi
+        # recentNotes embedded count
+        cosmos_assert_field "$COSMOS_FINAL_DOC" 'str(len(d.get("recentNotes",{}) or {}))' "1" "Cases.recentNotes count = 1"
+        # DFTs embedded
+        cosmos_assert_field "$COSMOS_FINAL_DOC" 'str(len(d.get("dataFulfillmentTasks",{}) or {}))' "1" "Cases.dataFulfillmentTasks count = 1 (embedded summary)"
+    fi
+fi
+
+# =================================================================
+# Step 13: LIST Cases — verify case appears
+# =================================================================
+echo ""
+echo "--- Step 13: LIST Cases ---"
+
+LIST_RESP=$(curl -s -w "\n%{http_code}" \
+    -H "$AUTH_HEADER" \
+    "$BASE_URL/api/v1/cases?pageSize=5")
+LIST_CODE=$(echo "$LIST_RESP" | tail -1)
+LIST_BODY=$(echo "$LIST_RESP" | sed '$d')
+
+assert_http "ListCases" "200" "$LIST_CODE" "$LIST_BODY"
+
+# Check that our case appears in the list
+FOUND_IN_LIST=$(echo "$LIST_BODY" | python3 -c "
+import sys,json
+d=json.load(sys.stdin)
+items = d.get('items', d) if isinstance(d, dict) else d
+found = False
+if isinstance(items, list):
+    for item in items:
+        if item.get('caseId') == '$CASE_ID':
+            found = True
+            break
+print('true' if found else 'false')
+" 2>/dev/null) || true
+
+[ "$FOUND_IN_LIST" = "true" ] && log_pass "Case $CASE_ID found in list" || log_fail "Case in list" "case $CASE_ID not found in list response"
+
+# =================================================================
+# Final State Dump
+# =================================================================
+echo ""
+echo "--- Final Case State ---"
+echo "$GET3_BODY" | python3 -m json.tool 2>/dev/null | head -80 || echo "$GET3_BODY" | head -80
+
+# =================================================================
+# Summary
+# =================================================================
+echo ""
+echo "==========================================="
+echo "  Results: $PASS passed, $FAIL failed ($TOTAL total)"
+echo "  CaseId:  $CASE_ID"
+echo "==========================================="
+exit $FAIL

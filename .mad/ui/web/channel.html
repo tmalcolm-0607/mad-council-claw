@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>channel &middot; MAD.Council</title>
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header class="page-header">
+  <h1><a href="/">MAD.Council</a></h1>
+  <nav>
+    <a href="/">channels</a>
+    <a href="/metrics">metrics</a>
+    <a href="/help">help</a>
+  </nav>
+</header>
+<main>
+  <div class="breadcrumb">
+    <a href="/">channels</a><span class="sep">/</span><span id="bc-name">&hellip;</span>
+  </div>
+  <h2 id="ch-name">channel</h2>
+  <p class="subtitle" id="ch-purpose"></p>
+  <div id="ch-status" class="status-line">loading&hellip;</div>
+
+  <section id="ch-summary" hidden>
+    <div class="metadata">
+      <dl>
+        <dt>tier</dt>         <dd><span id="m-tier"   class="badge"></span></dd>
+        <dt>status</dt>       <dd><span id="m-status" class="badge"></span></dd>
+        <dt>owner</dt>        <dd id="m-owner"></dd>
+        <dt>created</dt>      <dd id="m-created"></dd>
+        <dt>members</dt>      <dd id="m-members"></dd>
+        <dt>channel seq</dt>  <dd id="m-chseq"></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="ch-threads" hidden>
+    <h2>threads</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>thread</th>
+          <th>title</th>
+          <th>status</th>
+          <th>messages</th>
+          <th>last seq</th>
+          <th>last msg</th>
+          <th>verdict</th>
+        </tr>
+      </thead>
+      <tbody id="threads-tbody"></tbody>
+    </table>
+  </section>
+
+  <section id="ch-empty" class="empty-state" hidden>
+    <p>No threads in this channel yet. Post one with <code>/council-post</code>.</p>
+  </section>
+</main>
+<footer class="page-footer">
+  <span>MAD.Council UI &middot; phase-1c</span>
+</footer>
+<script>
+(async function () {
+  const status = document.getElementById('ch-status');
+  const name = decodeURIComponent(location.pathname.replace(/^\/channel\//, ''));
+  document.getElementById('bc-name').textContent = name;
+  try {
+    const r = await fetch('/api/channels/' + encodeURIComponent(name));
+    if (r.status === 404) { status.textContent = 'channel not found'; status.classList.add('error'); return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    status.hidden = true;
+
+    // Header
+    document.getElementById('ch-name').textContent = d.channel.name;
+    document.getElementById('ch-purpose').textContent = d.channel.purpose || '';
+    document.title = d.channel.name + ' · MAD.Council';
+
+    // Summary
+    const summary = document.getElementById('ch-summary');
+    summary.hidden = false;
+    const tier = d.channel.environment_tier || d.channel.tier || 'local';
+    const st   = d.channel.status || 'active';
+    tag('m-tier',   'tier-' + tier, tier);
+    tag('m-status', 'status-' + st, st);
+    document.getElementById('m-owner').textContent = d.channel.owner_alias || '';
+    document.getElementById('m-created').textContent = fmt(d.channel.created_utc);
+    const members = Array.isArray(d.channel.members) ? d.channel.members : [];
+    document.getElementById('m-members').textContent = members.length
+      ? members.map(m => m.alias + (m.status && m.status !== 'active' ? ' (' + m.status + ')' : '')).join(', ')
+      : '(none)';
+    document.getElementById('m-chseq').textContent = (d.digest && 'channel_seq' in d.digest) ? d.digest.channel_seq : '—';
+
+    // Threads
+    const threads = Array.isArray(d.threads) ? d.threads : [];
+    if (!threads.length) {
+      document.getElementById('ch-empty').hidden = false;
+      return;
+    }
+    document.getElementById('ch-threads').hidden = false;
+    const tbody = document.getElementById('threads-tbody');
+    threads.sort((a, b) => String(a.thread_id).localeCompare(String(b.thread_id)));
+    for (const t of threads) {
+      const tr = document.createElement('tr');
+      const threadLink = '/channel/' + encodeURIComponent(name) + '/thread/' + encodeURIComponent(t.thread_id);
+      tr.appendChild(link(threadLink, t.thread_id));
+      tr.appendChild(plain(t.title || ''));
+      tr.appendChild(badge('status-' + (t.status || 'active'), t.status || 'active'));
+      tr.appendChild(plain(t.message_count ?? 0));
+      tr.appendChild(plain(t.last_msg_seq ?? ''));
+      tr.appendChild(plain(fmt(t.last_msg_utc)));
+      tr.appendChild(plain(t.has_verdict ? '✓' : ''));
+      tbody.appendChild(tr);
+    }
+  } catch (err) {
+    status.textContent = 'failed to load: ' + err.message;
+    status.classList.add('error');
+  }
+  function plain(text) { const td = document.createElement('td'); td.textContent = text == null ? '' : String(text); return td; }
+  function link(href, text) {
+    const td = document.createElement('td'); const a = document.createElement('a');
+    a.href = href; a.textContent = text; td.appendChild(a); return td;
+  }
+  function badge(cls, text) {
+    const td = document.createElement('td'); const s = document.createElement('span');
+    s.className = 'badge ' + cls; s.textContent = text; td.appendChild(s); return td;
+  }
+  function tag(id, cls, text) {
+    const el = document.getElementById(id);
+    el.className = 'badge ' + cls;
+    el.textContent = text;
+  }
+  function fmt(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toISOString().replace('T', ' ').replace(/\..*$/, ' UTC');
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,446 @@
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/add-context.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/context-warning.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/parallel-opportunity-detector.js\"",
+            "timeout": 5,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/detect-anomaly.js\"",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/on-permission.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/pre-bash-validate.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \".claude/hooks/block-smart-unicode-on-outbound.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/pre-commit-validate.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/check-worktree.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/enforce-e2e-smoke.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/pre-commit-tokens.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-quality-gates.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/e2e-mock-check.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/require-plan-approval.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/logeventid-collision-check.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/nowarn-addition-warning.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/tdd-advisory.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/pre-write-settings-validate.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-mad-pipeline.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/track-mad-skill-invocation.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/detect-top-n-capping.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/detect-parallel-miss.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/record-task-start.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/enforce-orchestration.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "mcp__*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/mcp-tier-redirect.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/detect-vision-drift.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/auto-register-artifact.js\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/mid-flight-pattern-lint.js\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-plan-gates.js\"",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/auto-run-quality-gates.js\"",
+            "timeout": 310,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/content-scan-deferrals.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/enforce-skill-canonical-marker.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Skill",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/record-skill-completion.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/record-task-completion.js\"",
+            "timeout": 5
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-checkpoint.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/capture-learning.js\"",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      },
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/detect-anomaly.js\"",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/session-start.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/session-end.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/on-subagent-stop.js\"",
+            "timeout": 5,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/capture-learning.js\"",
+            "timeout": 5,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-baseline-size.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/detect-anomaly.js\"",
+            "timeout": 5,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-agent-deliverable.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-quality-gates.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-featuremap.js\"",
+            "timeout": 5,
+            "async": true
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-artifact-completeness.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/on-notification.js\"",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/pre-compact.js\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/stop-guard.js\"",
+            "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "node \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/validate-artifact-completeness.js\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "TeammateIdle": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -File \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/TeammateIdle.ps1\"",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "TaskCompleted": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "powershell.exe -NoProfile -File \"C:/Users/tonym/Repos/MAD - Clean/.claude/hooks/TaskCompleted.ps1\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  },
+  "mcpServers": {
+    "internal-mcp": {
+      "command": "powershell.exe",
+      "args": ["-NoProfile", "-File", "C:/Users/tonym/Repos/MAD - Clean/.claude/scripts/Start-InternalMcp.ps1"],
+      "env": {
+        "INTERNAL_MCP_TELEMETRY_OPTOUT": "1"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp", "--browser", "msedge", "--caps", "vision", "--viewport-size", "1280x720"]
+    },
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-postgres", "${POSTGRES_URL}"],
+      "disabled": true,
+      "description": "Set POSTGRES_URL environment variable (e.g., postgresql://user:pass@localhost:5432/db)"
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-github"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_TOKEN}"
+      },
+      "disabled": true
+    },
+    "memory": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-memory"],
+      "disabled": true
+    },
+    "filesystem": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-filesystem", "./"],
+      "disabled": true
+    },
+    "fetch": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-fetch"],
+      "disabled": true
+    },
+    "sequential-thinking": {
+      "command": "npx",
+      "args": ["-y", "@anthropic-ai/mcp-server-sequential-thinking"],
+      "disabled": true
+    }
+  }
+}

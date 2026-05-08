@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/verdict.schema.json",
+  "title": "verdict.json",
+  "description": "Binding verdict from /council-review or /council-verdict. Lives at threads/<thread-id>/verdict.json. See skills/council-review/SKILL.md §Step 9.",
+  "type": "object",
+  "required": ["thread_id", "verdict", "issued_utc", "issuer", "rationale", "findings", "roles_run", "run_id"],
+  "additionalProperties": false,
+  "properties": {
+    "thread_id": { "type": "string" },
+    "verdict": {
+      "enum": ["FIX", "ACCEPT", "ESCALATE", "INVESTIGATE", "TRIAGE_ACCEPT", "TRIAGE_REJECT", "OWNERSHIP_TRANSFER"],
+      "description": "Binding verdict types. FIX/ACCEPT/ESCALATE/INVESTIGATE per spec §5.5. TRIAGE_ACCEPT/TRIAGE_REJECT from rules/triage-gate.md (ADOPT-002) — control transition out of status=triage. OWNERSHIP_TRANSFER from rules/single-owner-accountability.md (ADOPT-001) — sole mechanism for owner_alias change."
+    },
+    "ownership_transfer": {
+      "type": "object",
+      "description": "Required when verdict=OWNERSHIP_TRANSFER. Per rules/single-owner-accountability.md — issuer MUST be current channel owner_alias; both from_alias and to_alias MUST be active channel members.",
+      "required": ["from_alias", "to_alias"],
+      "additionalProperties": false,
+      "properties": {
+        "from_alias": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "to_alias": { "type": "string", "minLength": 1, "maxLength": 64 }
+      }
+    },
+    "triage_decision": {
+      "type": "object",
+      "description": "Required when verdict=TRIAGE_ACCEPT or TRIAGE_REJECT. Per rules/triage-gate.md — captures the triage rationale and, for acceptance, the confirmed acceptance_criteria + effort_estimate_hours.",
+      "required": ["confirmed_acceptance_criteria"],
+      "additionalProperties": false,
+      "properties": {
+        "confirmed_acceptance_criteria": { "type": "string", "minLength": 10, "maxLength": 2000 },
+        "effort_estimate_hours": { "type": "number", "minimum": 0 },
+        "rejection_reason": {
+          "enum": ["out_of_scope", "duplicate", "insufficient_context", "wrong_tier", "deprioritized"],
+          "description": "Required only when verdict=TRIAGE_REJECT."
+        }
+      }
+    },
+    "issued_utc": { "type": "string", "format": "date-time" },
+    "issuer": {
+      "type": "object",
+      "required": ["alias", "session_id", "mode"],
+      "properties": {
+        "alias": { "type": "string" },
+        "session_id": { "type": "string" },
+        "mode": {
+          "enum": ["auto", "manual"],
+          "description": "auto = /council-review output; manual = /council-verdict override."
+        }
+      }
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 20,
+      "maxLength": 2000,
+      "description": "Why the verdict was issued; required for manual and auto modes alike."
+    },
+    "roles_run": {
+      "type": "array",
+      "description": "Which roles produced findings.",
+      "items": {
+        "type": "object",
+        "required": ["role", "confidence"],
+        "properties": {
+          "role": { "enum": ["advocate", "skeptic", "architect"] },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 },
+          "model": { "type": "string" },
+          "latency_ms": { "type": "integer", "minimum": 0 },
+          "timed_out": { "type": "boolean" }
+        }
+      }
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["role", "severity", "summary"],
+        "properties": {
+          "role": { "enum": ["advocate", "skeptic", "architect"] },
+          "severity": {
+            "enum": ["CRITICAL", "HIGH", "MEDIUM", "LOW", "OBSERVATION"],
+            "description": "OBSERVATION = demoted finding without file:line evidence (see wiki/patterns/evidence-beats-assertion.md)."
+          },
+          "summary": { "type": "string", "minLength": 1 },
+          "evidence": {
+            "type": "string",
+            "description": "file:line reference or quoted section. Empty/null triggers demotion to OBSERVATION."
+          },
+          "confidence": { "type": "number", "minimum": 0, "maximum": 1 }
+        }
+      }
+    },
+    "escalate_trigger": {
+      "type": "string",
+      "description": "When verdict=ESCALATE, which mechanical trigger fired (per skills/council-review §ESCALATE triggers)."
+    },
+    "prior_verdict_archive": {
+      "type": "string",
+      "description": "When this verdict overrides a prior one, relative path to the archived prior verdict.json."
+    },
+    "run_id": { "type": "string", "format": "uuid" },
+    "override_count": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 3,
+      "description": "Bounded iteration cap: max 3 overrides per thread (see skills/council-verdict/tests.md T2-16)."
+    }
+  }
+}

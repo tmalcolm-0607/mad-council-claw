@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>metrics &middot; MAD.Council</title>
+<link rel="stylesheet" href="/css/main.css">
+<style>
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.8rem; margin-bottom: 1.5rem; }
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 4px; padding: 0.8rem 1rem; }
+.card .label { color: var(--fg-muted); font-size: 0.85rem; }
+.card .value { font-size: 1.8rem; font-family: var(--mono); margin-top: 0.25rem; }
+.bar-row { display: flex; align-items: center; gap: 0.6rem; margin: 0.15rem 0; font-size: 0.9rem; }
+.bar-row .key { width: 8rem; color: var(--fg-muted); }
+.bar-row .bar { flex: 1; height: 0.8rem; background: var(--bg); border: 1px solid var(--border); border-radius: 2px; position: relative; overflow: hidden; }
+.bar-row .bar > span { display: block; height: 100%; background: var(--accent); }
+.bar-row .num { width: 3rem; text-align: right; font-family: var(--mono); }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1><a href="/">MAD.Council</a></h1>
+  <nav>
+    <a href="/">channels</a>
+    <a href="/metrics">metrics</a>
+    <a href="/help">help</a>
+  </nav>
+</header>
+<main>
+  <h2>metrics</h2>
+  <p class="subtitle">derived on request from <code>~/claude-data/</code></p>
+  <div id="mx-status" class="status-line">loading&hellip;</div>
+
+  <section id="mx-body" hidden>
+    <h3>channels</h3>
+    <div class="cards">
+      <div class="card"><div class="label">total channels</div>    <div class="value" id="m-ch-total"></div></div>
+      <div class="card"><div class="label">active members</div>    <div class="value" id="m-active-members"></div></div>
+      <div class="card"><div class="label">total threads</div>     <div class="value" id="m-th-total"></div></div>
+      <div class="card"><div class="label">total messages</div>    <div class="value" id="m-msg-total"></div></div>
+      <div class="card"><div class="label">total verdicts</div>    <div class="value" id="m-v-total"></div></div>
+      <div class="card"><div class="label">suspicious msgs</div>   <div class="value" id="m-suspicious"></div></div>
+    </div>
+
+    <h3>channels by tier</h3>
+    <div id="m-tier-bars"></div>
+
+    <h3>threads by status</h3>
+    <div id="m-thread-status-bars"></div>
+
+    <h3>verdicts by verdict</h3>
+    <div id="m-verdicts-bars"></div>
+
+    <h3>unread histogram</h3>
+    <div id="m-unread-bars"></div>
+
+    <h3>dogfood</h3>
+    <div class="metadata">
+      <dl>
+        <dt>channel</dt>             <dd id="m-dog-channel">—</dd>
+        <dt>verdicts issued</dt>     <dd id="m-dog-count">—</dd>
+        <dt>acceptance met?</dt>     <dd id="m-dog-accept">—</dd>
+      </dl>
+    </div>
+
+    <p class="subtitle" id="m-scanned"></p>
+  </section>
+</main>
+<footer class="page-footer">
+  <span>MAD.Council UI &middot; phase-1c</span>
+</footer>
+<script>
+(async function () {
+  const status = document.getElementById('mx-status');
+  try {
+    const r = await fetch('/api/metrics');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const m = await r.json();
+    status.hidden = true;
+    document.getElementById('mx-body').hidden = false;
+
+    document.getElementById('m-ch-total').textContent     = m.channels.total;
+    document.getElementById('m-active-members').textContent = m.channels.active_members_total;
+    document.getElementById('m-th-total').textContent     = m.threads.total;
+    document.getElementById('m-msg-total').textContent    = m.messages.total;
+    document.getElementById('m-v-total').textContent      = m.verdicts.total;
+    document.getElementById('m-suspicious').textContent   = m.messages.suspicious_count;
+
+    renderBars('m-tier-bars',           m.channels.by_tier);
+    renderBars('m-thread-status-bars',  m.threads.by_status);
+    renderBars('m-verdicts-bars',       m.verdicts.by_verdict);
+    renderBars('m-unread-bars',         m.unread_histogram);
+
+    document.getElementById('m-dog-channel').textContent = m.dogfood.channel || '—';
+    document.getElementById('m-dog-count').textContent   = m.dogfood.verdicts_count;
+    document.getElementById('m-dog-accept').textContent  = m.dogfood.acceptance_met_bool ? 'yes' : 'no';
+
+    document.getElementById('m-scanned').textContent = 'last scanned: ' + (m.scanned_utc || '').replace('T', ' ').replace(/\..*$/, ' UTC');
+  } catch (err) {
+    status.textContent = 'failed to load: ' + err.message;
+    status.classList.add('error');
+  }
+
+  function renderBars(containerId, obj) {
+    const host = document.getElementById(containerId);
+    host.innerHTML = '';
+    const entries = Object.entries(obj || {});
+    if (!entries.length) { host.textContent = '(none)'; host.classList.add('subtitle'); return; }
+    const max = Math.max(...entries.map(([, v]) => v), 1);
+    for (const [k, v] of entries) {
+      const row = document.createElement('div'); row.className = 'bar-row';
+      const key = document.createElement('div'); key.className = 'key'; key.textContent = k;
+      const bar = document.createElement('div'); bar.className = 'bar';
+      const fill = document.createElement('span'); fill.style.width = ((v / max) * 100).toFixed(1) + '%';
+      bar.appendChild(fill);
+      const num = document.createElement('div'); num.className = 'num'; num.textContent = v;
+      row.appendChild(key); row.appendChild(bar); row.appendChild(num);
+      host.appendChild(row);
+    }
+  }
+})();
+</script>
+</body>
+</html>

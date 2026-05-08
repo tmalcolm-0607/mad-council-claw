@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Multi-Dimensional Evaluation Score",
+  "description": "Schema for multi-dimensional scoring in eval systems. Supports weighted dimensions with composite aggregation.",
+  "type": "object",
+  "required": ["dimensions", "composite", "method"],
+  "properties": {
+    "dimensions": {
+      "type": "array",
+      "description": "Individual dimension scores with optional weights",
+      "items": {
+        "type": "object",
+        "required": ["name", "score"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Dimension name (e.g., correctness, efficiency, style, adherence)",
+            "minLength": 1
+          },
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Score for this dimension (0.0 = worst, 1.0 = best)"
+          },
+          "weight": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "default": 1,
+            "description": "Weight of this dimension in composite calculation (0.0 = ignore, 1.0 = full weight)"
+          },
+          "details": {
+            "type": "string",
+            "description": "Human-readable details or justification for this score"
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "List of evidence snippets or file paths supporting this score"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "composite": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Composite score aggregated across all dimensions using the specified method"
+    },
+    "method": {
+      "type": "string",
+      "enum": ["weighted_average", "geometric_mean", "harmonic_mean", "min"],
+      "description": "Aggregation method: weighted_average (default), geometric_mean (penalizes unbalanced), harmonic_mean (penalizes low outliers), min (conservative)"
+    },
+    "discrimination_delta": {
+      "type": "number",
+      "minimum": 0,
+      "description": "Measure of discrimination power: standard deviation of dimension scores. Higher = better differentiation between dimensions."
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": true,
+      "description": "Optional metadata specific to the eval type"
+    }
+  }
+}

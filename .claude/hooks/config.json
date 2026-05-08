@@ -1,0 +1,10 @@
+{
+  "validate-featuremap": {
+    "enabled": true,
+    "events": ["SubagentStop"],
+    "filters": {
+      "agentType": ["mad-implement", "mad-validate"]
+    },
+    "staleness_threshold_days": 7
+  }
+}

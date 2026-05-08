@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/seq.schema.json",
+  "title": "seq.json",
+  "description": "Monotonic channel-level sequence counter. Lives at ~/claude-data/channels/<channel>/seq.json. Only the number field is authoritative.",
+  "type": "object",
+  "required": ["current"],
+  "additionalProperties": false,
+  "properties": {
+    "current": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Next seq number to hand out. Incremented via read-inc-write with retry per scripts/seq-increment.ps1."
+    },
+    "last_incremented_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "last_incremented_by": {
+      "type": "object",
+      "properties": {
+        "alias": { "type": "string" },
+        "session_id": { "type": "string" }
+      },
+      "description": "Debugging breadcrumb; not load-bearing for concurrency."
+    }
+  }
+}

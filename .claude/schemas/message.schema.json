@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/message.schema.json",
+  "title": "message.json",
+  "description": "A single channel message. Stored at threads/<thread-id>/messages/<seq>-<timestamp>-<alias>.json. See mad.council.a2a.md §7.3.",
+  "type": "object",
+  "required": ["id", "seq", "from", "timestamp_utc", "type", "body", "body_size_bytes"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Message-doc schema version per schemas/README.md §Schema-version increment invariant (ADOPT-036). Current = 2 (triage-* types added). Absent == 1 (pre-ADOPT); readers up-convert."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^msg-[0-9]{3,}$",
+      "description": "Sequential message identifier; unique within the channel."
+    },
+    "seq": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Monotonic channel-level sequence number from seq.json."
+    },
+    "thread_id": {
+      "type": "string",
+      "description": "Thread ID this message belongs to. Absent only for unparented top-level messages (discouraged)."
+    },
+    "from": {
+      "type": "object",
+      "required": ["alias", "session_id"],
+      "additionalProperties": false,
+      "properties": {
+        "alias": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "session_id": { "type": "string", "minLength": 1 },
+        "project": { "type": "string" }
+      },
+      "description": "Author identity. session_id is bound at post time per §7.2 spoofing-defense."
+    },
+    "timestamp_utc": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "type": {
+      "enum": ["task", "question", "answer", "status", "fyi", "resolve", "triage-question", "triage-context"],
+      "description": "Message type vocabulary. Core six (task / question / answer / status / fyi / resolve) per spec §7.3. triage-question + triage-context added per ADOPT-002 / rules/triage-gate.md — only valid when channel.status = triage."
+    },
+    "body": {
+      "type": "string",
+      "maxLength": 32768,
+      "description": "Message content; hard-capped at 32KB per §8.5 body-size cap."
+    },
+    "in_reply_to": {
+      "type": "string",
+      "pattern": "^msg-[0-9]{3,}$",
+      "description": "Optional reference to the message being replied to."
+    },
+    "mentions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Aliases mentioned in the body; validated against channel.members at post time."
+    },
+    "attachments": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Reserved for future use."
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Correlation key per wiki/patterns/run-id-correlation.md. RFC 4122 any variant (v4 convention)."
+    },
+    "a2a_task_id": {
+      "type": "string",
+      "description": "A2A task identifier when transport is a2a-*. Maps to the remote system's task."
+    },
+    "transport": {
+      "enum": ["local", "a2a-http", "a2a-stream", "a2a-push"],
+      "default": "local"
+    },
+    "body_size_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 32768,
+      "description": "Computed at post time for the cap enforcement in §8.5."
+    },
+    "suspicious": {
+      "type": "boolean",
+      "description": "True when Rule-1 literal-phrase scan trips at post time. Readers render with ⚠️ badge."
+    }
+  }
+}

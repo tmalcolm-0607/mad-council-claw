@@ -1,0 +1,3 @@
+# Nothing to include; the image uses bind-mounts at runtime.
+# This .dockerignore prevents accidentally COPY'ing anything into the image.
+**

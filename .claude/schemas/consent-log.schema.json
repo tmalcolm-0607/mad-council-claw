@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/consent-log.schema.json",
+  "title": "consent-log.jsonl entry",
+  "description": "One-entry-per-line audit record of every consent-gate firing. Append-only. See rules/dangerous-operations-policy.md §Audit trail. Validates a single parsed line; the file itself is JSONL (not a JSON array).",
+  "type": "object",
+  "required": ["ts", "user", "operation", "decision"],
+  "additionalProperties": false,
+  "properties": {
+    "ts": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC. Insertion-ordered but not guaranteed strictly monotonic (multi-session writes)."
+    },
+    "user": {
+      "type": "object",
+      "required": ["alias", "session_id"],
+      "additionalProperties": false,
+      "properties": {
+        "alias":      { "type": "string" },
+        "session_id": { "type": "string" },
+        "project":    { "type": "string" }
+      }
+    },
+    "operation": {
+      "type": "string",
+      "description": "Which Category from the Dangerous Operations Policy triggered the gate (e.g., 'package-install', 'file-system-write', 'ado-write', 'feedback-submission', 'git-operation', 'mcp-server-startup', 'channel-archive', 'last-member-leave', 'cross-channel-invite', 'verdict-override', 'budget-override')."
+    },
+    "decision": {
+      "enum": ["yes", "no", "timeout"],
+      "description": "yes = user confirmed · no = user declined · timeout = 60s passed without response (default NO per §Enforcement)."
+    },
+    "input": {
+      "type": "string",
+      "description": "Raw user input that was parsed into `decision`. Kept for forensic review — supports 'consent-bypass attempt' investigations (e.g., rationale containing 'I already consented')."
+    },
+    "run_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Correlates this consent event with the triggering skill invocation."
+    },
+    "channel": {
+      "type": "string",
+      "description": "Channel in which the consent fired. Present iff consent is channel-scoped (most cases). Absent for session-level operations."
+    }
+  }
+}

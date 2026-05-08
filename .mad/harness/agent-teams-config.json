@@ -1,0 +1,50 @@
+{
+  "enabled": true,
+  "mode": "hybrid",
+  "teammateMode": "in-process",
+  "maxTeammates": 6,
+  "requirePlanApproval": true,
+  "phases": {
+    "spec-research": "teams",
+    "spec-review": "teams",
+    "plan-research": "teams",
+    "plan-review": "teams",
+    "implement-parallel": "teams",
+    "validate": "teams",
+    "pr-review": "teams",
+    "debate-adversarial": "teams",
+    "debate-oxford": "teams",
+    "debate-fishbowl": "teams",
+    "debate-devils-advocate": "teams",
+    "debate-interview": "teams",
+    "tasks-review": "teams",
+    "implement-review": "teams",
+    "decompose-review": "teams"
+  },
+  "dag": {
+    "enabled": true,
+    "executionMode": "dag-execute",
+    "waveDispatch": {
+      "enableParallelTeams": true,
+      "teammateTimeout": 300000,
+      "fallbackToSequential": true
+    },
+    "fileConflicts": {
+      "detectionEnabled": true,
+      "resolutionStrategy": "serialize",
+      "warnOnConflicts": true
+    },
+    "contextBudget": {
+      "threshold": 0.85,
+      "checkAfterEachWave": true,
+      "generateHandoffOnExceed": true
+    },
+    "phaseGates": {
+      "enabled": true,
+      "runAfterExecution": true,
+      "failFast": true,
+      "gates": ["build", "test"],
+      "timeout": 120000
+    }
+  }
+}

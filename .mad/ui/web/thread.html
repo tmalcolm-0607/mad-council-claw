@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>thread &middot; MAD.Council</title>
+<link rel="stylesheet" href="/css/main.css">
+</head>
+<body>
+<header class="page-header">
+  <h1><a href="/">MAD.Council</a></h1>
+  <nav>
+    <a href="/">channels</a>
+    <a href="/metrics">metrics</a>
+    <a href="/help">help</a>
+  </nav>
+</header>
+<main>
+  <div class="breadcrumb">
+    <a href="/">channels</a><span class="sep">/</span>
+    <a id="bc-channel" href="#">&hellip;</a><span class="sep">/</span>
+    <span id="bc-thread">&hellip;</span>
+  </div>
+  <h2 id="t-title">thread</h2>
+  <p class="subtitle" id="t-id"></p>
+  <div id="t-status" class="status-line">loading&hellip;</div>
+
+  <section id="t-meta" hidden>
+    <div class="metadata">
+      <dl>
+        <dt>status</dt>        <dd><span id="t-status-badge" class="badge"></span></dd>
+        <dt>first seq</dt>     <dd id="t-first"></dd>
+        <dt>last seq</dt>      <dd id="t-last"></dd>
+        <dt>message count</dt> <dd id="t-count"></dd>
+        <dt>last msg</dt>      <dd id="t-lastmsg"></dd>
+      </dl>
+    </div>
+  </section>
+
+  <section id="t-messages" hidden>
+    <h2>messages</h2>
+    <div id="messages-list"></div>
+  </section>
+
+  <section id="t-verdict" class="message verdict" hidden>
+    <h2>verdict</h2>
+    <div class="metadata">
+      <dl>
+        <dt>verdict</dt>       <dd id="v-verdict"></dd>
+        <dt>issued</dt>        <dd id="v-issued"></dd>
+        <dt>issuer</dt>        <dd id="v-issuer"></dd>
+      </dl>
+    </div>
+    <h3>rationale</h3>
+    <div class="body" id="v-rationale"></div>
+    <div id="v-findings-wrap" hidden>
+      <h3>findings</h3>
+      <table>
+        <thead><tr><th>role</th><th>severity</th><th>summary</th><th>evidence</th></tr></thead>
+        <tbody id="v-findings"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="t-empty" class="empty-state" hidden>
+    <p>No messages in this thread yet.</p>
+  </section>
+</main>
+<footer class="page-footer">
+  <span>MAD.Council UI &middot; phase-1c</span>
+</footer>
+<script>
+(async function () {
+  const status = document.getElementById('t-status');
+  const parts = location.pathname.split('/');
+  // /channel/<name>/thread/<id>
+  const chIdx = parts.indexOf('channel');
+  const tIdx = parts.indexOf('thread');
+  if (chIdx < 0 || tIdx < 0 || tIdx + 1 >= parts.length) {
+    status.textContent = 'invalid url'; status.classList.add('error'); return;
+  }
+  const chName = decodeURIComponent(parts[chIdx + 1] || '');
+  const tid    = decodeURIComponent(parts.slice(tIdx + 1).join('/'));
+  const bcCh = document.getElementById('bc-channel');
+  bcCh.href = '/channel/' + encodeURIComponent(chName);
+  bcCh.textContent = chName;
+  document.getElementById('bc-thread').textContent = tid;
+
+  try {
+    const r = await fetch('/api/channels/' + encodeURIComponent(chName) + '/thread/' + encodeURIComponent(tid));
+    if (r.status === 404) { status.textContent = 'thread not found'; status.classList.add('error'); return; }
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    status.hidden = true;
+
+    const thread = d.thread || {};
+    document.getElementById('t-title').textContent = thread.title || tid;
+    document.getElementById('t-id').textContent = 'thread_id: ' + tid;
+    document.title = tid + ' · MAD.Council';
+
+    const meta = document.getElementById('t-meta');
+    meta.hidden = false;
+    const tsBadge = document.getElementById('t-status-badge');
+    const st = thread.status || 'active';
+    tsBadge.className = 'badge status-' + st;
+    tsBadge.textContent = st;
+    document.getElementById('t-first').textContent = thread.first_seq ?? '';
+    document.getElementById('t-last').textContent  = thread.last_seq  ?? '';
+    document.getElementById('t-count').textContent = thread.message_count ?? (Array.isArray(d.messages) ? d.messages.length : 0);
+    document.getElementById('t-lastmsg').textContent = fmt(thread.last_msg_utc);
+
+    const messages = Array.isArray(d.messages) ? d.messages : [];
+    if (!messages.length) {
+      document.getElementById('t-empty').hidden = false;
+    } else {
+      messages.sort((a, b) => (a.seq ?? 0) - (b.seq ?? 0));
+      const list = document.getElementById('messages-list');
+      for (const m of messages) {
+        list.appendChild(renderMessage(m));
+      }
+      document.getElementById('t-messages').hidden = false;
+    }
+
+    // Verdict card
+    if (d.verdict) {
+      const v = d.verdict;
+      document.getElementById('t-verdict').hidden = false;
+      const verdictEl = document.getElementById('v-verdict');
+      const badgeClass = v.verdict === 'ACCEPT' ? 'badge status-active' :
+                         v.verdict === 'REJECT' ? 'badge tier-prod' :
+                         'badge status-triage';
+      verdictEl.innerHTML = '';
+      const s = document.createElement('span'); s.className = badgeClass; s.textContent = v.verdict || '';
+      verdictEl.appendChild(s);
+      document.getElementById('v-issued').textContent = fmt(v.issued_utc);
+      const issuer = v.issuer || {};
+      document.getElementById('v-issuer').textContent = (issuer.alias || '') + (issuer.mode ? ' (' + issuer.mode + ')' : '');
+      document.getElementById('v-rationale').textContent = v.rationale || '';
+      const findings = Array.isArray(v.findings) ? v.findings : [];
+      if (findings.length) {
+        document.getElementById('v-findings-wrap').hidden = false;
+        const fbody = document.getElementById('v-findings');
+        for (const f of findings) {
+          const tr = document.createElement('tr');
+          tr.appendChild(td(f.role || ''));
+          tr.appendChild(td(f.severity || ''));
+          tr.appendChild(td(f.summary || ''));
+          tr.appendChild(td(f.evidence || ''));
+          fbody.appendChild(tr);
+        }
+      }
+      // Re-style card by verdict type
+      const card = document.getElementById('t-verdict');
+      card.classList.remove('reject', 'investigate');
+      if (v.verdict === 'REJECT') card.classList.add('reject');
+      else if (v.verdict === 'INVESTIGATE') card.classList.add('investigate');
+    }
+  } catch (err) {
+    status.textContent = 'failed to load: ' + err.message;
+    status.classList.add('error');
+  }
+
+  function renderMessage(m) {
+    const div = document.createElement('div');
+    div.className = 'message';
+    const meta = document.createElement('div');
+    meta.className = 'meta';
+    const parts = [];
+    if ('seq' in m) parts.push('#' + m.seq);
+    if (m.type) parts.push(m.type);
+    if (m.alias) parts.push('@' + m.alias);
+    if (m.issued_utc || m.created_utc) parts.push(fmt(m.issued_utc || m.created_utc));
+    if (m.suspicious) parts.push('⚠ suspicious');
+    meta.textContent = parts.join(' · ');
+    div.appendChild(meta);
+    const body = document.createElement('div');
+    body.className = 'body';
+    body.textContent = m.body || '';
+    div.appendChild(body);
+    if (Array.isArray(m.mentions) && m.mentions.length) {
+      const mm = document.createElement('div');
+      mm.className = 'meta';
+      mm.textContent = 'mentions: ' + m.mentions.map(x => '@' + x).join(' ');
+      div.appendChild(mm);
+    }
+    return div;
+  }
+
+  function td(text) { const el = document.createElement('td'); el.textContent = text; return el; }
+  function fmt(iso) {
+    if (!iso) return '';
+    const d = new Date(iso);
+    if (isNaN(d)) return iso;
+    return d.toISOString().replace('T', ' ').replace(/\..*$/, ' UTC');
+  }
+})();
+</script>
+</body>
+</html>

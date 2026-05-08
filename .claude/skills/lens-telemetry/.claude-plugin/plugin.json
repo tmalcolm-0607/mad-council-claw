@@ -1,0 +1,12 @@
+{
+  "name": "lens-telemetry",
+  "description": "Coding skill for onboarding and using Microsoft.LENS.Common.Telemetry in LENS services. Enforces correct registration, middleware ordering, structured logging, metric definition, and synthetic traffic patterns.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Jamie Cote",
+    "email": "jacote@microsoft.com"
+  },
+  "homepage": "https://o365exchange.visualstudio.com/O365%20Core/_git/LENS-Common",
+  "license": "private",
+  "keywords": ["lens", "telemetry", "opentelemetry", "geneva", "metrics", "logging", "dotnet"]
+}

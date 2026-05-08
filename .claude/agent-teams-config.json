@@ -1,0 +1,12 @@
+{
+  "enabled": true,
+  "phases": {
+    "plan": "teams",
+    "review": "teams",
+    "tasks": {
+      "enabled": true,
+      "domains": ["completeness", "dependency-correctness", "coverage"]
+    }
+  },
+  "_comment": "Per .claude/rules/agent-teams.md — agent-teams dispatch is enabled when (1) config.enabled == true AND (2) phases[current-phase] == \"teams\" or matches domain config. Plan and review phases use teams; tasks phase uses 3-lane dispatch (completeness/dependency-correctness/coverage) per Wave 2 Lane W2-tasks restructure (2026-05-04)."
+}

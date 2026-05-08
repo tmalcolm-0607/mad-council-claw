@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>help &middot; MAD.Council</title>
+<link rel="stylesheet" href="/css/main.css">
+<style>
+.tabs { display: flex; gap: 0.25rem; border-bottom: 1px solid var(--border); margin-bottom: 1rem; }
+.tabs button { background: none; border: 1px solid transparent; border-bottom: none; padding: 0.45rem 0.9rem; cursor: pointer; color: var(--fg-muted); font: inherit; border-radius: 4px 4px 0 0; }
+.tabs button.active { border-color: var(--border); background: var(--bg-card); color: var(--fg); margin-bottom: -1px; }
+.tab-panel { display: none; }
+.tab-panel.active { display: block; }
+.command { border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; padding: 0.7rem 0.9rem; margin-bottom: 0.7rem; }
+.command h3 { margin: 0 0 0.2rem 0; font-family: var(--mono); font-size: 1rem; }
+.command .desc { color: var(--fg-muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
+.command .hint { font-family: var(--mono); font-size: 0.85rem; background: var(--bg); padding: 0.15rem 0.4rem; border-radius: 3px; }
+.command button.copy { margin-left: 0.5rem; font-size: 0.8rem; }
+.schema, .rule { border: 1px solid var(--border); background: var(--bg-card); border-radius: 4px; padding: 0.7rem 0.9rem; margin-bottom: 0.7rem; }
+.schema h3, .rule h3 { margin: 0 0 0.25rem 0; font-size: 1rem; }
+.schema .desc, .rule .desc { color: var(--fg-muted); font-size: 0.9rem; margin-bottom: 0.4rem; }
+pre.json { max-height: 20rem; overflow: auto; }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1><a href="/">MAD.Council</a></h1>
+  <nav>
+    <a href="/">channels</a>
+    <a href="/metrics">metrics</a>
+    <a href="/help">help</a>
+  </nav>
+</header>
+<main>
+  <h2>help</h2>
+  <p class="subtitle">catalog of slash commands, schemas, and rules</p>
+  <div id="hx-status" class="status-line">loading&hellip;</div>
+
+  <div id="hx-body" hidden>
+    <div class="tabs" id="hx-tabs">
+      <button data-tab="commands" class="active">commands</button>
+      <button data-tab="schemas">schemas</button>
+      <button data-tab="rules">rules</button>
+    </div>
+    <section id="panel-commands" class="tab-panel active">
+      <div id="list-commands"></div>
+    </section>
+    <section id="panel-schemas" class="tab-panel">
+      <div id="list-schemas"></div>
+    </section>
+    <section id="panel-rules" class="tab-panel">
+      <div id="list-rules"></div>
+    </section>
+  </div>
+</main>
+<footer class="page-footer">
+  <span>MAD.Council UI &middot; phase-1c</span>
+</footer>
+<script>
+(async function () {
+  const status = document.getElementById('hx-status');
+  try {
+    const r = await fetch('/api/help');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const h = await r.json();
+    status.hidden = true;
+    document.getElementById('hx-body').hidden = false;
+
+    renderCommands(h.commands || []);
+    renderSchemas(h.schemas || []);
+    renderRules(h.rules || []);
+
+    for (const btn of document.querySelectorAll('#hx-tabs button')) {
+      btn.addEventListener('click', () => {
+        for (const b of document.querySelectorAll('#hx-tabs button')) b.classList.remove('active');
+        for (const p of document.querySelectorAll('.tab-panel')) p.classList.remove('active');
+        btn.classList.add('active');
+        document.getElementById('panel-' + btn.dataset.tab).classList.add('active');
+      });
+    }
+  } catch (err) {
+    status.textContent = 'failed to load: ' + err.message;
+    status.classList.add('error');
+  }
+
+  function renderCommands(items) {
+    const host = document.getElementById('list-commands');
+    if (!items.length) { host.textContent = 'no commands found.'; return; }
+    for (const c of items) {
+      const div = document.createElement('div'); div.className = 'command';
+      const h = document.createElement('h3'); h.textContent = '/' + c.name; div.appendChild(h);
+      if (c.description) { const d = document.createElement('div'); d.className = 'desc'; d.textContent = c.description; div.appendChild(d); }
+      if (c.argument_hint) {
+        const hint = document.createElement('span'); hint.className = 'hint';
+        hint.textContent = '/' + c.name + ' ' + c.argument_hint;
+        div.appendChild(hint);
+        const btn = document.createElement('button'); btn.className = 'copy'; btn.textContent = 'copy';
+        btn.addEventListener('click', async () => {
+          try { await navigator.clipboard.writeText('/' + c.name + ' ' + c.argument_hint); btn.textContent = 'copied'; setTimeout(() => btn.textContent = 'copy', 1000); }
+          catch { btn.textContent = 'select + copy'; }
+        });
+        div.appendChild(btn);
+      }
+      if (c.allowed_tools) {
+        const at = document.createElement('div'); at.className = 'desc';
+        at.textContent = 'tools: ' + c.allowed_tools;
+        div.appendChild(at);
+      }
+      host.appendChild(div);
+    }
+  }
+
+  function renderSchemas(items) {
+    const host = document.getElementById('list-schemas');
+    if (!items.length) { host.textContent = 'no schemas found.'; return; }
+    for (const s of items) {
+      const div = document.createElement('div'); div.className = 'schema';
+      const h = document.createElement('h3'); h.textContent = s.name; div.appendChild(h);
+      if (s.description) { const d = document.createElement('div'); d.className = 'desc'; d.textContent = s.description; div.appendChild(d); }
+      const pre = document.createElement('pre'); pre.className = 'json';
+      try { pre.textContent = JSON.stringify(JSON.parse(s.content), null, 2); }
+      catch { pre.textContent = s.content; }
+      div.appendChild(pre);
+      host.appendChild(div);
+    }
+  }
+
+  function renderRules(items) {
+    const host = document.getElementById('list-rules');
+    if (!items.length) { host.textContent = 'no rules found.'; return; }
+    for (const r of items) {
+      const div = document.createElement('div'); div.className = 'rule';
+      const h = document.createElement('h3'); h.textContent = r.title || r.name; div.appendChild(h);
+      const meta = document.createElement('div'); meta.className = 'desc'; meta.textContent = r.name; div.appendChild(meta);
+      if (r.first_paragraph) { const p = document.createElement('div'); p.textContent = r.first_paragraph; div.appendChild(p); }
+      host.appendChild(div);
+    }
+  }
+})();
+</script>
+</body>
+</html>

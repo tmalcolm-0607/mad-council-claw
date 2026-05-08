@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/read-marker.schema.json",
+  "title": "read-marker.json",
+  "description": "Per-member read-position marker. Lives at read-markers/<alias>.json. See mad.council.a2a.md §7.6.",
+  "type": "object",
+  "required": ["alias", "session_id", "last_read_seq", "updated_utc"],
+  "additionalProperties": false,
+  "properties": {
+    "alias": { "type": "string" },
+    "session_id": {
+      "type": "string",
+      "description": "session_id of the owning member — reader-side spoofing check compares this against current channel.members registration."
+    },
+    "last_read_seq": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Highest channel_seq the member has observed. channel_seq - last_read_seq = unread count."
+    },
+    "updated_utc": { "type": "string", "format": "date-time" },
+    "last_thread_read": {
+      "type": "object",
+      "description": "Optional per-thread fine-grained markers for UI.",
+      "additionalProperties": {
+        "type": "integer",
+        "minimum": 0
+      }
+    }
+  }
+}

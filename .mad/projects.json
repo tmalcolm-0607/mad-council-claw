@@ -1,0 +1,18 @@
+{
+  "$schema": "https://example.com/projects.schema.json",
+  "default_project": "mad",
+  "projects": {
+    "mad": {
+      "plan_type": "spec",
+      "repo_path": "C:/Users/tonym/Repos/MAD - Clean",
+      "test_plans_dir": ".mad/test-plans/mad",
+      "description": "MAD kit itself — spec-driven /loop work; no API/Frontend surface",
+      "sources": {
+        "specs": "specs/"
+      },
+      "environments": {
+        "tonym": "local-only"
+      }
+    }
+  }
+}

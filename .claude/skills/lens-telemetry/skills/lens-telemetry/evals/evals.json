@@ -1,0 +1,93 @@
+{
+  "skill_name": "lens-telemetry",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Review this Program.cs middleware setup:\n\napp.UseRouting();\napp.UseMiddleware<GlobalErrorHandlingMiddleware>();\napp.UseMiddleware<InitializeTelemetryContextMiddleware>();\napp.UseMiddleware<LoggingAndMetricsMiddleware>();\napp.UseAuthentication();",
+      "expected_output": "Identifies both ordering violations: InitializeTelemetryContextMiddleware must be first so IRequestTelemetryContext is populated before anything else reads it; LoggingAndMetricsMiddleware must wrap GlobalErrorHandlingMiddleware so the QOS finally block sees the 500 response rather than an unhandled exception. Provides a corrected ordering.",
+      "assertions": [
+        "Identifies that InitializeTelemetryContextMiddleware must come before all other telemetry middleware",
+        "Identifies that LoggingAndMetricsMiddleware must wrap GlobalErrorHandlingMiddleware so the QOS finally block sees the 500 response",
+        "Provides a corrected middleware ordering example"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "I created a DocumentProcessedEvent that implements IStructuredLogEvent and decorated it with [StructuredEvent(\"DocumentProcessedEvent\")]. I registered it in my logger subclass with Register<DocumentProcessedEvent>(). When I call _logger.LogEvent(new DocumentProcessedEvent { ... }) nothing appears in Geneva. What could be wrong?",
+      "expected_output": "Identifies that the Geneva monitoring agent XML configuration must have a matching table entry and the agent must be redeployed — this is a separate step from DI/code registration. Confirms the code-side pattern is correct.",
+      "assertions": [
+        "Identifies the Geneva monitoring agent XML configuration as the missing step",
+        "Explains that the agent must be redeployed after adding the table entry",
+        "Confirms the code-side pattern (sealed, IStructuredLogEvent, [StructuredEvent], Register<T>()) is correct"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Review this service:\n\npublic class ReportGenerator\n{\n    private readonly IMeterFactory _meterFactory;\n\n    public ReportGenerator(IMeterFactory meterFactory)\n    {\n        _meterFactory = meterFactory;\n    }\n\n    public async Task GenerateAsync(string tenantId)\n    {\n        var meter = _meterFactory.Create(\"MyService.Reports\");\n        var counter = MyServiceMetrics.CreateReportsGeneratedMetric(meter);\n        counter.Add(1, tenantId, \"Success\");\n    }\n}",
+      "expected_output": "Identifies that Meter and metric instrument creation inside a method body is wasteful for a singleton service. Recommends moving instrument creation to the constructor as private readonly fields. Provides a corrected example.",
+      "assertions": [
+        "Identifies that creating a Meter and metric instrument on every GenerateAsync call is wasteful for a singleton service",
+        "Recommends moving instrument creation to the constructor",
+        "Provides a corrected example with private readonly counter field initialized in the constructor"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "I want to exclude calls to my /health endpoint from my availability SLO calculations. How do I do that with the LENS telemetry library?",
+      "expected_output": "Recommends implementing ISyntheticRequestDetector and registering it in DI before AddLensTelemetry. Shows an example checking the request path or route values. Does not suggest manually setting IsSynthetic in controller code.",
+      "assertions": [
+        "Recommends implementing ISyntheticRequestDetector",
+        "Shows registration in DI before AddLensTelemetry",
+        "Does not suggest manually calling CoreRequestContextItems.IsSynthetic.SetItem() in the controller as the primary solution"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Review:\n\nbuilder.Services.AddLensTelemetry<MyLogger>(builder.Configuration.GetSection(\"GenevaTelemetry\"));\nbuilder.Services.AddSingleton<IRequestContextBuilder, MyCustomRequestContextBuilder>();",
+      "expected_output": "Identifies that the custom IRequestContextBuilder registration comes after AddLensTelemetry and will be silently ignored because TryAddSingleton inside the library has already registered the default. Provides the corrected ordering with AddSingleton before AddLensTelemetry.",
+      "assertions": [
+        "Identifies that AddSingleton<IRequestContextBuilder> after AddLensTelemetry is ineffective due to TryAddSingleton",
+        "Provides the corrected ordering with the custom registration before AddLensTelemetry"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "How do I mark a 401 response as meeting the reliability bar? My service intentionally returns 401 as part of an auth challenge flow and I don't want it counted as a reliability failure.",
+      "expected_output": "Recommends setting CoreRequestContextItems.ReliabilityScenario with a descriptive non-empty string value before returning the 401. Explains that a non-empty ReliabilityScenario causes MetReliabilityBar to be set to True regardless of HTTP status code.",
+      "assertions": [
+        "Recommends CoreRequestContextItems.ReliabilityScenario.SetItem() with a descriptive string value",
+        "Explains that a non-empty ReliabilityScenario sets MetReliabilityBar to True regardless of status code"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "I added the GenevaTelemetry config section to appsettings.json but omitted LongRequestThresholdMs. Now every single request is emitting an InboundQOSEvent. Why?",
+      "expected_output": "Explains that LongRequestThresholdMs defaults to 0 when omitted. The middleware emits InboundQOSEvent when latency > LongRequestThresholdMs, so a threshold of 0 means any request with measurable latency (which is every request) triggers the event. Recommends setting LongRequestThresholdMs to a meaningful value such as 1000 ms.",
+      "assertions": [
+        "Identifies that LongRequestThresholdMs defaults to 0 when the key is absent",
+        "Explains that the emit condition is latency > LongRequestThresholdMs, so 0 causes every request to emit",
+        "Recommends setting LongRequestThresholdMs to a non-zero value (e.g. 1000)"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "My service threw a 500 error. I have the correlationId from the error response body. How do I find the corresponding exception details in DGrep?",
+      "expected_output": "Explains that the correlationId in the 500 response from GlobalErrorHandlingMiddleware is the RequestId. The corresponding ExceptionEvent in DGrep has a matching RequestId field. Confirms that GlobalErrorHandlingMiddleware logs ExceptionEvent automatically for unhandled exceptions.",
+      "assertions": [
+        "Identifies that the correlationId in the 500 response body is the RequestId",
+        "Explains that the corresponding ExceptionEvent in DGrep has a matching RequestId",
+        "Confirms that GlobalErrorHandlingMiddleware logs ExceptionEvent automatically"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "I added a custom latency histogram with [Histogram] for my DocumentProcessingLatencyMetric. In Jarvis the P95 percentile looks wrong — the buckets seem very coarse. What's going on?",
+      "expected_output": "Explains that custom histograms do not inherit the built-in 25 ms-interval explicit bucket configuration that InboundRequestLatencyMetric uses. OTel's default buckets are coarse and produce inaccurate percentiles. Recommends registering an explicit ExplicitBucketHistogramConfiguration view for the custom histogram to get accurate P50/P95/P99.",
+      "assertions": [
+        "Identifies that custom histograms use OTel's default coarse buckets, not the built-in 25 ms-interval configuration",
+        "Explains that inaccurate percentiles result from missing explicit bucket configuration",
+        "Recommends registering an ExplicitBucketHistogramConfiguration view for the custom histogram"
+      ]
+    }
+  ]
+}

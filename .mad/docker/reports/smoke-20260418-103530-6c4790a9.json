@@ -1,0 +1,489 @@
+{
+  "started_utc": "2026-04-18T17:35:31.4650345Z",
+  "mad_root": "/mad",
+  "session_id": "6c4790a9",
+  "host_info": {
+    "ps_version": "7.4.7",
+    "os": "Linux"
+  },
+  "checks": [
+    {
+      "name": "schema-parse-channel.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-channel.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-completion-report.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-completion-report.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-consent-log.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-consent-log.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-digest.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-digest.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-message.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-message.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-read-marker.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-read-marker.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-retro.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-retro.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-seq.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-seq.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-sessions.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-sessions.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-thread.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-thread.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-parse-verdict.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-id-unique-verdict.schema",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "schema-strict-props",
+      "status": "pass",
+      "details": {
+        "count": 11
+      }
+    },
+    {
+      "name": "cross-link-integrity",
+      "status": "warn",
+      "details": {
+        "files_checked": 420,
+        "refs_resolved": 1557,
+        "sample": [
+          "_gap-analysis-iter8-raw.md → agents/README.md",
+          "_lens-standards-review.md → operations/quarterly-review-log.md",
+          "_lens-standards-review.md → scripts/check-mad-links.ps1",
+          "_lens-standards-review.md → scripts/check-mad-links.ps1",
+          "_lens-standards-review.md → operations/weekly-promotion-log.md",
+          "_lens-standards-review.md → rules/patterns/dotnet-logging.md",
+          "_loop-state.md → scripts/check-mad-links.ps1",
+          "_loop-state.md → scripts/validate-schemas.ps1",
+          "_loop-state.md → scripts/backup-channels.ps1",
+          "_loop-state.md → scripts/check-mad-links.ps1",
+          "_review-checklist.md → scripts/check-mad-links.ps1",
+          "_review-checklist.md → scripts/validate-mad-artifact.ps1",
+          "mad.council.a2a.md → scripts/yagni-filter.ps1",
+          "mad.council.a2a.md → scripts/pattern-verify.ps1",
+          "mad.council.a2a.md → scripts/verdict-compute.ps1"
+        ],
+        "dangling_count": 160
+      }
+    },
+    {
+      "name": "skill-frontmatter-council-check",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-join",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-leave",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-list",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-open",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-post",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-resolve",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-retro",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-review",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-council-verdict",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-apply-learnings",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-brainstorm",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-check-environment-health",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-claude-md-refresh",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-code-audit",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-code-reviewer",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-config-lint",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-context-sync",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-coverage-fix",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-debate",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-design-review",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-failure-analyze",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-git-commit",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-adr",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-analyze",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-c4",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-checklist",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-decompose",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-eval",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-full",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-idea",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-implement",
+      "status": "warn",
+      "details": {
+        "missing_fields": [
+          "allowed-tools"
+        ]
+      }
+    },
+    {
+      "name": "skill-frontmatter-mad-parallel",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-plan",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-spec",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-tasks",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-teams",
+      "status": "warn",
+      "details": {
+        "missing_fields": [
+          "allowed-tools"
+        ]
+      }
+    },
+    {
+      "name": "skill-frontmatter-mad-testplan",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-traceability",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-mad-validate",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-memory",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-pattern-discover",
+      "status": "warn",
+      "details": {
+        "missing_fields": [
+          "allowed-tools"
+        ]
+      }
+    },
+    {
+      "name": "skill-frontmatter-pattern-generate",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-pr-pattern-extract",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-pr-review",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-project-init",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-refresh-best-practices",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-refresh-references",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-research-swarm",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-resume-handoff",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-session-improve",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-session-review",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-skill-audit",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-skill-refresh",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-test-validate-loop",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-workflow-checklist",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-worktree-parallel",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "skill-frontmatter-_template",
+      "status": "pass",
+      "details": null
+    },
+    {
+      "name": "pester-available",
+      "status": "pass",
+      "details": {
+        "version": "5.7.1"
+      }
+    },
+    {
+      "name": "pester-discovery",
+      "status": "pass",
+      "details": {
+        "test_file_count": 13
+      }
+    },
+    {
+      "name": "pester-suite",
+      "status": "pass",
+      "details": {
+        "passed": 140,
+        "failed": 0,
+        "skipped": 0,
+        "duration_ms": 15318,
+        "total": 140
+      }
+    }
+  ],
+  "summary": {
+    "pass": 81,
+    "skip": 0,
+    "warn": 4,
+    "fail": 0,
+    "total_checks": 85
+  },
+  "finished_utc": "2026-04-18T17:36:35.7647350Z"
+}

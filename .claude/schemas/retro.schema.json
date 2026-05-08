@@ -1,0 +1,73 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/retro.schema.json",
+  "title": "retro.json",
+  "description": "Learning signal from /council-retro at channel wind-down. Lives at <channel>/retros/<timestamp>-<alias>.json. See skills/council-retro/SKILL.md §Output format.",
+  "type": "object",
+  "required": ["schema_version", "run_id", "channel", "alias", "session_id", "retro_utc", "session_summary", "scores", "constraints_applied"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": 1,
+      "description": "Retro schema version. Bumped per `operations/migration-strategy.md`."
+    },
+    "run_id": { "type": "string", "format": "uuid" },
+    "channel": { "type": "string" },
+    "alias": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "session_id": { "type": "string" },
+    "retro_utc": { "type": "string", "format": "date-time" },
+    "session_summary": {
+      "type": "object",
+      "required": ["what_worked", "what_was_hard", "improvisation_needed", "turns_taken", "verdicts_required", "a2a_bridges_used"],
+      "additionalProperties": false,
+      "properties": {
+        "what_worked": { "type": "string", "maxLength": 500 },
+        "what_was_hard": { "type": "string", "maxLength": 500 },
+        "improvisation_needed": {
+          "type": "boolean",
+          "description": "True if what_was_hard contains improvise|adapt|unexpected OR any verdict has role_confidence<0.5. Heuristic per skills/council-retro/SKILL.md."
+        },
+        "turns_taken": { "type": "integer", "minimum": 0 },
+        "verdicts_required": { "type": "integer", "minimum": 0 },
+        "a2a_bridges_used": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "scores": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "1-5 score per axis; null if user skipped prompt.",
+      "properties": {
+        "accuracy":     { "type": ["integer", "null"], "minimum": 1, "maximum": 5 },
+        "completeness": { "type": ["integer", "null"], "minimum": 1, "maximum": 5 },
+        "tsg_alignment":{ "type": ["integer", "null"], "minimum": 1, "maximum": 5 },
+        "dx":           { "type": ["integer", "null"], "minimum": 1, "maximum": 5 },
+        "confidence":   { "type": ["integer", "null"], "minimum": 1, "maximum": 5 }
+      }
+    },
+    "constraints_applied": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["blameless", "no_pii", "session_local"],
+      "properties": {
+        "blameless":    { "const": true, "description": "Hard-coded true per plugins/retro-bar-raiser/ pattern." },
+        "no_pii":       { "const": true, "description": "User responsibility; retro stores verbatim — this const flags the expectation, not a guarantee." },
+        "session_local":{ "const": true, "description": "Retro lives in channel dir; no auto-upload unless ALAS consent given." }
+      }
+    },
+    "suspicious": {
+      "type": "boolean",
+      "description": "True if Rule-1 literal-phrase scan tripped on what_worked or what_was_hard at write time. See rules/prompt-injection-policy.md."
+    },
+    "alas": {
+      "type": "object",
+      "description": "ALAS submission record if user consented + ALAS_HUB_URL set.",
+      "additionalProperties": false,
+      "properties": {
+        "submitted":    { "type": "boolean" },
+        "endpoint":     { "type": "string", "format": "uri" },
+        "status_code":  { "type": "integer" },
+        "submitted_utc":{ "type": "string", "format": "date-time" }
+      }
+    }
+  }
+}

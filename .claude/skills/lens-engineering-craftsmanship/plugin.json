@@ -1,0 +1,50 @@
+{
+  "name": "lens-engineering-craftsmanship",
+  "version": "1.0.0",
+  "description": "Generic voice-aware authoring toolkit. Learns each user's voice from WorkIQ communication artifacts, generates a per-user style-reference profile, and validates new content against the learned profile. Ships scripts for the learn/lint/validate workflow plus a generic throttle-aware batch loop.",
+  "author": "tonym@microsoft.com",
+  "category": "communication",
+  "keywords": [
+    "voice",
+    "connect",
+    "peer-feedback",
+    "skill-creation",
+    "mad-framework",
+    "lens",
+    "agency",
+    "throttle-backoff",
+    "background-review"
+  ],
+  "skills": [
+    "lens-engineering-craftsmanship"
+  ],
+  "scripts": {
+    "learn-voice-from-workiq": "scripts/learn-voice-from-workiq.ps1",
+    "style-lint": "scripts/style-lint.ps1",
+    "connect-validate": "scripts/connect-validate.ps1",
+    "loop-with-backoff": "scripts/loop-with-backoff.ps1"
+  },
+  "templates": [
+    "templates/connect-section.md",
+    "templates/setback.md",
+    "templates/peer-feedback.md",
+    "templates/skill-skeleton.md"
+  ],
+  "evals": [
+    "evals/test-style-lint.md",
+    "evals/test-connect-format.md",
+    "evals/test-throttle-backoff.md"
+  ],
+  "documentation": {
+    "readme": "README.md",
+    "installation": "docs/INSTALLATION.md",
+    "architecture": "docs/ARCHITECTURE.md",
+    "backoff_patterns": "docs/BACKOFF-PATTERNS.md"
+  },
+  "lens_marketplace": {
+    "compatible_with": "lens-plugin-marketplace-scaffold >=1.0.0",
+    "depends_on": [],
+    "rides_on": "Tony Malcolm's LENS plugin marketplace scaffold"
+  },
+  "minimum_claude_code_version": "0.1.0"
+}

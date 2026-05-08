@@ -1,0 +1,12 @@
+{
+  "name": "lens-pipeline-audit",
+  "description": "Audit LENS release pipeline YAML files for compliance with PPE and Prod ring-based deployment standards (configuringPpeAndProdRings.md). Generates scored compliance reports with remediation guidance.",
+  "version": "1.0.0",
+  "author": {
+    "name": "Miguel Bachetti",
+    "email": "mibachet@microsoft.com"
+  },
+  "homepage": "https://o365exchange.visualstudio.com/O365%20Core/_git/LENS-Common",
+  "license": "Proprietary",
+  "keywords": ["audit", "pipeline", "ppe", "prod", "rings", "ev2", "compliance", "lens", "release"]
+}

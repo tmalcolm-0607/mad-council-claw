@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/thread.schema.json",
+  "title": "thread.json",
+  "description": "Thread-level metadata. Lives at threads/<thread-id>/thread.json. See mad.council.a2a.md §7.4.",
+  "type": "object",
+  "required": ["thread_id", "status", "created_utc", "created_by"],
+  "additionalProperties": false,
+  "properties": {
+    "thread_id": { "type": "string" },
+    "status": {
+      "enum": ["active", "stale", "resolved", "archived"]
+    },
+    "created_utc": { "type": "string", "format": "date-time" },
+    "created_by": {
+      "type": "object",
+      "properties": {
+        "alias": { "type": "string" },
+        "session_id": { "type": "string" }
+      }
+    },
+    "resolved_utc": { "type": "string", "format": "date-time" },
+    "archived_utc": { "type": "string", "format": "date-time" },
+    "verdict_ref": {
+      "type": "string",
+      "description": "Relative path to verdict.json if reviewed."
+    },
+    "run_id_root": {
+      "type": "string",
+      "format": "uuid",
+      "description": "run_id of the first message; inherited by replies per wiki/patterns/run-id-correlation.md."
+    },
+    "first_seq": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Sequence number of the first message in this thread. Written by council-post on thread creation."
+    },
+    "last_seq": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Sequence number of the most recent message. Updated by council-post on each append."
+    },
+    "message_count": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Count of messages in threads/<id>/messages/. Updated by council-post."
+    },
+    "last_msg_utc": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 UTC of the most recent message. Updated by council-post."
+    },
+    "title": {
+      "type": "string",
+      "maxLength": 100,
+      "description": "Human-readable title passed via --new-thread. Optional; most threads identify by thread_id alone."
+    }
+  }
+}

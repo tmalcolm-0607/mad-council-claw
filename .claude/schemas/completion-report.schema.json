@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/agency-microsoft/playground-main/MAD/schemas/completion-report.schema.json",
+  "title": "completion-report.json",
+  "description": "Structured JSON emitted by /council-leave per wiki/patterns/completion-report-protocol.md. See skills/council-leave/SKILL.md §Output format.",
+  "type": "object",
+  "required": ["alias", "session_id", "channel", "joined_utc", "left_utc", "threads", "tasks", "questions", "final_state"],
+  "additionalProperties": false,
+  "properties": {
+    "alias": { "type": "string" },
+    "session_id": { "type": "string" },
+    "channel": { "type": "string" },
+    "joined_utc": { "type": "string", "format": "date-time" },
+    "left_utc": { "type": "string", "format": "date-time" },
+    "threads": {
+      "type": "object",
+      "required": ["created", "resolved", "participated"],
+      "properties": {
+        "created": { "type": "integer", "minimum": 0 },
+        "resolved": { "type": "integer", "minimum": 0 },
+        "participated": { "type": "integer", "minimum": 0 },
+        "verdict_pending": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "tasks": {
+      "type": "object",
+      "required": ["picked_up", "completed", "dropped"],
+      "properties": {
+        "picked_up": { "type": "integer", "minimum": 0 },
+        "completed": { "type": "integer", "minimum": 0 },
+        "dropped": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "questions": {
+      "type": "object",
+      "required": ["asked", "answered"],
+      "properties": {
+        "asked": { "type": "integer", "minimum": 0 },
+        "answered": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "final_state": {
+      "enum": ["left", "last-member-archived", "last-member-dormant"],
+      "description": "last-member-archived = last active member confirmed archive; last-member-dormant = last active member declined archive."
+    },
+    "run_ids": {
+      "type": "array",
+      "items": { "type": "string", "format": "uuid" },
+      "description": "Distinct run_ids the session touched during membership."
+    },
+    "context_gaps": {
+      "type": "array",
+      "items": { "type": "object" }
+    }
+  }
+}

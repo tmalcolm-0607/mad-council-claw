@@ -16,3 +16,20 @@ Thumbs.db
 # Cross-lane staging-race recovery scratch (per foundational-plan.md § "No git reset").
 # Subagents may stash debris here during multi-lane recovery; never commit.
 .tmp-stash/
+
+# ---- MAD Kit runtime artifacts (added by kit sync) ----
+# Per-developer config + session state; regenerated each session.
+.claude/settings.local.json
+.claude/.local.json
+.claude/work-items/sessions/
+.claude/work-items/PENDING_HANDOFF
+.claude/work-items/ACTIVE
+.claude/work-items/WI-*/
+.claude/scheduled_tasks.lock
+
+# Transient runtime + auto-regenerated state.
+.mad/scratch/
+.mad/logs/
+.mad/learning/failures.json
+.mad/learning/failures.json.bak.*
+.mad/metrics/agent-effectiveness.json
